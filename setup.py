@@ -10,4 +10,5 @@ setup(
 	license = 'Apache License 2.0',
 	py_modules = ['rpm2swidtag'],
 	data_files = [('/etc/rpm2swidtag', ['template.swidtag', 'swidtag.xslt'])],
+	install_requires = ['rpm', 'lxml'],
 )
