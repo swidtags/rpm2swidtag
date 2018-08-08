@@ -9,4 +9,5 @@ setup(
 	author = 'Jan Pazdziora',
 	license = 'Apache License 2.0',
 	py_modules = ['rpm2swidtag'],
+	data_files = [('/etc/rpm2swidtag', ['template.swidtag', 'swidtag.xslt'])],
 )
