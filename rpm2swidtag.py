@@ -23,5 +23,9 @@ except rpm.error as e:
 
 close(fdno)
 
-print("{0}-{1}-{2}.{3}".format(*map(lambda x: x.decode(), (h['name'], h['version'], h['release'], h['arch']))))
+arch = h['arch']
+if h[rpm.RPMTAG_SOURCEPACKAGE]:
+	arch = b'src'
+
+print("{0}-{1}-{2}.{3}".format(*map(lambda x: x.decode(), (h['name'], h['version'], h['release'], arch))))
 
