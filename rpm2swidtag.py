@@ -23,5 +23,5 @@ except rpm.error as e:
 
 close(fdno)
 
-print("%s-%s-%s.%s" % (h['name'], h['version'], h['release'], h['arch']))
+print("{0}-{1}-{2}.{3}".format(*map(lambda x: x.decode(), (h['name'], h['version'], h['release'], h['arch']))))
 
