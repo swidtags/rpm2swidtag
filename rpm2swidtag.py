@@ -42,9 +42,11 @@ def parse_xml(file, msg):
 
 DATA_DIR = "/etc/rpm2swidtag"
 data_dir = getenv('RPM2SWIDTAG_TEMPLATE_DIR', DATA_DIR)
+xml_template = getenv('RPM2SWIDTAG_TEMPLATE', data_dir + "/template.swidtag")
+xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/swidtag.xslt")
 
-x = parse_xml(data_dir + "/template.swidtag", "SWID template file")
-s = parse_xml(data_dir + "/swidtag.xslt", "processing XSLT file")
+x = parse_xml(xml_template, "SWID template file")
+s = parse_xml(xslt_file, "processing XSLT file")
 
 params = {
 	'name': etree.XSLT.strparam(h['name']),

@@ -34,13 +34,23 @@
   </xsl:copy>
 </xsl:template>
 
-<xsl:template match="swid:SoftwareIdentity/@name">
+<xsl:template name="si_name_attr" match="swid:SoftwareIdentity/@name">
   <xsl:attribute name="name">
     <xsl:value-of select="$name" />
   </xsl:attribute>
 </xsl:template>
 
-<xsl:template match="swid:SoftwareIdentity/@version">
+<xsl:template match="swid:SoftwareIdentity[not(@name)]">
+  <xsl:copy>
+    <xsl:apply-templates select="@*"/>
+    <xsl:if test="not(@tagId)"> <xsl:call-template name="si_tagid_attr" /> </xsl:if>
+    <xsl:if test="not(@name)"> <xsl:call-template name="si_name_attr" /> </xsl:if>
+    <xsl:if test="not(@version)"> <xsl:call-template name="si_version_attr" /> </xsl:if>
+    <xsl:apply-templates select="node()"/>
+  </xsl:copy>
+</xsl:template>
+
+<xsl:template name="si_version_attr" match="swid:SoftwareIdentity/@version">
   <xsl:attribute name="version">
     <xsl:value-of select="$version" />-<xsl:value-of select="$release" />.<xsl:value-of select="$arch" />
   </xsl:attribute>
@@ -68,7 +78,7 @@
   </xsl:attribute>
 </xsl:template>
 
-<xsl:template match="swid:SoftwareIdentity/@tagId">
+<xsl:template name="si_tagid_attr" match="swid:SoftwareIdentity/@tagId">
   <xsl:attribute name="tagId">
     <xsl:value-of select="$name" />-<xsl:value-of select="$version" />
     <xsl:if test="$release">-<xsl:value-of select="$release" /></xsl:if>
