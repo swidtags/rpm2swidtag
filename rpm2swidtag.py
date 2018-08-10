@@ -52,7 +52,8 @@ params = {
 	'name': etree.XSLT.strparam(h['name']),
 	'version': etree.XSLT.strparam(h['version']),
 	'release': etree.XSLT.strparam(h['release']),
-	'arch': etree.XSLT.strparam(arch)
+	'arch': etree.XSLT.strparam(arch),
+	'summary': etree.XSLT.strparam(h['summary']),
 }
 
 t = etree.XSLT(s.getroot())

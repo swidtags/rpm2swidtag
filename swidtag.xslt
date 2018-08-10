@@ -11,6 +11,7 @@
 <xsl:param name="version" />
 <xsl:param name="release" />
 <xsl:param name="arch" />
+<xsl:param name="summary" />
 
 <xsl:template match="/">
   <xsl:if test="not($name)">
@@ -52,8 +53,20 @@
         <xsl:call-template name="meta_product_attr" />
         <xsl:call-template name="meta_cv_attr" />
         <xsl:call-template name="meta_revision_attr" />
+        <xsl:call-template name="meta_summary_attr" />
       </Meta>
     </xsl:if>
+    <xsl:apply-templates select="node()"/>
+  </xsl:copy>
+</xsl:template>
+
+<xsl:template match="swid:Meta">
+  <xsl:copy>
+    <xsl:apply-templates select="@*"/>
+    <xsl:if test="not(@product)"> <xsl:call-template name="meta_product_attr" /> </xsl:if>
+    <xsl:if test="not(@colloquialVersion)"> <xsl:call-template name="meta_cv_attr" /> </xsl:if>
+    <xsl:if test="not(@revision)"> <xsl:call-template name="meta_revision_attr" /> </xsl:if>
+    <xsl:if test="not(@summary)"> <xsl:call-template name="meta_summary_attr" /> </xsl:if>
     <xsl:apply-templates select="node()"/>
   </xsl:copy>
 </xsl:template>
@@ -91,6 +104,12 @@
     <xsl:value-of select="$name" />-<xsl:value-of select="$version" />
     <xsl:if test="$release">-<xsl:value-of select="$release" /></xsl:if>
     <xsl:value-of select="'.'" /><xsl:value-of select="$arch" />
+  </xsl:attribute>
+</xsl:template>
+
+<xsl:template name="meta_summary_attr" match="swid:Meta/@summary">
+  <xsl:attribute name="summary">
+    <xsl:value-of select="$summary" />
   </xsl:attribute>
 </xsl:template>
 
