@@ -4,25 +4,45 @@ from sys import argv, exit, stderr, stdout
 from os import open, O_RDONLY, close, getenv
 import rpm
 from lxml import etree
+import argparse
 
-if len(argv) < 2:
-	stderr.write("Usage: %s file.rpm\n" % (argv[0]))
-	exit(2)
+parser = argparse.ArgumentParser(description='SWID tag parameters.')
+parser.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
+parser.add_argument('package', type=str, help='package or file name')
+opts = parser.parse_args()
 
-try:
-	fdno = open(argv[1], O_RDONLY)
-except FileNotFoundError as e:
-	stderr.write("%s: Error reading [%s]: %s\n" % (argv[0], argv[1], e.strerror))
-	exit(3)
+h = None
 
+# We only assume the use of _RPM2SWIDTAG_RPMDBPATH for testing, really
+rpmdb_path = getenv('_RPM2SWIDTAG_RPMDBPATH')
+if rpmdb_path is not None:
+	rpm.addMacro('_dbpath', rpmdb_path)
 ts = rpm.TransactionSet()
-try:
-	h = ts.hdrFromFdno(fdno)
-except rpm.error as e:
-	stderr.write("%s: Error parsing rpm file [%s]: %s\n" % (argv[0], argv[1], str(e)))
-	exit(4)
-
-close(fdno)
+ts.openDB()
+if rpmdb_path is not None:
+	rpm.delMacro('_dbpath')
+if opts.rpmfile:
+	try:
+		fdno = open(opts.package, O_RDONLY)
+	except FileNotFoundError as e:
+		stderr.write("%s: Error reading [%s]: %s\n" % (argv[0], opts.package, e.strerror))
+		exit(3)
+	try:
+		h = ts.hdrFromFdno(fdno)
+		close(fdno)
+	except rpm.error as e:
+		stderr.write("%s: Error parsing rpm file [%s]: %s\n" % (argv[0], opts.package, str(e)))
+		exit(4)
+else:
+	l = ts.dbMatch('name', opts.package)
+	if len(l) < 1:
+		stderr.write("%s: No package [%s] found in database\n" % (argv[0], opts.package))
+		exit(7)
+	if len(l) > 1:
+		stderr.write("%s: Multiple packages matching [%s] found in database\n" % (argv[0], opts.package))
+		exit(8)
+	for h in l:
+		break
 
 arch = h['arch']
 if h[rpm.RPMTAG_SOURCEPACKAGE]:
