@@ -46,6 +46,14 @@
     <xsl:if test="not(@tagId)"> <xsl:call-template name="si_tagid_attr" /> </xsl:if>
     <xsl:if test="not(@name)"> <xsl:call-template name="si_name_attr" /> </xsl:if>
     <xsl:if test="not(@version)"> <xsl:call-template name="si_version_attr" /> </xsl:if>
+    <xsl:if test="not(@versionScheme)"> <xsl:call-template name="si_vs_attr" /> </xsl:if>
+    <xsl:if test="not(swid:Meta)">
+      <Meta>
+        <xsl:call-template name="meta_product_attr" />
+        <xsl:call-template name="meta_cv_attr" />
+        <xsl:call-template name="meta_revision_attr" />
+      </Meta>
+    </xsl:if>
     <xsl:apply-templates select="node()"/>
   </xsl:copy>
 </xsl:template>
@@ -56,23 +64,23 @@
   </xsl:attribute>
 </xsl:template>
 
-<xsl:template match="swid:Meta/@product">
+<xsl:template name="si_vs_attr" match="swid:SoftwareIdentity/@versionScheme">
+  <xsl:attribute name="versionScheme">rpm</xsl:attribute>
+</xsl:template>
+
+<xsl:template name="meta_product_attr" match="swid:Meta/@product">
   <xsl:attribute name="product">
     <xsl:value-of select="$name" />
   </xsl:attribute>
 </xsl:template>
 
-<xsl:template match="swid:SoftwareIdentity/@versionScheme">
-  <xsl:attribute name="versionScheme">rpm</xsl:attribute>
-</xsl:template>
-
-<xsl:template match="swid:Meta/@colloquialVersion">
+<xsl:template name="meta_cv_attr" match="swid:Meta/@colloquialVersion">
   <xsl:attribute name="colloquialVersion">
     <xsl:value-of select="$version" />
   </xsl:attribute>
 </xsl:template>
 
-<xsl:template match="swid:Meta/@revision">
+<xsl:template name="meta_revision_attr" match="swid:Meta/@revision">
   <xsl:attribute name="revision">
     <xsl:value-of select="$release" />
   </xsl:attribute>
