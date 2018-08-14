@@ -10,6 +10,7 @@
 <xsl:param name="name" />
 <xsl:param name="version" />
 <xsl:param name="release" />
+<xsl:param name="epoch" />
 <xsl:param name="arch" />
 <xsl:param name="summary" />
 
@@ -73,6 +74,7 @@
 
 <xsl:template name="si_version_attr" match="swid:SoftwareIdentity/@version">
   <xsl:attribute name="version">
+    <xsl:if test="$epoch"><xsl:value-of select="$epoch"/>:</xsl:if>
     <xsl:value-of select="$version" />-<xsl:value-of select="$release" />.<xsl:value-of select="$arch" />
   </xsl:attribute>
 </xsl:template>
@@ -101,7 +103,10 @@
 
 <xsl:template name="si_tagid_attr" match="swid:SoftwareIdentity/@tagId">
   <xsl:attribute name="tagId">
-    <xsl:value-of select="$name" />-<xsl:value-of select="$version" />
+    <xsl:value-of select="$name" />
+    <xsl:text>-</xsl:text>
+    <xsl:if test="$epoch"><xsl:value-of select="$epoch"/>:</xsl:if>
+    <xsl:value-of select="$version" />
     <xsl:if test="$release">-<xsl:value-of select="$release" /></xsl:if>
     <xsl:value-of select="'.'" /><xsl:value-of select="$arch" />
   </xsl:attribute>

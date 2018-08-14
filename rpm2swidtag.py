@@ -75,6 +75,8 @@ params = {
 	'arch': etree.XSLT.strparam(arch),
 	'summary': etree.XSLT.strparam(h['summary']),
 }
+if h['epoch'] is not None:
+	params['epoch'] = etree.XSLT.strparam(str(h['epoch']))
 
 t = etree.XSLT(s.getroot())
 o = t(x, **params)
