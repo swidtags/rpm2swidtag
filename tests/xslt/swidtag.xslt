@@ -5,7 +5,7 @@
   exclude-result-prefixes="swid"
   >
 
-<xsl:import href="../../swidtag.xslt"/>
+<xsl:import href="../../rpm2swidtag.xslt"/>
 
 <xsl:template name="si_tagid_attr" match="swid:SoftwareIdentity/@tagId">
   <xsl:attribute name="tagId">

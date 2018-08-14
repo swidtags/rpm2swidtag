@@ -63,23 +63,29 @@ def parse_xml(file, msg):
 DATA_DIR = "/etc/rpm2swidtag"
 data_dir = getenv('RPM2SWIDTAG_TEMPLATE_DIR', DATA_DIR)
 xml_template = getenv('RPM2SWIDTAG_TEMPLATE', data_dir + "/template.swidtag")
-xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/swidtag.xslt")
+xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag.xslt")
 
 x = parse_xml(xml_template, "SWID template file")
+
+def pass_in_hdr(ih):
+	def tag_from_header(c, tag):
+		if tag == 'arch':
+			return arch
+		try:
+			return ih[tag]
+		except ValueError as e:
+			stderr.write("Unknown header tag [%s]: %s\n" % (tag, e))
+		return ''
+	return tag_from_header
+
+ns = etree.FunctionNamespace("http://adelton.fedorapeople.org/rpm2swidtag")
+ns.prefix = 'x'
+ns['package_tag'] = pass_in_hdr(h)
+
 s = parse_xml(xslt_file, "processing XSLT file")
 
-params = {
-	'name': etree.XSLT.strparam(h['name']),
-	'version': etree.XSLT.strparam(h['version']),
-	'release': etree.XSLT.strparam(h['release']),
-	'arch': etree.XSLT.strparam(arch),
-	'summary': etree.XSLT.strparam(h['summary']),
-}
-if h['epoch'] is not None:
-	params['epoch'] = etree.XSLT.strparam(str(h['epoch']))
-
 t = etree.XSLT(s.getroot())
-o = t(x, **params)
+o = t(x)
 
 os = etree.tostring(o, pretty_print=True, xml_declaration=True, encoding=x.docinfo.encoding)
 
