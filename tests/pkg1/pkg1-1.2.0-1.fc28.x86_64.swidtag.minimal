@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" tagId="pkg1-1.2.0-1.fc28.x86_64" name="pkg1" version="1.2.0-1.fc28.x86_64" versionScheme="rpm">
   <Meta product="pkg1" colloquialVersion="1.2.0" revision="1.fc28" summary="Example rpm package"/>
 </SoftwareIdentity>

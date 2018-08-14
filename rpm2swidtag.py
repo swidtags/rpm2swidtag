@@ -81,7 +81,7 @@ if h['epoch'] is not None:
 t = etree.XSLT(s.getroot())
 o = t(x, **params)
 
-os = etree.tostring(o, pretty_print=True)
+os = etree.tostring(o, pretty_print=True, xml_declaration=True, encoding=x.docinfo.encoding)
 
 stdout.write(os.decode())
 
