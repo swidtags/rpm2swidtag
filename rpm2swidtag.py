@@ -53,7 +53,7 @@ def parse_xml(file, msg):
 	try:
 		x = etree.parse(file)
 	except OSError as e:
-		stderr.write("%s: Error reading %s [%s]: %s\n" % (argv[0], msg, file, e.strerror))
+		stderr.write("%s: %s\n" % (argv[0], str(e)))
 		exit(5)
 	except etree.XMLSyntaxError as e:
 		stderr.write("%s: Error parsing %s [%s]: %s\n" % (argv[0], msg, file, str(e)))
@@ -74,7 +74,7 @@ def pass_in_hdr(ih):
 		try:
 			return ih[tag]
 		except ValueError as e:
-			stderr.write("Unknown header tag [%s]: %s\n" % (tag, e))
+			raise etree.XSLTApplyError("Unknown header tag [%s] requested by XSLT stylesheet: %s\n" % (tag, str(e))) from None
 		return ''
 	return tag_from_header
 
@@ -85,9 +85,12 @@ ns['package_tag'] = pass_in_hdr(h)
 s = parse_xml(xslt_file, "processing XSLT file")
 
 t = etree.XSLT(s.getroot())
-o = t(x)
 
-os = etree.tostring(o, pretty_print=True, xml_declaration=True, encoding=x.docinfo.encoding)
-
-stdout.write(os.decode())
+try:
+	o = t(x)
+	os = etree.tostring(o, pretty_print=True, xml_declaration=True, encoding=x.docinfo.encoding)
+	stdout.write(os.decode())
+except etree.XSLTApplyError as e:
+	stderr.write("%s: Error generating SWID tag: %s\n" % (argv[0], str(e)))
+	exit(9)
 
