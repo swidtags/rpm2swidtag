@@ -2,6 +2,8 @@
 from lxml import etree
 from sys import stderr
 
+XMLNS = 'http://adelton.fedorapeople.org/rpm2swidtag'
+
 class Error(Exception):
 	def __init__(self, strerror):
 		self.strerror = strerror
@@ -38,7 +40,6 @@ class Tag:
 	def tostring(self):
 		return etree.tostring(self.xml, pretty_print=True, xml_declaration=True, encoding=self.encoding)
 
-XMLNS = 'http://adelton.fedorapeople.org/rpm2swidtag'
 class Template:
 	def __init__(self, xml_template, xslt):
 		self.xml_template = _parse_xml(xml_template, "SWID template file")
@@ -52,5 +53,7 @@ class Template:
 
 		transform = etree.XSLT(self.xslt_stylesheet.getroot(),
 			extensions = { (XMLNS, 'generate-payload') : generate_payload })
-		return Tag(transform(self.xml_template), self.xml_template.docinfo.encoding)
+		tag = Tag(transform(self.xml_template), self.xml_template.docinfo.encoding)
+		generate_payload.cleanup_namespaces(tag.xml.getroot())
+		return tag
 

@@ -65,3 +65,5 @@ ERR=$?
 set -e
 test "$ERR" -eq 6
 test "$OUT" == 'bin/rpm2swidtag: Error generating SWID tag for file [tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm]: Unknown header tag [broken] requested by XSLT stylesheet: unknown header tag'
+
+echo OK.
