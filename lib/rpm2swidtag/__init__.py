@@ -7,6 +7,7 @@ class Error(Exception):
 		self.strerror = strerror
 
 from rpm2swidtag import rpm
+from rpm2swidtag import payload
 
 def _parse_xml(file, msg):
 	x = None
@@ -37,14 +38,19 @@ class Tag:
 	def tostring(self):
 		return etree.tostring(self.xml, pretty_print=True, xml_declaration=True, encoding=self.encoding)
 
+XMLNS = 'http://adelton.fedorapeople.org/rpm2swidtag'
 class Template:
 	def __init__(self, xml_template, xslt):
 		self.xml_template = _parse_xml(xml_template, "SWID template file")
 		self.xslt_stylesheet = _parse_xml(xslt, "processing XSLT file")
 
 	def generate_tag_for_header(self, rpm_header):
-		ns = etree.FunctionNamespace("http://adelton.fedorapeople.org/rpm2swidtag")
+		ns = etree.FunctionNamespace(XMLNS)
 		ns['package_tag'] = _pass_in_hdr(rpm_header)
-		transform = etree.XSLT(self.xslt_stylesheet.getroot())
+
+		generate_payload = payload.SWIDPayloadExtension(rpm_header)
+
+		transform = etree.XSLT(self.xslt_stylesheet.getroot(),
+			extensions = { (XMLNS, 'generate-payload') : generate_payload })
 		return Tag(transform(self.xml_template), self.xml_template.docinfo.encoding)
 
