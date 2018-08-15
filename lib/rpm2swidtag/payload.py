@@ -16,6 +16,11 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 		if indent and indent_parent and indent.startswith(indent_parent) and indent != indent_parent:
 			indent_level = indent[length(indent_parent):]
 
+		NSMAP = {
+			None: 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd',
+			'sha256': 'http://www.w3.org/2001/04/xmlenc#sha256',
+		}
+
 		output = []
 		for f in fi(self.rpm_header):
 			name = f[0]
@@ -26,12 +31,14 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 				name = m.group(2)
 
 			if S_ISDIR(f[2]):
-				e = etree.Element("Directory")
+				e = etree.Element("Directory", nsmap=NSMAP)
 			else:
-				e = etree.Element("File", size=str(f[1]))
+				e = etree.Element("File", size=str(f[1]), nsmap=NSMAP)
 			e.set("name", name)
 			if location:
 				e.set("location", location)
+			if f[12]:
+				e.set("{%s}hash" % NSMAP['sha256'], f[12])
 			output.append(e)
 		if len(output) > 0 and indent is not None:
 			output_parent.text = "\n" + indent + indent_level
