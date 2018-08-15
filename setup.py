@@ -11,7 +11,9 @@ setup(
 	description = 'Exploring the rpm header information and producing SWID tag out of it',
 	author = 'Jan Pazdziora',
 	license = 'Apache License 2.0',
-	py_modules = ['rpm2swidtag'],
+	package_dir = {'': 'lib'},
+	packages = ['rpm2swidtag'],
+	scripts = ['bin/rpm2swidtag'],
 	data_files = [('/etc/rpm2swidtag', ['template.swidtag', 'swidtag.xslt'])],
 	install_requires = ['rpm', 'lxml'],
 )
