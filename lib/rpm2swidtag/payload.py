@@ -37,7 +37,7 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 			e.set("name", name)
 			if location:
 				e.set("location", location)
-			if f[12]:
+			if f[12] and f[12] != "0" * 64:
 				e.set("{%s}hash" % NSMAP['sha256'], f[12])
 			output.append(e)
 		if len(output) > 0 and indent is not None:

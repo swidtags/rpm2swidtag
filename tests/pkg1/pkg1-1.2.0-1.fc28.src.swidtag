@@ -3,7 +3,7 @@
   <Entity name="Jan Pazdziora" regid="adelton.fedorapeople.org" role="tagCreator"/>
   <Meta product="pkg1" colloquialVersion="1.2.0" revision="1.fc28" summary="Example rpm package"/>
   <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
-    <File size="840" name="pkg1.spec"/>
-    <File size="5" name="testfile"/>
+    <File xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" size="840" name="pkg1.spec" sha256:hash="7e14662e80821a140dd8f2217f031c35c551cf5277b7025e7c8fbf603f497b5e"/>
+    <File xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" size="5" name="testfile" sha256:hash="f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2"/>
   </Payload>
 </SoftwareIdentity>
