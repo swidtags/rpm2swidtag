@@ -20,6 +20,7 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 		NSMAP = {
 			None: 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd',
 			'sha256': 'http://www.w3.org/2001/04/xmlenc#sha256',
+			'md5': 'http://www.w3.org/2001/04/xmldsig-more#md5',
 			'payload-generated-42': XMLNS,
 		}
 
@@ -54,8 +55,11 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 			if location:
 				location = re.sub(r'^(.+)/$', '\g<1>', location)
 				e.set("location", location)
-			if f[12] and f[12] != "0" * 64:
-				e.set("{%s}hash" % NSMAP['sha256'], f[12])
+			if f[12]:
+				if len(f[12]) == 64 and f[12] != "0" * 64:
+					e.set("{%s}hash" % NSMAP['sha256'], f[12])
+				if len(f[12]) == 32:
+					e.set("{%s}hash" % NSMAP['md5'], f[12])
 			if append_to is None:
 				append_to = output
 			append_to.append(e)
