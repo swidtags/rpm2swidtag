@@ -16,19 +16,20 @@ This is an example rpm package to test generating SWID tags.
 %prep
 %build
 %install
-mkdir -p %{buildroot}/usr/share
-install -m 644 %{SOURCE0} %{buildroot}/usr/share/testfile
-touch %{buildroot}/usr/share/emptyfile
-mkdir -p %{buildroot}/usr/share/testdir
-ln -s testfile %{buildroot}/usr/share/testsymlink
-ln -s testdir %{buildroot}/usr/share/testsymlink-to-dir
-ln -s missing %{buildroot}/usr/share/testsymlink-to-missing
+mkdir -p %{buildroot}/usr/share/testdir/testdir2
+install -m 644 %{SOURCE0} %{buildroot}/usr/share/testdir/testfile
+touch %{buildroot}/usr/share/testdir/emptyfile
+mkdir -p %{buildroot}/usr/share/testdir/testdir
+ln -s testfile %{buildroot}/usr/share/testdir/testsymlink
+ln -s testdir %{buildroot}/usr/share/testdir/testsymlink-to-dir
+ln -s missing %{buildroot}/usr/share/testdir/testsymlink-to-missing
 mkdir -p %{buildroot}/etc
 echo "[config]" > %{buildroot}/etc/testconfig.conf
 
 %files
-/usr/share/testfile
-/usr/share/emptyfile
-/usr/share/testdir
+/usr/share/testdir/testfile
+/usr/share/testdir/emptyfile
+/usr/share/testdir/testdir
 %config /etc/testconfig.conf
-/usr/share/testsymlink*
+/usr/share/testdir/testsymlink*
+%dir /usr/share/testdir

@@ -24,7 +24,10 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 		}
 
 		output = []
+		last_dir = None
 		for f in fi(self.rpm_header):
+			append_to = None
+
 			name = f[0]
 			location = None
 			m = re.search(r'^(.*/)(.+)$', name)
@@ -32,21 +35,33 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 				location = m.group(1)
 				name = m.group(2)
 
+				while location is not None and last_dir is not None:
+					last_dir_path = last_dir.get('fullname') + '/'
+					if location.startswith(last_dir_path):
+						location = location[len(last_dir_path):]
+						append_to = last_dir
+						break
+					last_dir = last_dir.getparent()
+
 			if S_ISDIR(f[2]):
 				e = etree.Element("Directory", nsmap=NSMAP)
+				last_dir = e
 			else:
 				e = etree.Element("File", size=str(f[1]), nsmap=NSMAP)
+
+			e.set("fullname", f[0])
 			e.set("name", name)
 			if location:
+				location = re.sub(r'^(.+)/$', '\g<1>', location)
 				e.set("location", location)
 			if f[12] and f[12] != "0" * 64:
 				e.set("{%s}hash" % NSMAP['sha256'], f[12])
-			output.append(e)
+			if append_to is None:
+				append_to = output
+			append_to.append(e)
 		if len(output) > 0 and indent is not None:
 			output_parent.text = "\n" + indent + indent_level
-			for e in output:
-				e.tail = "\n" + indent + indent_level
-			output[-1].tail = "\n" + indent
+			self._set_indent(output, None, indent, indent_level)
 		for e in output:
 			output_parent.append(e)
 
@@ -72,4 +87,16 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 		if m is not None:
 			return m.group(1)
 		return None
+
+	@staticmethod
+	def _set_indent(l, parent, indent, indent_level, level = 0):
+		if len(l) > 0:
+			if parent is not None:
+				parent.text = "\n" + indent + indent_level * (level + 1)
+			for i in l:
+				i.tail = "\n" + indent + indent_level * (level + 1)
+				if len(i) > 0:
+					__class__._set_indent(i, i, indent, indent_level, level + 1)
+				del i.attrib["fullname"]
+			l[-1].tail = "\n" + indent + indent_level * level
 
