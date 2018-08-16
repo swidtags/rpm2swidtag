@@ -15,4 +15,5 @@ positional arguments:
 optional arguments:
   -h, --help     show this help message and exit
   -p, --package  process rpm package file
+  --regid REGID  tag creator's regid
 ```

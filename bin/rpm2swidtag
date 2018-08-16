@@ -7,6 +7,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='SWID tag parameters.')
 parser.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
+parser.add_argument('--regid', type=str, help="tag creator's regid")
 parser.add_argument('package', type=str, help='package or file name')
 opts = parser.parse_args()
 
@@ -47,7 +48,10 @@ else:
 		exit(3)
 
 try:
-	tag = template.generate_tag_for_header(h)
+	params = {}
+	if opts.regid:
+		params['tagcreator-regid'] = opts.regid
+	tag = template.generate_tag_for_header(h, params=params)
 	stdout.write(tag.tostring().decode())
 except Error as e:
 	stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))

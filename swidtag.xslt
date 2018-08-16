@@ -4,6 +4,7 @@
   xmlns:swid="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
   xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:str="http://exslt.org/strings"
   exclude-result-prefixes="swid"
   >
 
@@ -13,6 +14,9 @@
 <xsl:param name="epoch" />
 <xsl:param name="arch" />
 <xsl:param name="summary" />
+
+<xsl:param name="tagcreator-regid" select="/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid"/>
+<xsl:param name="tagcreator-name" select="/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@name"/>
 
 <xsl:template match="/">
   <xsl:if test="not($name)">
@@ -56,6 +60,9 @@
         <xsl:call-template name="meta_revision_attr" />
         <xsl:call-template name="meta_summary_attr" />
       </Meta>
+    </xsl:if>
+    <xsl:if test="$tagcreator-regid and not(swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')])">
+      <Entity name="{$tagcreator-name}" regid="{$tagcreator-regid}" role="tagCreator"/>
     </xsl:if>
     <xsl:apply-templates select="node()"/>
   </xsl:copy>
@@ -103,6 +110,10 @@
 
 <xsl:template name="si_tagid_attr" match="swid:SoftwareIdentity/@tagId">
   <xsl:attribute name="tagId">
+    <xsl:for-each select="str:tokenize($tagcreator-regid, '\.')">
+      <xsl:sort select="position()" data-type="number" order="descending"/>
+      <xsl:copy-of select="."/><xsl:text>.</xsl:text>
+    </xsl:for-each>
     <xsl:value-of select="$name" />
     <xsl:text>-</xsl:text>
     <xsl:if test="$epoch"><xsl:value-of select="$epoch"/>:</xsl:if>
@@ -115,6 +126,12 @@
 <xsl:template name="meta_summary_attr" match="swid:Meta/@summary">
   <xsl:attribute name="summary">
     <xsl:value-of select="$summary" />
+  </xsl:attribute>
+</xsl:template>
+
+<xsl:template match="swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid">
+  <xsl:attribute name="regid">
+    <xsl:value-of select="$tagcreator-regid"/>
   </xsl:attribute>
 </xsl:template>
 

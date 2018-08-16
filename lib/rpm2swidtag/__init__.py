@@ -1,6 +1,7 @@
 
 from lxml import etree
 from sys import stderr
+import sys
 
 XMLNS = 'http://adelton.fedorapeople.org/rpm2swidtag'
 
@@ -45,15 +46,23 @@ class Template:
 		self.xml_template = _parse_xml(xml_template, "SWID template file")
 		self.xslt_stylesheet = _parse_xml(xslt, "processing XSLT file")
 
-	def generate_tag_for_header(self, rpm_header):
+	def generate_tag_for_header(self, rpm_header, params={}):
 		ns = etree.FunctionNamespace(XMLNS)
 		ns['package_tag'] = _pass_in_hdr(rpm_header)
 
 		generate_payload = payload.SWIDPayloadExtension(rpm_header)
 
-		transform = etree.XSLT(self.xslt_stylesheet.getroot(),
-			extensions = { (XMLNS, 'generate-payload') : generate_payload })
-		tag = Tag(transform(self.xml_template), self.xml_template.docinfo.encoding)
-		generate_payload.cleanup_namespaces(tag.xml.getroot())
-		return tag
+		try:
+			transform = etree.XSLT(self.xslt_stylesheet.getroot(),
+				extensions = { (XMLNS, 'generate-payload') : generate_payload })
+
+			str_params = {}
+			for i in params:
+				str_params[i] = etree.XSLT.strparam(params[i])
+			tag = Tag(transform(self.xml_template, **str_params), self.xml_template.docinfo.encoding)
+			generate_payload.cleanup_namespaces(tag.xml.getroot())
+			return tag
+		# except etree.XSLTApplyError as e:
+		except TypeError as e:
+			raise Error("Error processing SWID tag: %s" % str(e))
 
