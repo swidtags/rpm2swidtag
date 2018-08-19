@@ -14,6 +14,6 @@ setup(
 	package_dir = {'': 'lib'},
 	packages = ['rpm2swidtag'],
 	scripts = ['bin/rpm2swidtag'],
-	data_files = [('/etc/rpm2swidtag', ['template.swidtag', 'swidtag.xslt'])],
+	data_files = [('/etc/rpm2swidtag', ['template.swidtag', 'swidtag.xslt', 'rpm2swidtag.xslt'])],
 	install_requires = ['rpm', 'lxml'],
 )
