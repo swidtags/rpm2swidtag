@@ -1,0 +1,26 @@
+language: generic
+
+sudo: required
+
+services:
+- docker
+
+install: true
+
+stages:
+- build-and-test
+
+matrix:
+  include:
+    - stage: build-and-test
+      env: fedora=28
+    - stage: build-and-test
+      env: fedora=27
+
+before_script:
+- if test -n "$fedora" ; then sed -i "s#^FROM.*#FROM registry.fedoraproject.org/fedora:$fedora#" tests/Dockerfile ; fi
+
+script:
+- docker build -t rpm2swidtag -f tests/Dockerfile .
+- docker run --name rpm2swidtag --rm rpm2swidtag make test
+- docker run --name rpm2swidtag --rm rpm2swidtag /usr/bin/rpm2swidtag bash
