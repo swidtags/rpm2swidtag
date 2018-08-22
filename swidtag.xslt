@@ -8,6 +8,8 @@
   exclude-result-prefixes="swid"
   >
 
+<xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="utf-8"/>
+
 <xsl:param name="name" />
 <xsl:param name="version" />
 <xsl:param name="release" />

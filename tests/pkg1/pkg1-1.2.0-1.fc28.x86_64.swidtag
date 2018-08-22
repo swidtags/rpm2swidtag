@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="pkg1" tagId="org.fedorapeople.adelton.pkg1-1.2.0-1.fc28.x86_64" version="1.2.0-1.fc28.x86_64" versionScheme="rpm">
   <Entity name="Jan Pazdziora" regid="adelton.fedorapeople.org" role="tagCreator"/>
   <Meta product="pkg1" colloquialVersion="1.2.0" revision="1.fc28" summary="Example rpm package"/>

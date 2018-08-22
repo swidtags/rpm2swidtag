@@ -35,12 +35,11 @@ def _pass_in_hdr(ih):
 	return tag_from_header
 
 class Tag:
-	def __init__(self, xml, encoding):
+	def __init__(self, xml):
 		self.xml = xml
-		self.encoding = encoding
 
-	def tostring(self):
-		return etree.tostring(self.xml, pretty_print=True, xml_declaration=True, encoding=self.encoding)
+	def write_output(self, file):
+		self.xml.write_output(file)
 
 	def get_tagid(self):
 		r = self.xml.xpath('/swid:SoftwareIdentity/@tagId', namespaces = { 'swid': SWID_XMLNS })
@@ -69,7 +68,7 @@ class Template:
 			str_params = {}
 			for i in params:
 				str_params[i] = etree.XSLT.strparam(params[i])
-			tag = Tag(transform(self.xml_template, **str_params), self.xml_template.docinfo.encoding)
+			tag = Tag(transform(self.xml_template, **str_params))
 			generate_payload.cleanup_namespaces(tag.xml.getroot())
 			return tag
 		# except etree.XSLTApplyError as e:

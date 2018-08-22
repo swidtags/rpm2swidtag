@@ -2,6 +2,7 @@
 
 from sys import argv, exit, stderr, stdout
 from os import getenv, path, makedirs
+from io import BytesIO
 from rpm2swidtag import Template, Error, rpm
 import argparse
 
@@ -60,11 +61,11 @@ for p in opts.package:
 				dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
 				if not path.exists(dir):
 					makedirs(dir)
-				output_file = open(dir + '/' + tag.get_tagid() + '.swidtag', 'w')
-				output_file.write(tag.tostring().decode())
-				output_file.close()
+				tag.write_output(dir + '/' + tag.get_tagid() + '.swidtag')
 			else:
-				stdout.write(tag.tostring().decode())
+				f = BytesIO(None)
+				tag.write_output(f)
+				stdout.write(f.getvalue().decode())
 		except Error as e:
 			stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
 			exit(6)
