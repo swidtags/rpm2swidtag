@@ -26,7 +26,7 @@ def read_from_db(package, rpmdb_path=None):
 	if rpmdb_path is not None:
 		rpm.delMacro('_dbpath')
 	try:
-		l = ts.dbMatch('name', package)
+		l = ts.dbMatch(rpm.RPMDBI_LABEL, package)
 		return l
 	except rpm.error as e:
 		raise Error(str(e))

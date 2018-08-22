@@ -42,6 +42,9 @@ rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tmp/x86_64/pkg1-1.3.0-1.fc28
 rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
 rpm --dbpath $(pwd)/tmp/rpmdb -qa
 
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag pkg1-1.3.0 > tmp/pkg-generated.swidtag
+diff tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tmp/pkg-generated.swidtag
+
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag pkg1 > tmp/pkg-generated.swidtag
 cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag > tmp/pkg1-1.2.0-and-1.3.0.swidtag
 diff tmp/pkg1-1.2.0-and-1.3.0.swidtag tmp/pkg-generated.swidtag
