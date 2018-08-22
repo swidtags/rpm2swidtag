@@ -111,6 +111,13 @@ test "$ERR" -eq 7
 test "$OUT" == 'bin/rpm2swidtag: No package [pkg*] found in database'
 
 set +e
+OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag -a 'x*' 2>&1 )
+ERR=$?
+set -e
+test "$ERR" -eq 7
+test "$OUT" == 'bin/rpm2swidtag: No package [x*] found in database'
+
+set +e
 OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag pkg1 x pkg2 2>&1 > /tmp/pkg-generated.swidtag )
 ERR=$?
 set -e

@@ -48,14 +48,13 @@ for p in opts.package:
 		try:
 			# We only assume the use of _RPM2SWIDTAG_RPMDBPATH for testing, really
 			l = rpm.read_from_db(p, rpmdb_path=getenv('_RPM2SWIDTAG_RPMDBPATH'), glob=opts.all)
-			if len(l) < 1:
-				stderr.write("%s: No package [%s] found in database\n" % (argv[0], p))
-				exit_status = 7
 		except Error as e:
 			stderr.write("%s: %s\n" % (argv[0], e.strerror))
 			exit(3)
 
+	found = False
 	for h in l:
+		found = True
 		try:
 			params = {}
 			if opts.regid:
@@ -73,5 +72,8 @@ for p in opts.package:
 		except Error as e:
 			stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
 			exit(6)
+	if not found:
+		stderr.write("%s: No package [%s] found in database\n" % (argv[0], p))
+		exit_status = 7
 
 exit(exit_status)
