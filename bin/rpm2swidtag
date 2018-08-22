@@ -6,7 +6,9 @@ from rpm2swidtag import Template, Error, rpm
 import argparse
 
 parser = argparse.ArgumentParser(description='SWID tag parameters.')
-parser.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
+group = parser.add_mutually_exclusive_group()
+group.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
+group.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
 parser.add_argument('--regid', type=str, help="tag creator's regid")
 parser.add_argument('package', type=str, nargs='+', help='package or file name')
 opts = parser.parse_args()
@@ -36,7 +38,7 @@ for p in opts.package:
 		msg = "for package [%s]" % p
 		try:
 			# We only assume the use of _RPM2SWIDTAG_RPMDBPATH for testing, really
-			l = rpm.read_from_db(p, rpmdb_path=getenv('_RPM2SWIDTAG_RPMDBPATH'))
+			l = rpm.read_from_db(p, rpmdb_path=getenv('_RPM2SWIDTAG_RPMDBPATH'), glob=opts.all)
 			if len(l) < 1:
 				stderr.write("%s: No package [%s] found in database\n" % (argv[0], p))
 				exit_status = 7

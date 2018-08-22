@@ -18,7 +18,7 @@ def read_from_file(file):
 		if fdno:
 			close(fdno)
 
-def read_from_db(package, rpmdb_path=None):
+def read_from_db(package, rpmdb_path=None, glob=False):
 	if rpmdb_path is not None:
 		rpm.addMacro('_dbpath', rpmdb_path)
 	ts = rpm.TransactionSet()
@@ -26,7 +26,11 @@ def read_from_db(package, rpmdb_path=None):
 	if rpmdb_path is not None:
 		rpm.delMacro('_dbpath')
 	try:
-		l = ts.dbMatch(rpm.RPMDBI_LABEL, package)
+		if glob:
+			l = ts.dbMatch(rpm.RPMDBI_LABEL)
+			l.pattern('name', rpm.RPMMIRE_GLOB, package)
+		else:
+			l = ts.dbMatch(rpm.RPMDBI_LABEL, package)
 		return l
 	except rpm.error as e:
 		raise Error(str(e))

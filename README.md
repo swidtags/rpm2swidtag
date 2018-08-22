@@ -5,7 +5,7 @@ Exploring the rpm header information and producing SWID tag out of it
 ## Usage
 
 ```
-usage: rpm2swidtag [-h] [-p] [--regid REGID] package [package ...]
+usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] package [package ...]
 
 SWID tag parameters.
 
@@ -14,6 +14,7 @@ positional arguments:
 
 optional arguments:
   -h, --help     show this help message and exit
+  -a, --all      query all packages with glob pattern
   -p, --package  process rpm package file
   --regid REGID  tag creator's regid
 ```
