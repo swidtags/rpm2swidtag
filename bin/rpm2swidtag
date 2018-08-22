@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from sys import argv, exit, stderr, stdout
-from os import getenv
+from os import getenv, path, makedirs
 from rpm2swidtag import Template, Error, rpm
 import argparse
 
@@ -10,6 +10,7 @@ group = parser.add_mutually_exclusive_group()
 group.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
 group.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
 parser.add_argument('--regid', type=str, help="tag creator's regid")
+parser.add_argument('--output-dir', type=str, help="write SWID tags to files under regid subdirectory of this directory")
 parser.add_argument('package', type=str, nargs=argparse.REMAINDER, help='package(s), glob(s) or file name(s)', metavar='...')
 opts = parser.parse_args()
 
@@ -55,7 +56,15 @@ for p in opts.package:
 			if opts.regid:
 				params['tagcreator-regid'] = opts.regid
 			tag = template.generate_tag_for_header(h, params=params)
-			stdout.write(tag.tostring().decode())
+			if opts.output_dir:
+				dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
+				if not path.exists(dir):
+					makedirs(dir)
+				output_file = open(dir + '/' + tag.get_tagid() + '.swidtag', 'w')
+				output_file.write(tag.tostring().decode())
+				output_file.close()
+			else:
+				stdout.write(tag.tostring().decode())
 		except Error as e:
 			stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
 			exit(6)

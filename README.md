@@ -5,18 +5,22 @@ Exploring the rpm header information and producing SWID tag out of it
 ## Usage
 
 ```
-usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] ...
+usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] [--output-dir OUTPUT_DIR]
+                   ...
 
 SWID tag parameters.
 
 positional arguments:
-  ...            package(s), glob(s) or file name(s)
+  ...                   package(s), glob(s) or file name(s)
 
 optional arguments:
-  -h, --help     show this help message and exit
-  -a, --all      query all packages with glob pattern
-  -p, --package  process rpm package file
-  --regid REGID  tag creator's regid
+  -h, --help            show this help message and exit
+  -a, --all             query all packages with glob pattern
+  -p, --package         process rpm package file
+  --regid REGID         tag creator's regid
+  --output-dir OUTPUT_DIR
+                        write SWID tags to files under regid subdirectory of
+                        this directory
 ```
 
 ## Customizing the output

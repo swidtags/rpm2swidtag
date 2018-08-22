@@ -4,7 +4,7 @@ from rpm import fi, RPMFILE_CONFIG, RPMFILE_DOC, RPMFILE_MISSINGOK, RPMFILE_GHOS
 from lxml import etree
 import re
 from stat import S_ISDIR
-from rpm2swidtag import XMLNS
+from rpm2swidtag import XMLNS, SWID_XMLNS
 
 class SWIDPayloadExtension(etree.XSLTExtension):
 	def __init__(self, rpm_header):
@@ -19,7 +19,7 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 			indent_level = indent[length(indent_parent):]
 
 		NSMAP = {
-			None: 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd',
+			None: SWID_XMLNS,
 			'sha256': 'http://www.w3.org/2001/04/xmlenc#sha256',
 			'md5': 'http://www.w3.org/2001/04/xmldsig-more#md5',
 			'n8060': 'http://csrc.nist.gov/ns/swid/2015-extensions/1.0',

@@ -4,6 +4,7 @@ from sys import stderr
 import sys
 
 XMLNS = 'http://adelton.fedorapeople.org/rpm2swidtag'
+SWID_XMLNS = 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd'
 
 class Error(Exception):
 	def __init__(self, strerror):
@@ -40,6 +41,15 @@ class Tag:
 
 	def tostring(self):
 		return etree.tostring(self.xml, pretty_print=True, xml_declaration=True, encoding=self.encoding)
+
+	def get_tagid(self):
+		r = self.xml.xpath('/swid:SoftwareIdentity/@tagId', namespaces = { 'swid': SWID_XMLNS })
+		return r[0]
+
+	def get_tagcreator_regid(self):
+		r = self.xml.xpath("/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid",
+			namespaces = { 'swid': SWID_XMLNS })
+		return r[0]
 
 class Template:
 	def __init__(self, xml_template, xslt):

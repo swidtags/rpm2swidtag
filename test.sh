@@ -34,7 +34,7 @@ RPM2SWIDTAG_XSLT=tests/xslt/swidtag.xslt bin/rpm2swidtag -p tmp/x86_64/pkg1-1.2.
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.custom-tagid tmp/pkg-custom-tagid.swidtag
 
 bin/rpm2swidtag -p tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm > tmp/pkg-generated-epoch.swidtag
-diff tests/pkg2/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.swidtag tmp/pkg-generated-epoch.swidtag
+diff tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag tmp/pkg-generated-epoch.swidtag
 
 rm -rf tmp/rpmdb
 rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm
@@ -50,11 +50,19 @@ cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86
 diff tmp/pkg1-1.2.0-and-1.3.0.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag -a 'pkg*' > tmp/pkg-generated.swidtag
-cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg2/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
+cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
 diff tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag -a > tmp/pkg-generated.swidtag
 diff tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
+
+rm -rf tmp/output-dir tmp/compare-dir
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --regid=example.test --output-dir=tmp/output-dir -a
+mkdir -p tmp/compare-dir/example.test
+for i in pkg1-1.2.0-1.fc28.x86_64 pkg1-1.3.0-1.fc28.x86_64 pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64 ; do
+	sed 's/org.fedorapeople.adelton/test.example/;s/adelton.fedorapeople.org/example.test/' tests/${i%%-*}/$i.swidtag > tmp/compare-dir/example.test/test.example.$i.swidtag
+done
+diff -ru tmp/output-dir tmp/compare-dir
 
 # Testing errors
 set +e
@@ -104,7 +112,7 @@ OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag pkg1 x pkg2 2>&1 
 ERR=$?
 set -e
 test "$ERR" -eq 7
-cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg2/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
+cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
 test "$OUT" == 'bin/rpm2swidtag: No package [x] found in database'
 diff tmp/pkg1-and-pkg2.swidtag /tmp/pkg-generated.swidtag
 
