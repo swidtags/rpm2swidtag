@@ -10,7 +10,7 @@ group = parser.add_mutually_exclusive_group()
 group.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
 group.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
 parser.add_argument('--regid', type=str, help="tag creator's regid")
-parser.add_argument('package', type=str, nargs='+', help='package or file name')
+parser.add_argument('package', type=str, nargs=argparse.REMAINDER, help='package(s), glob(s) or file name(s)', metavar='...')
 opts = parser.parse_args()
 
 DATA_DIR = "/etc/rpm2swidtag"
@@ -23,6 +23,9 @@ try:
 except Error as e:
 	stderr.write("%s: %s\n" % (argv[0], e.strerror))
 	exit(5)
+
+if opts.all and not opts.package:
+	opts.package = [ '*' ]
 
 exit_status = 0
 for p in opts.package:

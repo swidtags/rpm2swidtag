@@ -5,12 +5,12 @@ Exploring the rpm header information and producing SWID tag out of it
 ## Usage
 
 ```
-usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] package [package ...]
+usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] ...
 
 SWID tag parameters.
 
 positional arguments:
-  package        package or file name
+  ...            package(s), glob(s) or file name(s)
 
 optional arguments:
   -h, --help     show this help message and exit

@@ -28,7 +28,8 @@ def read_from_db(package, rpmdb_path=None, glob=False):
 	try:
 		if glob:
 			l = ts.dbMatch(rpm.RPMDBI_LABEL)
-			l.pattern('name', rpm.RPMMIRE_GLOB, package)
+			if package != '*':
+				l.pattern('name', rpm.RPMMIRE_GLOB, package)
 		else:
 			l = ts.dbMatch(rpm.RPMDBI_LABEL, package)
 		return l

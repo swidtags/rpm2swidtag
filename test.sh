@@ -53,6 +53,9 @@ _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag -a 'pkg*' > tmp/pkg-gene
 cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg2/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
 diff tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
 
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag -a > tmp/pkg-generated.swidtag
+diff tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
+
 # Testing errors
 set +e
 OUT=$( bin/rpm2swidtag -p nonexistent 2>&1 )
