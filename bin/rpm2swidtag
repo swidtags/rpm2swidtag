@@ -22,11 +22,11 @@ except Error as e:
 	stderr.write("%s: %s\n" % (argv[0], e.strerror))
 	exit(5)
 
-h = None
+l = []
 msg = "for file [%s]" % opts.package
 if opts.rpmfile:
 	try:
-		h = rpm.read_from_file(opts.package)
+		l = [ rpm.read_from_file(opts.package) ]
 	except Error as e:
 		stderr.write("%s: %s\n" % (argv[0], e.strerror))
 		exit(3)
@@ -38,22 +38,18 @@ else:
 		if len(l) < 1:
 			stderr.write("%s: No package [%s] found in database\n" % (argv[0], opts.package))
 			exit(7)
-		if len(l) > 1:
-			stderr.write("%s: Multiple packages matching [%s] found in database\n" % (argv[0], opts.package))
-			exit(8)
-		for h in l:
-			break
 	except Error as e:
 		stderr.write("%s: %s\n" % (argv[0], e.strerror))
 		exit(3)
 
-try:
-	params = {}
-	if opts.regid:
-		params['tagcreator-regid'] = opts.regid
-	tag = template.generate_tag_for_header(h, params=params)
-	stdout.write(tag.tostring().decode())
-except Error as e:
-	stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
-	exit(6)
+for h in l:
+	try:
+		params = {}
+		if opts.regid:
+			params['tagcreator-regid'] = opts.regid
+		tag = template.generate_tag_for_header(h, params=params)
+		stdout.write(tag.tostring().decode())
+	except Error as e:
+		stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
+		exit(6)
 
