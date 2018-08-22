@@ -28,9 +28,6 @@
   <xsl:if test="not($release)">
     <xsl:message terminate="yes">Parameter release was not provided.</xsl:message>
   </xsl:if>
-  <xsl:if test="not($arch)">
-    <xsl:message terminate="yes">Parameter arch was not provided.</xsl:message>
-  </xsl:if>
   <xsl:apply-templates select="node()"/>
 </xsl:template>
 
@@ -82,7 +79,8 @@
 <xsl:template name="si_version_attr" match="swid:SoftwareIdentity/@version">
   <xsl:attribute name="version">
     <xsl:if test="$epoch"><xsl:value-of select="$epoch"/>:</xsl:if>
-    <xsl:value-of select="$version" />-<xsl:value-of select="$release" />.<xsl:value-of select="$arch" />
+    <xsl:value-of select="$version" />-<xsl:value-of select="$release" />
+    <xsl:if test="$arch">.<xsl:value-of select="$arch"/></xsl:if>
   </xsl:attribute>
 </xsl:template>
 
@@ -119,7 +117,7 @@
     <xsl:if test="$epoch"><xsl:value-of select="$epoch"/>:</xsl:if>
     <xsl:value-of select="$version" />
     <xsl:if test="$release">-<xsl:value-of select="$release" /></xsl:if>
-    <xsl:value-of select="'.'" /><xsl:value-of select="$arch" />
+    <xsl:if test="$arch">.<xsl:value-of select="$arch"/></xsl:if>
   </xsl:attribute>
 </xsl:template>
 
