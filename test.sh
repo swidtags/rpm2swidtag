@@ -64,6 +64,9 @@ for i in pkg1-1.2.0-1.fc28.x86_64 pkg1-1.3.0-1.fc28.x86_64 pkg2-13:0.0.1-1.git0f
 done
 diff -ru tmp/output-dir tmp/compare-dir
 
+OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --print-tagid pkg1 )
+test "$OUT" == "$( echo -e 'org.fedorapeople.adelton.pkg1-1.2.0-1.fc28.x86_64\norg.fedorapeople.adelton.pkg1-1.3.0-1.fc28.x86_64' )"
+
 # Testing errors
 set +e
 OUT=$( bin/rpm2swidtag -p nonexistent 2>&1 )

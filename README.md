@@ -6,6 +6,7 @@ Exploring the rpm header information and producing SWID tag out of it
 
 ```
 usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] [--output-dir OUTPUT_DIR]
+                   [--print-tagid]
                    ...
 
 SWID tag parameters.
@@ -21,6 +22,7 @@ optional arguments:
   --output-dir OUTPUT_DIR
                         write SWID tags to files under regid subdirectory of
                         this directory
+  --print-tagid         compute and print tagId(s) to standard output
 ```
 
 ## Customizing the output
@@ -42,3 +44,9 @@ When customizing the XSLT stylesheet,
 `{http://adelton.fedorapeople.org/rpm2swidtag}package_tag(tag)`
 function can be used to retrieve values from the rpm header for
 inclusion in the output SWID tag.
+
+## Printing just `@tagId` values
+
+When the `--print-tagid` option is used, values of `tagId` are
+computed and printed to standard output, instead of the full
+SWID tag, using stylesheet `/etc/rpm2swidtag/rpm2swidtag-tagid.xslt`.

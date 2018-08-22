@@ -12,6 +12,7 @@ group.add_argument('-a', '--all', dest='all', action='store_true', help='query a
 group.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
 parser.add_argument('--regid', type=str, help="tag creator's regid")
 parser.add_argument('--output-dir', type=str, help="write SWID tags to files under regid subdirectory of this directory")
+parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
 parser.add_argument('package', type=str, nargs=argparse.REMAINDER, help='package(s), glob(s) or file name(s)', metavar='...')
 opts = parser.parse_args()
 
@@ -20,7 +21,10 @@ template = None
 try:
 	data_dir = getenv('RPM2SWIDTAG_TEMPLATE_DIR', DATA_DIR)
 	xml_template = getenv('RPM2SWIDTAG_TEMPLATE', data_dir + "/template.swidtag")
-	xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag.xslt")
+	if opts.print_tagid:
+		xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag-tagid.xslt")
+	else:
+		xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag.xslt")
 	template = Template(xml_template, xslt_file)
 except Error as e:
 	stderr.write("%s: %s\n" % (argv[0], e.strerror))
@@ -57,7 +61,7 @@ for p in opts.package:
 			if opts.regid:
 				params['tagcreator-regid'] = opts.regid
 			tag = template.generate_tag_for_header(h, params=params)
-			if opts.output_dir:
+			if opts.output_dir and not opts.print_tagid:
 				dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
 				if not path.exists(dir):
 					makedirs(dir)

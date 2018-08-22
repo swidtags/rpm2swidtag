@@ -108,18 +108,22 @@
   </xsl:attribute>
 </xsl:template>
 
+<xsl:template name="si_tagid_value">
+  <xsl:for-each select="str:tokenize($tagcreator-regid, '\.')">
+    <xsl:sort select="position()" data-type="number" order="descending"/>
+    <xsl:copy-of select="."/><xsl:text>.</xsl:text>
+  </xsl:for-each>
+  <xsl:value-of select="$name" />
+  <xsl:text>-</xsl:text>
+  <xsl:if test="$epoch"><xsl:value-of select="$epoch"/>:</xsl:if>
+  <xsl:value-of select="$version" />
+  <xsl:if test="$release">-<xsl:value-of select="$release" /></xsl:if>
+  <xsl:if test="$arch">.<xsl:value-of select="$arch"/></xsl:if>
+</xsl:template>
+
 <xsl:template name="si_tagid_attr" match="swid:SoftwareIdentity/@tagId">
   <xsl:attribute name="tagId">
-    <xsl:for-each select="str:tokenize($tagcreator-regid, '\.')">
-      <xsl:sort select="position()" data-type="number" order="descending"/>
-      <xsl:copy-of select="."/><xsl:text>.</xsl:text>
-    </xsl:for-each>
-    <xsl:value-of select="$name" />
-    <xsl:text>-</xsl:text>
-    <xsl:if test="$epoch"><xsl:value-of select="$epoch"/>:</xsl:if>
-    <xsl:value-of select="$version" />
-    <xsl:if test="$release">-<xsl:value-of select="$release" /></xsl:if>
-    <xsl:if test="$arch">.<xsl:value-of select="$arch"/></xsl:if>
+    <xsl:call-template name="si_tagid_value"/>
   </xsl:attribute>
 </xsl:template>
 
