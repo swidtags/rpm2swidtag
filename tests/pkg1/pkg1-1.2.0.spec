@@ -25,6 +25,8 @@ ln -s testdir %{buildroot}/usr/share/testdir/testsymlink-to-dir
 ln -s missing %{buildroot}/usr/share/testdir/testsymlink-to-missing
 mkdir -p %{buildroot}/etc
 echo "[config]" > %{buildroot}/etc/testconfig.conf
+echo "křížala" > %{buildroot}/usr/share/testdir/testutf8-křížala
+echo 6 > %{buildroot}/usr/share/testdir/testutf8-sqrt-$( echo $'\342\210\23236' )
 
 %files
 /usr/share/testdir/testfile
@@ -32,4 +34,5 @@ echo "[config]" > %{buildroot}/etc/testconfig.conf
 /usr/share/testdir/testdir
 %config /etc/testconfig.conf
 /usr/share/testdir/testsymlink*
+/usr/share/testdir/testutf8*
 %dir /usr/share/testdir
