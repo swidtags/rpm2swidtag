@@ -8,7 +8,7 @@ import argparse
 parser = argparse.ArgumentParser(description='SWID tag parameters.')
 parser.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
 parser.add_argument('--regid', type=str, help="tag creator's regid")
-parser.add_argument('package', type=str, help='package or file name')
+parser.add_argument('package', type=str, nargs='+', help='package or file name')
 opts = parser.parse_args()
 
 DATA_DIR = "/etc/rpm2swidtag"
@@ -22,34 +22,37 @@ except Error as e:
 	stderr.write("%s: %s\n" % (argv[0], e.strerror))
 	exit(5)
 
-l = []
-msg = "for file [%s]" % opts.package
-if opts.rpmfile:
-	try:
-		l = [ rpm.read_from_file(opts.package) ]
-	except Error as e:
-		stderr.write("%s: %s\n" % (argv[0], e.strerror))
-		exit(3)
-else:
-	msg = "for package [%s]" % opts.package
-	try:
-		# We only assume the use of _RPM2SWIDTAG_RPMDBPATH for testing, really
-		l = rpm.read_from_db(opts.package, rpmdb_path=getenv('_RPM2SWIDTAG_RPMDBPATH'))
-		if len(l) < 1:
-			stderr.write("%s: No package [%s] found in database\n" % (argv[0], opts.package))
-			exit(7)
-	except Error as e:
-		stderr.write("%s: %s\n" % (argv[0], e.strerror))
-		exit(3)
+exit_status = 0
+for p in opts.package:
+	l = []
+	msg = "for file [%s]" % p
+	if opts.rpmfile:
+		try:
+			l = [ rpm.read_from_file(p) ]
+		except Error as e:
+			stderr.write("%s: %s\n" % (argv[0], e.strerror))
+			exit(3)
+	else:
+		msg = "for package [%s]" % p
+		try:
+			# We only assume the use of _RPM2SWIDTAG_RPMDBPATH for testing, really
+			l = rpm.read_from_db(p, rpmdb_path=getenv('_RPM2SWIDTAG_RPMDBPATH'))
+			if len(l) < 1:
+				stderr.write("%s: No package [%s] found in database\n" % (argv[0], p))
+				exit_status = 7
+		except Error as e:
+			stderr.write("%s: %s\n" % (argv[0], e.strerror))
+			exit(3)
 
-for h in l:
-	try:
-		params = {}
-		if opts.regid:
-			params['tagcreator-regid'] = opts.regid
-		tag = template.generate_tag_for_header(h, params=params)
-		stdout.write(tag.tostring().decode())
-	except Error as e:
-		stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
-		exit(6)
+	for h in l:
+		try:
+			params = {}
+			if opts.regid:
+				params['tagcreator-regid'] = opts.regid
+			tag = template.generate_tag_for_header(h, params=params)
+			stdout.write(tag.tostring().decode())
+		except Error as e:
+			stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
+			exit(6)
 
+exit(exit_status)

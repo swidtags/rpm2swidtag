@@ -78,4 +78,23 @@ set -e
 test "$ERR" -eq 6
 test "$OUT" == 'bin/rpm2swidtag: Error generating SWID tag for file [tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm]: Unknown header tag [broken] requested by XSLT stylesheet: unknown header tag'
 
+set +e
+OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag x 2>&1 )
+ERR=$?
+set -e
+test "$ERR" -eq 7
+test "$OUT" == 'bin/rpm2swidtag: No package [x] found in database'
+
+set +e
+OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag pkg1 x pkg2 2>&1 > /tmp/pkg-generated.swidtag )
+ERR=$?
+set -e
+test "$ERR" -eq 7
+cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg2/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
+test "$OUT" == 'bin/rpm2swidtag: No package [x] found in database'
+diff tmp/pkg1-and-pkg2.swidtag /tmp/pkg-generated.swidtag
+
+# Test that README has up-to-date usage section
+diff <( bin/rpm2swidtag -h ) README.md | grep '^<' && false
+
 echo OK.

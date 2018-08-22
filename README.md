@@ -5,7 +5,7 @@ Exploring the rpm header information and producing SWID tag out of it
 ## Usage
 
 ```
-usage: rpm2swidtag.py [-h] [-p] [--regid REGID] package
+usage: rpm2swidtag [-h] [-p] [--regid REGID] package [package ...]
 
 SWID tag parameters.
 
