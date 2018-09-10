@@ -7,7 +7,7 @@ def read_from_file(file):
 	fdno = None
 	try:
 		fdno = open(file, O_RDONLY)
-		ts = rpm.TransactionSet()
+		ts = rpm.TransactionSet('', rpm._RPMVSF_NOSIGNATURES)
 		h = ts.hdrFromFdno(fdno)
 		return h
 	except FileNotFoundError as e:
