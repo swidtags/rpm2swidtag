@@ -60,12 +60,12 @@ rm -rf tmp/output-dir tmp/compare-dir
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --regid=example.test --output-dir=tmp/output-dir -a
 mkdir -p tmp/compare-dir/example.test
 for i in pkg1-1.2.0-1.fc28.x86_64 pkg1-1.3.0-1.fc28.x86_64 pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64 ; do
-	sed 's/org.fedorapeople.adelton/test.example/;s/adelton.fedorapeople.org/example.test/' tests/${i%%-*}/$i.swidtag > tmp/compare-dir/example.test/test.example.$i.swidtag
+	sed 's/unavailable.invalid/test.example/;s/invalid.unavailable/example.test/' tests/${i%%-*}/$i.swidtag > tmp/compare-dir/example.test/test.example.$i.swidtag
 done
 diff -ru tmp/output-dir tmp/compare-dir
 
 OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --print-tagid pkg1 )
-test "$OUT" == "$( echo -e 'org.fedorapeople.adelton.pkg1-1.2.0-1.fc28.x86_64\norg.fedorapeople.adelton.pkg1-1.3.0-1.fc28.x86_64' )"
+test "$OUT" == "$( echo -e 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64\nunavailable.invalid.pkg1-1.3.0-1.fc28.x86_64' )"
 
 # Testing errors
 set +e

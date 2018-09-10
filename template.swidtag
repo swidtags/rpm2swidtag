@@ -11,7 +11,7 @@
   tagId=""
   version=""
   versionScheme="">
-  <Entity name="Jan Pazdziora" regid="adelton.fedorapeople.org" role="tagCreator"/>
+  <Entity name="" regid="invalid.unavailable" role="tagCreator"/>
   <Meta product="" colloquialVersion="" revision="" summary=""/>
   <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix=""/>
 </SoftwareIdentity>
