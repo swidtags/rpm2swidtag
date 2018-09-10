@@ -27,6 +27,12 @@ diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid tmp/pkg-generated-regid.s
 bin/rpm2swidtag -p tmp/pkg1-1.2.0-1.fc28.src.rpm > tmp/pkg-generated-src.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.src.swidtag tmp/pkg-generated-src.swidtag
 
+bin/rpm2swidtag -p tests/hello-rpm/hello-1.0-1.i386.rpm > tmp/pkg-generated-src.swidtag
+diff tests/hello-rpm/hello-1.0-1.i386.swidtag tmp/pkg-generated-src.swidtag
+
+bin/rpm2swidtag -p tests/hello-rpm/hello-2.0-1.x86_64-signed.rpm > tmp/pkg-generated-src.swidtag
+diff tests/hello-rpm/hello-2.0-1.x86_64-signed.swidtag tmp/pkg-generated-src.swidtag
+
 RPM2SWIDTAG_TEMPLATE=template-minimal.swidtag bin/rpm2swidtag -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm > tmp/pkg-from-minimal.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.minimal tmp/pkg-from-minimal.swidtag
 

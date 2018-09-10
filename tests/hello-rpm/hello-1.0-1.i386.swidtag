@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="hello" tagId="unavailable.invalid.hello-1.0-1.i386" version="1.0-1.i386" versionScheme="rpm">
+  <Entity name="" regid="invalid.unavailable" role="tagCreator"/>
+  <Meta product="hello" colloquialVersion="1.0" revision="1" summary="hello -- hello, world rpm"/>
+  <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
+    <File xmlns:md5="http://www.w3.org/2001/04/xmldsig-more#md5" size="2880" name="hello" location="/usr/local/bin" md5:hash="85415ebf2d836d21c1fffd50fed2f202" key="true"/>
+    <Directory xmlns:md5="http://www.w3.org/2001/04/xmldsig-more#md5" name="hello-1.0" location="/usr/share/doc">
+      <File size="36" name="FAQ" md5:hash="33cccc1f055d73acaceed7d8204e99c7"/>
+    </Directory>
+  </Payload>
+</SoftwareIdentity>

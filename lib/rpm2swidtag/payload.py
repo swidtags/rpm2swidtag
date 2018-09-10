@@ -60,7 +60,7 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 			if f[12]:
 				if len(f[12]) == 64 and f[12] != "0" * 64:
 					e.set("{%s}hash" % NSMAP['sha256'], f[12])
-				if len(f[12]) == 32:
+				if len(f[12]) == 32 and f[12] != "0" * 32:
 					e.set("{%s}hash" % NSMAP['md5'], f[12])
 			if f[4] & RPMFILE_CONFIG:
 				e.set("{%s}mutable" % NSMAP['n8060'], "true")
