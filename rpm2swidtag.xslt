@@ -22,6 +22,14 @@
   <xsl:copy>
     <xsl:apply-templates select="@*"/>
     <f:generate-payload />
+    <xsl:apply-templates select="text()|*"/>
+  </xsl:copy>
+</xsl:template>
+
+<xsl:template match="swid:Payload/swid:Resource[@type = 'rpm']">
+  <xsl:copy>
+    <xsl:apply-templates select="@*"/>
+    <xsl:attribute name="rpm"><xsl:call-template name="nevra"/></xsl:attribute>
   </xsl:copy>
 </xsl:template>
 

@@ -5,5 +5,6 @@
   <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
     <File size="1143" name="pkg1-1.2.0.spec" sha256:hash="847434af2b93690774e50a4d2697d002a6a0a10b6a086c85b6fe44127ca55fde" key="true"/>
     <File size="5" name="testfile" sha256:hash="f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2" key="true"/>
+    <Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.src.rpm"/>
   </Payload>
 </SoftwareIdentity>

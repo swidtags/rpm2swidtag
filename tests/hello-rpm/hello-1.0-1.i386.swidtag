@@ -7,5 +7,6 @@
     <Directory xmlns:md5="http://www.w3.org/2001/04/xmldsig-more#md5" name="hello-1.0" location="/usr/share/doc">
       <File size="36" name="FAQ" md5:hash="33cccc1f055d73acaceed7d8204e99c7"/>
     </Directory>
+    <Resource type="rpm" rpm="hello-1.0-1.i386"/>
   </Payload>
 </SoftwareIdentity>
