@@ -11,13 +11,6 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 		self.rpm_header = rpm_header
 
 	def execute(self, context, self_node, input_node, output_parent):
-		indent = self._get_indent(input_node)
-		indent_parent = self._get_indent(input_node.getparent())
-
-		indent_level = '  '
-		if indent and indent_parent and indent.startswith(indent_parent) and indent != indent_parent:
-			indent_level = indent[length(indent_parent):]
-
 		NSMAP = {
 			None: SWID_XMLNS,
 			'sha256': 'http://www.w3.org/2001/04/xmlenc#sha256',
@@ -71,9 +64,7 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 			if append_to is None:
 				append_to = output
 			append_to.append(e)
-		if len(output) > 0 and indent is not None:
-			output_parent.text = "\n" + indent + indent_level
-			self._set_indent(output, None, indent, indent_level)
+		self._cleanup_fullname(output)
 		for e in output:
 			output_parent.append(e)
 
@@ -85,30 +76,8 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 				self.cleanup_namespaces(i)
 
 	@staticmethod
-	def _get_indent(e):
-		if e is None:
-			return None
-		indent = ''
-		if e.getprevious():
-			indent = e.getprevious().tail
-		elif e.getparent():
-			indent = e.getparent().text
-		if indent is None:
-			return None
-		m = re.search(r'.*\n([ \t]*)', indent)
-		if m is not None:
-			return m.group(1)
-		return None
-
-	@staticmethod
-	def _set_indent(l, parent, indent, indent_level, level = 0):
-		if len(l) > 0:
-			if parent is not None:
-				parent.text = "\n" + indent + indent_level * (level + 1)
-			for i in l:
-				i.tail = "\n" + indent + indent_level * (level + 1)
-				if len(i) > 0:
-					__class__._set_indent(i, i, indent, indent_level, level + 1)
-				del i.attrib["fullname"]
-			l[-1].tail = "\n" + indent + indent_level * level
+	def _cleanup_fullname(l):
+		for i in l:
+			del i.attrib["fullname"]
+			__class__._cleanup_fullname(i)
 

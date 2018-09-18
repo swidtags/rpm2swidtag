@@ -9,6 +9,7 @@
   >
 
 <xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="utf-8"/>
+<xsl:strip-space elements="*"/>
 
 <xsl:param name="name" />
 <xsl:param name="version" />
