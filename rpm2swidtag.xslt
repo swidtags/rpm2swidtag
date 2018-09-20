@@ -18,12 +18,25 @@
 <xsl:param name="arch" select="f:package_tag('arch')"/>
 <xsl:param name="summary" select="f:package_tag('summary')"/>
 
+<xsl:param name="authoritative" select="'false'"/>
+
 <xsl:template match="swid:Payload">
-  <xsl:copy>
-    <xsl:apply-templates select="@*"/>
-    <f:generate-payload />
-    <xsl:apply-templates select="text()|*"/>
-  </xsl:copy>
+  <xsl:choose>
+    <xsl:when test="$authoritative = 'true'">
+      <xsl:copy>
+        <xsl:apply-templates select="@*"/>
+        <f:generate-payload />
+        <xsl:apply-templates select="text()|*"/>
+      </xsl:copy>
+    </xsl:when>
+    <xsl:otherwise>
+      <Evidence>
+        <xsl:apply-templates select="@*"/>
+        <f:generate-payload />
+        <xsl:apply-templates select="text()|*"/>
+      </Evidence>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xsl:template match="swid:Payload/swid:Resource[@type = 'rpm']">

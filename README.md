@@ -6,7 +6,7 @@ Exploring the rpm header information and producing SWID tag out of it
 
 ```
 usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] [--output-dir DIR]
-                   [--print-tagid]
+                   [--authoritative] [--print-tagid]
                    ...
 
 SWID tag parameters.
@@ -21,6 +21,8 @@ optional arguments:
   --regid REGID     tag creator's regid
   --output-dir DIR  write SWID tags files into regid subdirectory of DIR; or
                     directly into DIR when the path ends with /.
+  --authoritative   produce authoritative tag (per NIST.IR.8060) with Payload,
+                    rather than Evidence
   --print-tagid     compute and print tagId(s) to standard output
 ```
 
