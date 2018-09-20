@@ -5,7 +5,8 @@
   xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:f="http://adelton.fedorapeople.org/rpm2swidtag"
-  extension-element-prefixes="f"
+  xmlns:date="http://exslt.org/dates-and-times"
+  extension-element-prefixes="f date"
   exclude-result-prefixes="swid f"
   >
 
@@ -19,6 +20,7 @@
 <xsl:param name="summary" select="f:package_tag('summary')"/>
 
 <xsl:param name="authoritative" select="'false'"/>
+<xsl:param name="deviceid" select="'localhost.localdomain'"/>
 
 <xsl:template match="swid:Payload">
   <xsl:choose>
@@ -31,6 +33,8 @@
     </xsl:when>
     <xsl:otherwise>
       <Evidence>
+        <xsl:attribute name="date"><xsl:value-of select="date:add('1970-01-01T00:00:00Z', date:difference('1970-01-01T00:00:00Z', date:date-time()))"/></xsl:attribute>
+        <xsl:attribute name="deviceId"><xsl:value-of select="$deviceid"/></xsl:attribute>
         <xsl:apply-templates select="@*"/>
         <f:generate-payload />
         <xsl:apply-templates select="text()|*"/>

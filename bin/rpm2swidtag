@@ -3,17 +3,20 @@
 from sys import argv, exit, stderr, stdout
 from os import getenv, path, makedirs
 from io import BytesIO
+from platform import node
 from rpm2swidtag import Template, Error, rpm
 import argparse
 
 parser = argparse.ArgumentParser(description='SWID tag parameters.')
-group = parser.add_mutually_exclusive_group()
-group.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
-group.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
+group1 = parser.add_mutually_exclusive_group()
+group1.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
+group1.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
 parser.add_argument('--regid', type=str, help="tag creator's regid")
 parser.add_argument('--output-dir', type=str, metavar='DIR',
 	help="write SWID tags files into regid subdirectory of DIR; or directly into DIR when the path ends with /.")
-parser.add_argument('--authoritative', action='store_true', help="produce authoritative tag (per NIST.IR.8060) with Payload, rather than Evidence")
+group2 = parser.add_mutually_exclusive_group()
+group2.add_argument('--authoritative', action='store_true', help="produce authoritative tag (per NIST.IR.8060) with Payload, rather than Evidence")
+group2.add_argument('--evidence-deviceid', type=str, dest='device', default=node(), help="Evidence/@deviceId string, defaults to hostname")
 parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
 parser.add_argument('package', type=str, nargs=argparse.REMAINDER, help='package(s), glob(s) or file name(s)', metavar='...')
 opts = parser.parse_args()
@@ -63,6 +66,8 @@ for p in opts.package:
 				params['tagcreator-regid'] = opts.regid
 			if opts.authoritative:
 				params['authoritative'] = 'true'
+			else:
+				params['deviceid'] = opts.device
 			tag = template.generate_tag_for_header(h, params=params)
 			if opts.output_dir and not opts.print_tagid:
 				if opts.output_dir.endswith("/."):

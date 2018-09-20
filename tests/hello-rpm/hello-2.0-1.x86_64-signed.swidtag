@@ -2,7 +2,7 @@
 <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="hello" tagId="unavailable.invalid.hello-2.0-1.x86_64" version="2.0-1.x86_64" versionScheme="rpm">
   <Entity name="" regid="invalid.unavailable" role="tagCreator"/>
   <Meta product="hello" colloquialVersion="2.0" revision="1" summary="hello -- hello, world rpm"/>
-  <Evidence n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
+  <Evidence date="2018-01-01T12:13:14Z" deviceId="machine.example.test" n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
     <File size="7120" name="hello" location="/usr/bin" sha256:hash="c89fa87aeb1143969c0b6be9334b21d932f77f74e8f60120b5de316406369cf0" key="true"/>
     <Directory name="hello-2.0" location="/usr/share/doc">
       <File size="48" name="COPYING" sha256:hash="fac3b28492ecdc16da172a6f1a432ceed356ca4d9248157b2a962b395e37b3b0"/>
