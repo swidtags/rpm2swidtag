@@ -11,7 +11,8 @@ group = parser.add_mutually_exclusive_group()
 group.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
 group.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
 parser.add_argument('--regid', type=str, help="tag creator's regid")
-parser.add_argument('--output-dir', type=str, help="write SWID tags to files under regid subdirectory of this directory")
+parser.add_argument('--output-dir', type=str, metavar='DIR',
+	help="write SWID tags files into regid subdirectory of DIR; or directly into DIR when the path ends with /.")
 parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
 parser.add_argument('package', type=str, nargs=argparse.REMAINDER, help='package(s), glob(s) or file name(s)', metavar='...')
 opts = parser.parse_args()
@@ -61,7 +62,10 @@ for p in opts.package:
 				params['tagcreator-regid'] = opts.regid
 			tag = template.generate_tag_for_header(h, params=params)
 			if opts.output_dir and not opts.print_tagid:
-				dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
+				if opts.output_dir.endswith("/."):
+					dir = opts.output_dir
+				else:
+					dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
 				if not path.exists(dir):
 					makedirs(dir)
 				tag.write_output(dir + '/' + tag.get_tagid() + '.swidtag')

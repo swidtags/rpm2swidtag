@@ -70,6 +70,12 @@ for i in pkg1-1.2.0-1.fc28.x86_64 pkg1-1.3.0-1.fc28.x86_64 pkg2-13:0.0.1-1.git0f
 done
 diff -ru tmp/output-dir tmp/compare-dir
 
+rm -rf tmp/output-dir
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --regid=example.test --output-dir=tmp/output-dir/. -a
+mv tmp/compare-dir/example.test/* tmp/compare-dir
+rmdir tmp/compare-dir/example.test
+diff -ru tmp/output-dir tmp/compare-dir
+
 OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --print-tagid pkg1 )
 test "$OUT" == "$( echo -e 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64\nunavailable.invalid.pkg1-1.3.0-1.fc28.x86_64' )"
 
