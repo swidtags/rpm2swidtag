@@ -155,6 +155,6 @@ test "$OUT" == 'bin/rpm2swidtag: No package [x] found in database'
 diff tmp/pkg1-and-pkg2.swidtag /tmp/pkg-generated.swidtag
 
 # Test that README has up-to-date usage section
-diff <( bin/rpm2swidtag -h ) README.md | grep '^<' && false
+diff -u <( bin/rpm2swidtag -h ) <( sed -n '/^usage: rpm2swidtag/,/```/{/```/T;p}' README.md )
 
 echo OK.
