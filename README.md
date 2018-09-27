@@ -54,3 +54,14 @@ inclusion in the output SWID tag.
 When the `--print-tagid` option is used, values of `tagId` are
 computed and printed to standard output, instead of the full
 SWID tag, using stylesheet `/etc/rpm2swidtag/rpm2swidtag-tagid.xslt`.
+
+## SWID tags for all rpms
+
+To generate SWID tags for all packages in the rpm database
+
+```
+rpm2swidtag -a --regid $(hostname -f) --output-dir /usr/share
+```
+
+can be used. It will produce the `.swidtag` files in
+`/usr/share/$(hostname -f)` directory.
