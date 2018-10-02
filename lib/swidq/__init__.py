@@ -42,6 +42,9 @@ class SWIDTag:
 	def get_tagversion(self):
 		return self.tagversion
 
+	def get_name(self):
+		return self.name
+
 	def get_errors(self):
 		return self.errors
 

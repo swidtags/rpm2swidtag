@@ -13,11 +13,17 @@ CONFIG_FILE = "/etc/swid/swidq.conf"
 SWIDTAGS_DIRS = "/etc/swid/swidtags.d/*"
 
 parser = argparse.ArgumentParser(description='List SWID tags.')
-parser.add_argument('--debug', action='store_true', help="verbose debugging messages")
-parser.add_argument('-a', '--all', dest='all', action='store_true', help="match tagId with glob pattern, default '*'")
-parser.add_argument('-p', '--paths', action='store_true', help="process listed directories and SWID tag files")
-parser.add_argument('-c', '--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
-parser.add_argument('match', type=str, nargs='*', help='tagIds or paths, depending on the selection option', metavar='...')
+select_group = parser.add_argument_group("selection options")
+select_group.add_argument('-p', '--paths', action='store_true', help="process listed directories and SWID tag files")
+select_group.add_argument('-a', '--all', dest='all', action='store_true', help="match tagId/name with glob pattern, default '*'")
+select_group.add_argument('-n', '--name', action='store_true', help="query name instead of tagId")
+
+other_group = parser.add_argument_group("other options")
+other_group.add_argument('--debug', action='store_true', help="verbose debugging messages")
+other_group.add_argument('-c', '--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
+
+positional_group = parser.add_argument_group("remaining arguments")
+positional_group.add_argument('match', type=str, nargs='*', help='tagId, name, or path', metavar='...')
 opts = parser.parse_args()
 
 config = ConfigParser(delimiters = '=', comment_prefixes = '#')
@@ -51,13 +57,16 @@ def load_file(f):
 	elif opts.all and len(opts.match) == 0:
 		matched = True
 	elif len(opts.match) > 0:
-		tagid = tag.get_tagid()
+		if opts.name:
+			value = tag.get_name()
+		else:
+			value = tag.get_tagid()
 		if opts.all:
 			for t in opts.match:
-				if re.compile(translate(t)).match(tagid):
+				if re.compile(translate(t)).match(value):
 					matched = True
 					break
-		elif tagid in opts.match:
+		elif value in opts.match:
 			matched = True
 
 	if matched:

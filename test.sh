@@ -200,6 +200,15 @@ diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.tes
 bin/swidq -c tests/swidq.conf unknown.tagid > tmp/swidq.out
 diff /dev/null tmp/swidq.out
 
+bin/swidq -c tests/swidq.conf -n 'qkg1' > tmp/swidq.out
+diff <( echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
+
+bin/swidq -c tests/swidq.conf -a -n 'qkg*' > tmp/swidq.out
+diff <( echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
+
+bin/swidq -c tests/swidq.conf -n qkg2 > tmp/swidq.out
+diff /dev/null tmp/swidq.out
+
 # Testing errors
 set +e
 OUT=$( bin/swidq -p nonexistent 2>&1 )
