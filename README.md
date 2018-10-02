@@ -65,3 +65,20 @@ rpm2swidtag -a --regid $(hostname -f) --output-dir /usr/share
 
 can be used. It will produce the `.swidtag` files in
 `/usr/share/$(hostname -f)` directory.
+
+## Listing SWID tags
+
+Produced SWID tags can be listed using the `swidq` utility:
+
+```
+usage: swidq [-h] [--debug] files [files ...]
+
+List SWID tags.
+
+positional arguments:
+  files       files to process
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --debug     verbose debugging messages
+```

@@ -1,0 +1,3 @@
+bin/swidq: parsing [tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag]
+bin/swidq: file [tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag] tagId [unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64] tagVersion [0]
+bin/swidq: exitting.

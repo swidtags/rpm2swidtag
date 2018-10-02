@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256"
+  xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0"
+  xml:lang="en-US"
+  name="pkg3" tagId="test.b.pkg3-1.0.0-1.x86_64" version="1.0.0-1.x86_64" versionScheme="rpm">
+  <Entity name="Example B Organization" regid="b.test" role="tagCreator"/>
+  <Meta product="pkg3" colloquialVersion="1.0.0" revision="1.fc28" summary="Another example rpm package"/>
+  <Evidence date="2018-01-01T18:19:20Z" deviceId="machine.customer.example.test">
+    <File size="9" name="testconfig.conf" location="/etc" sha256:hash="a11e9e5746f775b735b09d18d7edb13eb7774534146ed3e61d23ba11ce4ce396" n8060:mutable="true" key="true"/>
+    <File size="5" name="testfile" location="/etc/pkg3" sha256:hash="f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2" key="true"/>
+    <Resource type="rpm" rpm="pkg3-1.0.0-1.x86_64"/>
+  </Evidence>
+</SoftwareIdentity>

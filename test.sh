@@ -23,6 +23,8 @@ function normalize_i() {
 }
 
 export PYTHONPATH=lib
+
+# Testing rpm2swidtag
 # For testing, let's default the data location to the current directory
 export RPM2SWIDTAG_TEMPLATE_DIR=.
 bin/rpm2swidtag -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated.swidtag
@@ -156,5 +158,41 @@ diff tmp/pkg1-and-pkg2.swidtag /tmp/pkg-generated.swidtag
 
 # Test that README has up-to-date usage section
 diff -u <( bin/rpm2swidtag -h ) <( sed -n '/^usage: rpm2swidtag/,/```/{/```/T;p}' README.md )
+
+
+# Testing swidq
+bin/swidq tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+
+bin/swidq tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag --debug 2> tmp/swidq.out
+diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.debug tmp/swidq.out
+
+bin/swidq - < tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 -' ) tmp/swidq.out
+
+bin/swidq tests/swiddata1/*/*.swidtag > tmp/swidq.out
+diff tests/swidq-swiddata1.out tmp/swidq.out
+
+bin/swidq tests/swiddata1/*/*.swidtag tests/swiddata1/*/*.swidtag > tmp/swidq.out
+diff <( cat tests/swidq-swiddata1.out tests/swidq-swiddata1.out ) tmp/swidq.out
+
+# Testing errors
+set +e
+OUT=$( bin/swidq 2>&1 )
+ERR=$?
+set -e
+test "$ERR" -eq 2
+test "$OUT" == 'usage: swidq [-h] [--debug] files [files ...]
+swidq: error: the following arguments are required: files'
+
+set +e
+OUT=$( bin/swidq nonexistent 2>&1 )
+ERR=$?
+set -e
+test "$ERR" -eq 1
+test "$OUT" == 'bin/swidq: error reading file [nonexistent]: Error reading file '\''nonexistent'\'': failed to load external entity "nonexistent"'
+
+# Test that README has up-to-date usage section
+diff -u <( bin/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
 
 echo OK.

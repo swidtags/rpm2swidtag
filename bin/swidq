@@ -1,0 +1,31 @@
+#!/usr/bin/python3
+
+from sys import argv, exit, stderr
+import argparse
+from swidq import SWIDTag
+
+parser = argparse.ArgumentParser(description='List SWID tags.')
+parser.add_argument('--debug', action='store_true', help="verbose debugging messages")
+parser.add_argument('files', type=str, nargs='+', help='files to process')
+opts = parser.parse_args()
+
+exit_status = 0
+for f in opts.files:
+	if opts.debug:
+		stderr.write("%s: parsing [%s]\n" % (argv[0], f))
+	tag = SWIDTag(f)
+	errors = tag.get_errors()
+	if errors is not None:
+		for e in errors:
+			stderr.write("%s: %s\n" % (argv[0], e))
+		exit_status = 1
+		continue
+
+	if opts.debug:
+		stderr.write("%s: %s\n" % (argv[0], tag.get_info()))
+	print("%s %s" % (tag.get_tagid(), tag.get_path()))
+
+if opts.debug:
+	stderr.write("%s: exitting.\n" % argv[0])
+
+exit(exit_status)

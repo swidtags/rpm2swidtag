@@ -1,0 +1,4 @@
+test.a.Example-OS-Distro-3.x86_64 tests/swiddata1/a.test/distro.swidtag
+unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag
+test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag
+test.b.pkg3-1.0.0-1.x86_64 tests/swiddata1/b.test/pkg3.swidtag
