@@ -1,4 +1,4 @@
-bin/swidq: config file [/etc/swid/swidq.conf]
+bin/swidq: config file [swidq.conf]
 bin/swidq: config data [swidq]
 bin/swidq: config data dir = /etc/swid/swidtags.d/*
 bin/swidq: parsing [tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag]
