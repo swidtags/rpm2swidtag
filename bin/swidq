@@ -2,6 +2,8 @@
 
 from sys import argv, exit, stderr
 import argparse
+from glob import iglob
+from os.path import isfile, isdir
 from swidq import SWIDTag
 
 parser = argparse.ArgumentParser(description='List SWID tags.')
@@ -10,7 +12,8 @@ parser.add_argument('files', type=str, nargs='+', help='files to process')
 opts = parser.parse_args()
 
 exit_status = 0
-for f in opts.files:
+
+def load_file(f):
 	if opts.debug:
 		stderr.write("%s: parsing [%s]\n" % (argv[0], f))
 	tag = SWIDTag(f)
@@ -18,12 +21,26 @@ for f in opts.files:
 	if errors is not None:
 		for e in errors:
 			stderr.write("%s: %s\n" % (argv[0], e))
-		exit_status = 1
-		continue
+		return
 
 	if opts.debug:
 		stderr.write("%s: %s\n" % (argv[0], tag.get_info()))
 	print("%s %s" % (tag.get_tagid(), tag.get_path()))
+
+for f in opts.files:
+	if isfile(f) or f == '-':
+		load_file(f)
+	else:
+		fg = sorted(iglob(f))
+		if not fg:
+			stderr.write("%s: no file matching [%s]\n" % (argv[0], f))
+			exit_status = 1
+		for g in fg:
+			if isdir(g):
+				for gg in sorted(iglob(g + "/*.swidtag")):
+					load_file(gg)
+			else:
+				load_file(g)
 
 if opts.debug:
 	stderr.write("%s: exitting.\n" % argv[0])

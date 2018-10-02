@@ -173,6 +173,9 @@ diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 -' ) tmp/swidq.out
 bin/swidq tests/swiddata1/*/*.swidtag > tmp/swidq.out
 diff tests/swidq-swiddata1.out tmp/swidq.out
 
+bin/swidq 'tests/swiddata1/*' > tmp/swidq.out
+diff tests/swidq-swiddata1.out tmp/swidq.out
+
 bin/swidq tests/swiddata1/*/*.swidtag tests/swiddata1/*/*.swidtag > tmp/swidq.out
 diff <( cat tests/swidq-swiddata1.out tests/swidq-swiddata1.out ) tmp/swidq.out
 
@@ -190,7 +193,7 @@ OUT=$( bin/swidq nonexistent 2>&1 )
 ERR=$?
 set -e
 test "$ERR" -eq 1
-test "$OUT" == 'bin/swidq: error reading file [nonexistent]: Error reading file '\''nonexistent'\'': failed to load external entity "nonexistent"'
+test "$OUT" == 'bin/swidq: no file matching [nonexistent]'
 
 # Test that README has up-to-date usage section
 diff -u <( bin/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
