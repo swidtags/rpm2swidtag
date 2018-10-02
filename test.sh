@@ -161,35 +161,30 @@ diff -u <( bin/rpm2swidtag -h ) <( sed -n '/^usage: rpm2swidtag/,/```/{/```/T;p}
 
 
 # Testing swidq
-bin/swidq tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out
+bin/swidq -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
 
-bin/swidq tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag --debug 2> tmp/swidq.out
+bin/swidq -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag --debug 2> tmp/swidq.out
 diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.debug tmp/swidq.out
 
-bin/swidq - < tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out
+bin/swidq -p - < tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 -' ) tmp/swidq.out
 
-bin/swidq tests/swiddata1/*/*.swidtag > tmp/swidq.out
+bin/swidq -p tests/swiddata1/*/*.swidtag > tmp/swidq.out
 diff tests/swidq-swiddata1.out tmp/swidq.out
 
-bin/swidq 'tests/swiddata1/*' > tmp/swidq.out
+bin/swidq -p 'tests/swiddata1/*' > tmp/swidq.out
 diff tests/swidq-swiddata1.out tmp/swidq.out
 
-bin/swidq tests/swiddata1/*/*.swidtag tests/swiddata1/*/*.swidtag > tmp/swidq.out
+bin/swidq -p tests/swiddata1/*/*.swidtag tests/swiddata1/*/*.swidtag > tmp/swidq.out
 diff <( cat tests/swidq-swiddata1.out tests/swidq-swiddata1.out ) tmp/swidq.out
+
+bin/swidq -c tests/swidq.conf > tmp/swidq.out
+diff <( cat tests/swidq-swiddata1.out tests/swidq-swiddata2.out ) tmp/swidq.out
 
 # Testing errors
 set +e
-OUT=$( bin/swidq 2>&1 )
-ERR=$?
-set -e
-test "$ERR" -eq 2
-test "$OUT" == 'usage: swidq [-h] [--debug] files [files ...]
-swidq: error: the following arguments are required: files'
-
-set +e
-OUT=$( bin/swidq nonexistent 2>&1 )
+OUT=$( bin/swidq -p nonexistent 2>&1 )
 ERR=$?
 set -e
 test "$ERR" -eq 1

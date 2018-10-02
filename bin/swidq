@@ -2,14 +2,30 @@
 
 from sys import argv, exit, stderr
 import argparse
+from configparser import ConfigParser
+import re
 from glob import iglob
 from os.path import isfile, isdir
 from swidq import SWIDTag
 
+CONFIG_FILE = "/etc/swid/swidq.conf"
+SWIDTAGS_DIRS = "/etc/swid/swidtags.d/*"
+
 parser = argparse.ArgumentParser(description='List SWID tags.')
 parser.add_argument('--debug', action='store_true', help="verbose debugging messages")
-parser.add_argument('files', type=str, nargs='+', help='files to process')
+parser.add_argument('-c', '--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
+parser.add_argument('-p', '--paths', type=str, nargs='*', help="process listed directories and SWID tag files")
 opts = parser.parse_args()
+
+config = ConfigParser(delimiters = '=', comment_prefixes = '#')
+config['swidq'] = { 'dir': SWIDTAGS_DIRS }
+config.read(opts.config)
+if opts.debug:
+	stderr.write("%s: config file [%s]\n" % (argv[0], opts.config))
+	for s in config.sections():
+		stderr.write("%s: config data [%s]\n" % (argv[0], s))
+		for k in config[s].keys():
+			stderr.write("%s: config data %s = %s\n" % (argv[0], k, config[s][k]))
 
 exit_status = 0
 
@@ -27,7 +43,18 @@ def load_file(f):
 		stderr.write("%s: %s\n" % (argv[0], tag.get_info()))
 	print("%s %s" % (tag.get_tagid(), tag.get_path()))
 
-for f in opts.files:
+dirs = None
+if opts.paths:
+	dirs = opts.paths
+
+if dirs is None:
+	d = config.get('swidq', 'dir')
+	if d == '':
+		stderr.write("%s: no dir configured in [%s]\n" % (argv[0], opts.config))
+		exit(2)
+	dirs = re.split(r' +', d)
+
+for f in dirs:
 	if isfile(f) or f == '-':
 		load_file(f)
 	else:

@@ -71,14 +71,19 @@ can be used. It will produce the `.swidtag` files in
 Produced SWID tags can be listed using the `swidq` utility:
 
 ```
-usage: swidq [-h] [--debug] files [files ...]
+usage: swidq [-h] [--debug] [-c FILE] [-p [PATHS [PATHS ...]]]
 
 List SWID tags.
 
-positional arguments:
-  files       files to process
-
 optional arguments:
-  -h, --help  show this help message and exit
-  --debug     verbose debugging messages
+  -h, --help            show this help message and exit
+  --debug               verbose debugging messages
+  -c FILE, --config FILE
+                        location of the configuration file
+  -p [PATHS [PATHS ...]], --paths [PATHS [PATHS ...]]
+                        process listed directories and SWID tag files
 ```
+
+By default, config file `/etc/swid/swidq.conf` configures `swidq` to
+query directories (or symlinks to directories) under `/etc/swid/swidtags.d`
+when looking for SWID tag files.

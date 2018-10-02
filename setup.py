@@ -14,6 +14,7 @@ setup(
 	package_dir = {'': 'lib'},
 	packages = ['rpm2swidtag', 'swidq'],
 	scripts = ['bin/rpm2swidtag', 'bin/swidq'],
-	data_files = [('/etc/rpm2swidtag', ['template.swidtag', 'swidtag.xslt', 'rpm2swidtag.xslt', 'rpm2swidtag-tagid.xslt'])],
+	data_files = [('/etc/rpm2swidtag', ['template.swidtag', 'swidtag.xslt', 'rpm2swidtag.xslt', 'rpm2swidtag-tagid.xslt']),
+		('/etc/swid', ['swidq.conf']), ('/etc/swid/swidtags.d', [])],
 	install_requires = ['rpm', 'lxml'],
 )
