@@ -79,6 +79,7 @@ for f in dirs:
 			else:
 				load_file(g)
 
+tags.compute_supplemental(stderr=stderr, prefix="%s: " % argv[0], debug=opts.debug, silent=opts.silent)
 for tag in tags:
 	matched = False
 	if opts.paths:
@@ -100,6 +101,9 @@ for tag in tags:
 
 	if matched:
 		print("%s %s" % (tag.get_tagid(), tag.get_path()))
+		if tags.supplemental_for(tag):
+			for stag in tags.supplemental_for(tag):
+				print("+ " + stag.get_tagid() + " " + stag.get_path())
 
 if opts.debug:
 	stderr.write("%s: exitting.\n" % argv[0])
