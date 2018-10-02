@@ -180,7 +180,16 @@ bin/swidq -p tests/swiddata1/*/*.swidtag tests/swiddata1/*/*.swidtag > tmp/swidq
 diff <( cat tests/swidq-swiddata1.out tests/swidq-swiddata1.out ) tmp/swidq.out
 
 bin/swidq -c tests/swidq.conf > tmp/swidq.out
+diff /dev/null tmp/swidq.out
+
+bin/swidq -c tests/swidq.conf -a > tmp/swidq.out
 diff <( cat tests/swidq-swiddata1.out tests/swidq-swiddata2.out ) tmp/swidq.out
+
+bin/swidq -c tests/swidq.conf unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 > tmp/swidq.out
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+
+bin/swidq -c tests/swidq.conf unknown.tagid > tmp/swidq.out
+diff /dev/null tmp/swidq.out
 
 # Testing errors
 set +e
