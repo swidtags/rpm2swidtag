@@ -1,0 +1,12 @@
+Tag id			[unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64]
+File			[tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag]
+Name			[pkg1]
+Version			[1.2.0-1.fc28.x86_64] version scheme [rpm]
+Colloquial version	[1.2.0]
+Revision		[1.fc28]
+XML language		[en-US]
+Attr xsi:schemaLocation	[http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd]
+Product			[pkg1]
+Summary			[Example rpm package]
+
+Entity [tagCreator] regid [invalid.unavailable] name []

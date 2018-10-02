@@ -246,6 +246,23 @@ bin/swidq -p tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.out 2
 diff /dev/null tmp/swidq.out
 diff <( echo 'bin/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know' ) tmp/swidq.err
 
+export SWIDQ_STYLESHEET_DIR=.
+bin/swidq --dump -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.dump tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
+bin/swidq -i -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.info tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
+bin/swidq -il -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff <( cat tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.{info,files} ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
+bin/swidq --silent -c tests/swidq.conf -l -n pkg1 > tmp/swidq.out 2> tmp/swidq.err
+diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.files tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
 # Testing errors
 set +e
 OUT=$( bin/swidq -p nonexistent 2>&1 )

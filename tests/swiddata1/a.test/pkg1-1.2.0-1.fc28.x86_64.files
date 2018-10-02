@@ -1,0 +1,10 @@
+/etc/testconfig.conf
+/usr/share/testdir
+/usr/share/testdir/emptyfile
+/usr/share/testdir/testdir
+/usr/share/testdir/testfile
+/usr/share/testdir/testsymlink
+/usr/share/testdir/testsymlink-to-dir
+/usr/share/testdir/testsymlink-to-missing
+/usr/share/testdir/testutf8-křížala
+/usr/share/testdir/testutf8-sqrt-√36

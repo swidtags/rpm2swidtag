@@ -4,6 +4,14 @@ from collections import OrderedDict
 
 SWID_XMLNS = 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd'
 
+class XSLT:
+	def __init__(self, file):
+		xml = etree.parse(file)
+		self.xslt = etree.XSLT(xml.getroot())
+
+	def process(self, swidtag):
+		return self.xslt(swidtag.get_xml(), **{ "file": etree.XSLT.strparam(swidtag.get_path()) })
+
 class SWIDTag:
 	def __init__(self, file):
 		self.path = file
@@ -50,6 +58,9 @@ class SWIDTag:
 			self.errors = errors
 		if len(supplemental_for) > 0:
 			self.supplemental_for = supplemental_for
+
+	def get_xml(self):
+		return self.xml
 
 	def get_path(self):
 		return self.path

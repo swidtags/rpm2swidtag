@@ -1,22 +1,29 @@
 #!/usr/bin/python3
 
-from sys import argv, exit, stderr
+from sys import argv, exit, stdout, stderr
 import argparse
 from configparser import ConfigParser
 import re
 from fnmatch import translate
 from glob import iglob
+from os import getenv
 from os.path import isfile, isdir
-from swidq import SWIDTagCollection
+from swidq import SWIDTagCollection, XSLT
 
 CONFIG_FILE = "/etc/swid/swidq.conf"
 SWIDTAGS_DIRS = "/etc/swid/swidtags.d/*"
+STYLESHEET_DIR = "/usr/share/swidq/stylesheets"
 
-parser = argparse.ArgumentParser(description='List SWID tags.')
+parser = argparse.ArgumentParser(description='Querying SWID tags.')
 select_group = parser.add_argument_group("selection options")
 select_group.add_argument('-p', '--paths', action='store_true', help="process listed directories and SWID tag files")
 select_group.add_argument('-a', '--all', dest='all', action='store_true', help="match tagId/name with glob pattern, default '*'")
 select_group.add_argument('-n', '--name', action='store_true', help="query name instead of tagId")
+
+output_group = parser.add_argument_group("output options")
+output_group.add_argument('-i', '--info', action='store_true', help="output some SWID tag fields")
+output_group.add_argument('-l', '--list-files', action='store_true', help="list files from the SWID tag")
+output_group.add_argument('--dump', action='store_true', help="dump SWID tag content as indented text")
 
 other_group = parser.add_argument_group("other options")
 other_group.add_argument('--debug', action='store_true', help="verbose debugging messages")
@@ -26,6 +33,15 @@ other_group.add_argument('-c', '--config', default=CONFIG_FILE, metavar='FILE', 
 positional_group = parser.add_argument_group("remaining arguments")
 positional_group.add_argument('match', type=str, nargs='*', help='tagId, name, or path', metavar='...')
 opts = parser.parse_args()
+
+stylesheet_dir = getenv('SWIDQ_STYLESHEET_DIR', STYLESHEET_DIR)
+transforms = []
+if opts.dump:
+	transforms.append(XSLT(stylesheet_dir + '/swidq-dump.xslt'))
+if opts.info:
+	transforms.append(XSLT(stylesheet_dir + '/swidq-info.xslt'))
+if opts.list_files:
+	transforms.append(XSLT(stylesheet_dir + '/swidq-files.xslt'))
 
 config = ConfigParser(delimiters = '=', comment_prefixes = '#')
 config['swidq'] = { 'dir': SWIDTAGS_DIRS }
@@ -99,11 +115,18 @@ for tag in tags:
 		elif value in opts.match:
 			matched = True
 
-	if matched:
-		print("%s %s" % (tag.get_tagid(), tag.get_path()))
-		if tags.supplemental_for(tag):
-			for stag in tags.supplemental_for(tag):
-				print("+ " + stag.get_tagid() + " " + stag.get_path())
+	if not matched:
+		continue
+
+	if transforms:
+		for t in transforms:
+			t.process(tag).write_output(stdout.buffer)
+		continue
+
+	print("%s %s" % (tag.get_tagid(), tag.get_path()))
+	if tags.supplemental_for(tag):
+		for stag in tags.supplemental_for(tag):
+			print("+ " + stag.get_tagid() + " " + stag.get_path())
 
 if opts.debug:
 	stderr.write("%s: exitting.\n" % argv[0])
