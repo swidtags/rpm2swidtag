@@ -71,7 +71,8 @@ can be used. It will produce the `.swidtag` files in
 Produced SWID tags can be listed using the `swidq` utility:
 
 ```
-usage: swidq [-h] [-p] [-a] [-n] [--debug] [-c FILE] [... [... ...]]
+usage: swidq [-h] [-p] [-a] [-n] [--debug] [--silent] [-c FILE]
+             [... [... ...]]
 
 List SWID tags.
 
@@ -85,6 +86,7 @@ selection options:
 
 other options:
   --debug               verbose debugging messages
+  --silent              suppress non-fatal warnings
   -c FILE, --config FILE
                         location of the configuration file
 

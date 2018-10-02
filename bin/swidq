@@ -7,7 +7,7 @@ import re
 from fnmatch import translate
 from glob import iglob
 from os.path import isfile, isdir
-from swidq import SWIDTag
+from swidq import SWIDTagCollection
 
 CONFIG_FILE = "/etc/swid/swidq.conf"
 SWIDTAGS_DIRS = "/etc/swid/swidtags.d/*"
@@ -20,6 +20,7 @@ select_group.add_argument('-n', '--name', action='store_true', help="query name 
 
 other_group = parser.add_argument_group("other options")
 other_group.add_argument('--debug', action='store_true', help="verbose debugging messages")
+other_group.add_argument('--silent', action='store_true', help="suppress non-fatal warnings")
 other_group.add_argument('-c', '--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
 
 positional_group = parser.add_argument_group("remaining arguments")
@@ -37,40 +38,20 @@ if opts.debug:
 			stderr.write("%s: config data %s = %s\n" % (argv[0], k, config[s][k]))
 
 exit_status = 0
+tags = SWIDTagCollection()
 
 def load_file(f):
 	if opts.debug:
 		stderr.write("%s: parsing [%s]\n" % (argv[0], f))
-	tag = SWIDTag(f)
-	errors = tag.get_errors()
-	if errors is not None:
+	(tag, fatal, errors) = tags.load_swidtag_file(f)
+	if (fatal or (errors and not opts.silent)):
 		for e in errors:
 			stderr.write("%s: %s\n" % (argv[0], e))
+	if not tag:
 		return
-
 	if opts.debug:
 		stderr.write("%s: %s\n" % (argv[0], tag.get_info()))
 
-	matched = False
-	if opts.paths:
-		matched = True
-	elif opts.all and len(opts.match) == 0:
-		matched = True
-	elif len(opts.match) > 0:
-		if opts.name:
-			value = tag.get_name()
-		else:
-			value = tag.get_tagid()
-		if opts.all:
-			for t in opts.match:
-				if re.compile(translate(t)).match(value):
-					matched = True
-					break
-		elif value in opts.match:
-			matched = True
-
-	if matched:
-		print("%s %s" % (tag.get_tagid(), tag.get_path()))
 
 dirs = None
 if opts.paths:
@@ -97,6 +78,28 @@ for f in dirs:
 					load_file(gg)
 			else:
 				load_file(g)
+
+for tag in tags:
+	matched = False
+	if opts.paths:
+		matched = True
+	elif opts.all and len(opts.match) == 0:
+		matched = True
+	elif len(opts.match) > 0:
+		if opts.name:
+			value = tag.get_name()
+		else:
+			value = tag.get_tagid()
+		if opts.all:
+			for t in opts.match:
+				if re.compile(translate(t)).match(value):
+					matched = True
+					break
+		elif value in opts.match:
+			matched = True
+
+	if matched:
+		print("%s %s" % (tag.get_tagid(), tag.get_path()))
 
 if opts.debug:
 	stderr.write("%s: exitting.\n" % argv[0])

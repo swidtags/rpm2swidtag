@@ -161,53 +161,81 @@ diff -u <( bin/rpm2swidtag -h ) <( sed -n '/^usage: rpm2swidtag/,/```/{/```/T;p}
 
 
 # Testing swidq
-bin/swidq -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out
+bin/swidq -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c swidq.conf -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag --debug 2> tmp/swidq.out
-diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.debug tmp/swidq.out
+bin/swidq -c swidq.conf -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag --debug > tmp/swidq.out 2> tmp/swidq.err
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.debug tmp/swidq.err
 
-bin/swidq -p - < tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out
+bin/swidq --silent -p - < tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 -' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -p tests/swiddata1/*/*.swidtag > tmp/swidq.out
+bin/swidq -p tests/swiddata1/*/*.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff tests/swidq-swiddata1.out tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -p 'tests/swiddata1/*' > tmp/swidq.out
+bin/swidq -p 'tests/swiddata1/*' > tmp/swidq.out 2> tmp/swidq.err
 diff tests/swidq-swiddata1.out tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -p tests/swiddata1/*/*.swidtag tests/swiddata1/*/*.swidtag > tmp/swidq.out
-diff <( cat tests/swidq-swiddata1.out tests/swidq-swiddata1.out ) tmp/swidq.out
+bin/swidq -p tests/swiddata1/*/*.swidtag tests/swiddata1/*/*.swidtag --silent > tmp/swidq.out 2> tmp/swidq.err
+diff <( cat tests/swidq-swiddata1.out ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf > tmp/swidq.out
+bin/swidq -c tests/swidq.conf --silent > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf -a > tmp/swidq.out
-diff <( cat tests/swidq-swiddata1.out tests/swidq-swiddata2.out ) tmp/swidq.out
+bin/swidq --silent -c tests/swidq.conf -a > tmp/swidq.out 2> tmp/swidq.err
+diff <( cat tests/swidq-swiddata1-swiddata2.out ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 > tmp/swidq.out
+bin/swidq -c tests/swidq.conf unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 --silent > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf -a unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 > tmp/swidq.out
+bin/swidq -c tests/swidq.conf -a unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 --silent > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf -a '*pkg1*' > tmp/swidq.out
+bin/swidq --silent -c tests/swidq.conf -a '*pkg1*' > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf -a '*pkg1*' '*pkg5*' > tmp/swidq.out
+bin/swidq --silent -c tests/swidq.conf -a '*pkg1*' '*pkg5*' > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf unknown.tagid > tmp/swidq.out
+bin/swidq --silent -c tests/swidq.conf unknown.tagid > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf -n 'qkg1' > tmp/swidq.out
-diff <( echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
+bin/swidq --silent -c tests/swidq.conf -n 'qkg1' > tmp/swidq.out 2> tmp/swidq.err
+diff <( echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf -a -n 'qkg*' > tmp/swidq.out
-diff <( echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
+bin/swidq --silent -c tests/swidq.conf -n 'qkg1' pkg1 > tmp/swidq.out 2> tmp/swidq.err
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
 
-bin/swidq -c tests/swidq.conf -n qkg2 > tmp/swidq.out
+bin/swidq --silent -c tests/swidq.conf -a -n 'qkg*' 'p?g1' > tmp/swidq.out 2> tmp/swidq.err
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
+bin/swidq --silent -c tests/swidq.conf -n qkg2 > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
+bin/swidq -p tests/swiddata1/a.test/pkg3.swidtag tests/swiddata2/pkg3.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ) tmp/swidq.out
+diff <( echo 'bin/swidq: [tests/swiddata2/pkg3.swidtag] overriding previous file [tests/swiddata1/a.test/pkg3.swidtag] which had lower tagVersion [0]' ) tmp/swidq.err
+
+bin/swidq -p tests/swiddata2/pkg3.swidtag tests/swiddata1/a.test/pkg3.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ) tmp/swidq.out
+diff <( echo 'bin/swidq: skipping [tests/swiddata1/a.test/pkg3.swidtag] as existing file [tests/swiddata2/pkg3.swidtag] has already tagVersion [10]' ) tmp/swidq.err
 
 # Testing errors
 set +e
