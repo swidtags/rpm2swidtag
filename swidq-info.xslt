@@ -54,7 +54,7 @@
   </xsl:for-each>
 
   <xsl:apply-templates select="./@*[not(name() = 'tagId' or name() = 'name' or name() = 'version' or name() = 'versionScheme' or name() = 'media'
-    or name() = 'xml:lang')]"/>
+    or name() = 'xml:lang' or name() = 'xsi:schemaLocation')]"/>
   <xsl:apply-templates select="swid:Meta"/>
   <xsl:apply-templates select="swid:Entity"/>
 </xsl:template>
