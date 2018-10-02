@@ -4,6 +4,7 @@ from sys import argv, exit, stderr
 import argparse
 from configparser import ConfigParser
 import re
+from fnmatch import translate
 from glob import iglob
 from os.path import isfile, isdir
 from swidq import SWIDTag
@@ -13,7 +14,7 @@ SWIDTAGS_DIRS = "/etc/swid/swidtags.d/*"
 
 parser = argparse.ArgumentParser(description='List SWID tags.')
 parser.add_argument('--debug', action='store_true', help="verbose debugging messages")
-parser.add_argument('-a', '--all', dest='all', action='store_true', help="display all found tags")
+parser.add_argument('-a', '--all', dest='all', action='store_true', help="match tagId with glob pattern, default '*'")
 parser.add_argument('-p', '--paths', action='store_true', help="process listed directories and SWID tag files")
 parser.add_argument('-c', '--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
 parser.add_argument('match', type=str, nargs='*', help='tagIds or paths, depending on the selection option', metavar='...')
@@ -47,11 +48,16 @@ def load_file(f):
 	matched = False
 	if opts.paths:
 		matched = True
-	elif opts.all:
+	elif opts.all and len(opts.match) == 0:
 		matched = True
 	elif len(opts.match) > 0:
 		tagid = tag.get_tagid()
-		if tagid in opts.match:
+		if opts.all:
+			for t in opts.match:
+				if re.compile(translate(t)).match(tagid):
+					matched = True
+					break
+		elif tagid in opts.match:
 			matched = True
 
 	if matched:

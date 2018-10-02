@@ -81,7 +81,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --debug               verbose debugging messages
-  -a, --all             display all found tags
+  -a, --all             match tagId with glob pattern, default '*'
   -p, --paths           process listed directories and SWID tag files
   -c FILE, --config FILE
                         location of the configuration file

@@ -188,6 +188,15 @@ diff <( cat tests/swidq-swiddata1.out tests/swidq-swiddata2.out ) tmp/swidq.out
 bin/swidq -c tests/swidq.conf unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 > tmp/swidq.out
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
 
+bin/swidq -c tests/swidq.conf -a unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 > tmp/swidq.out
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+
+bin/swidq -c tests/swidq.conf -a '*pkg1*' > tmp/swidq.out
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+
+bin/swidq -c tests/swidq.conf -a '*pkg1*' '*pkg5*' > tmp/swidq.out
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+
 bin/swidq -c tests/swidq.conf unknown.tagid > tmp/swidq.out
 diff /dev/null tmp/swidq.out
 
