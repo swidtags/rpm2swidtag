@@ -18,6 +18,11 @@
     <xsl:call-template name="newline"/>
   </xsl:if>
 
+  <xsl:for-each select="@tagVersion">
+    <xsl:text>Tag version		</xsl:text>
+    <xsl:apply-templates select="."/>
+  </xsl:for-each>
+
   <xsl:if test="$file">
     <xsl:text>File			[</xsl:text>
     <xsl:value-of select="$file"/>
@@ -45,6 +50,14 @@
     <xsl:text/>Revision		<xsl:apply-templates select="."/>
   </xsl:for-each>
 
+  <xsl:for-each select="swid:Meta/@edition">
+    <xsl:text/>Edition			<xsl:apply-templates select="."/>
+  </xsl:for-each>
+
+  <xsl:for-each select="swid:Meta/@arch">
+    <xsl:text/>Architecture		<xsl:apply-templates select="."/>
+  </xsl:for-each>
+
   <xsl:for-each select="@xml:lang">
     <xsl:text/>XML language		<xsl:apply-templates select="."/>
   </xsl:for-each>
@@ -54,21 +67,26 @@
   </xsl:for-each>
 
   <xsl:apply-templates select="./@*[not(name() = 'tagId' or name() = 'name' or name() = 'version' or name() = 'versionScheme' or name() = 'media'
-    or name() = 'xml:lang' or name() = 'xsi:schemaLocation')]"/>
+    or name() = 'xml:lang' or name() = 'xsi:schemaLocation' or name() = 'tagVersion')]"/>
   <xsl:apply-templates select="swid:Meta"/>
   <xsl:apply-templates select="swid:Entity"/>
 </xsl:template>
 
 <xsl:template match="
   swid:SoftwareIdentity/@tagId
+  | swid:SoftwareIdentity/@tagVersion
   | swid:SoftwareIdentity/@name
   | swid:SoftwareIdentity/@versionScheme
   | swid:SoftwareIdentity/swid:Meta/@colloquialVersion
   | swid:SoftwareIdentity/swid:Meta/@revision
+  | swid:SoftwareIdentity/swid:Meta/@edition
+  | swid:SoftwareIdentity/swid:Meta/@arch
   | swid:SoftwareIdentity/@media
   | swid:SoftwareIdentity/@xml:lang
   | swid:SoftwareIdentity/swid:Meta/@product
+  | swid:SoftwareIdentity/swid:Meta/@entitlementDataRequired
   | swid:SoftwareIdentity/swid:Meta/@summary
+  | swid:SoftwareIdentity/swid:Meta/@unspscVersion
   ">
   <xsl:call-template name="quoted-value"/>
   <xsl:call-template name="newline"/>
@@ -102,12 +120,23 @@
     <xsl:apply-templates select="."/>
   </xsl:for-each>
 
+  <xsl:for-each select="@entitlementDataRequired">
+    <xsl:text>Entitlement required	</xsl:text>
+    <xsl:apply-templates select="."/>
+  </xsl:for-each>
+
   <xsl:for-each select="@summary">
     <xsl:text>Summary			</xsl:text>
     <xsl:apply-templates select="."/>
   </xsl:for-each>
 
-  <xsl:apply-templates select="./@*[not(name() = 'colloquialVersion' or name() = 'revision' or name() = 'product' or name() = 'summary')]"/>
+  <xsl:for-each select="@unspscCode">
+    <xsl:text>United Nations Standard Products and Services Code </xsl:text>
+    <xsl:apply-templates select="."/>
+  </xsl:for-each>
+
+  <xsl:apply-templates select="./@*[not(name() = 'colloquialVersion' or name() = 'revision' or name() = 'product' or name() = 'summary'
+    or name() = 'edition' or name() = 'entitlementDataRequired' or name() = 'arch' or name() = 'unspscCode' or name() = 'unspscVersion')]"/>
 </xsl:template>
 
 <xsl:template match="swid:Entity">
@@ -131,6 +160,17 @@
   <xsl:call-template name="newline"/>
 
   <xsl:apply-templates select="./@*[not(name() = 'role' or name() = 'regid' or name() = 'name')]"/>
+</xsl:template>
+
+<xsl:template match="swid:SoftwareIdentity/swid:Meta/@unspscCode">
+  <xsl:call-template name="quoted-value"/>
+  <xsl:for-each select="../@unspscVersion">
+    <xsl:text> of version </xsl:text>
+    <xsl:apply-templates select="."/>
+  </xsl:for-each>
+  <xsl:if test="not(../@unspscVersion)">
+    <xsl:call-template name="newline"/>
+  </xsl:if>
 </xsl:template>
 
 </xsl:stylesheet>
