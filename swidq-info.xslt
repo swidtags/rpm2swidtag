@@ -22,6 +22,7 @@
     <xsl:text>Tag version		</xsl:text>
     <xsl:apply-templates select="."/>
   </xsl:for-each>
+  <xsl:apply-templates select="swid:Link[@rel = 'supplemental']"/>
 
   <xsl:if test="$file">
     <xsl:text>File			[</xsl:text>
@@ -70,6 +71,7 @@
     or name() = 'xml:lang' or name() = 'xsi:schemaLocation' or name() = 'tagVersion')]"/>
   <xsl:apply-templates select="swid:Meta"/>
   <xsl:apply-templates select="swid:Entity"/>
+  <xsl:apply-templates select="swid:Link[not(@rel = 'supplemental')]"/>
 </xsl:template>
 
 <xsl:template match="
@@ -173,6 +175,39 @@
   <xsl:if test="not(../@unspscVersion)">
     <xsl:call-template name="newline"/>
   </xsl:if>
+</xsl:template>
+
+<xsl:template match="swid:Link">
+  <xsl:call-template name="newline"/>
+  <xsl:text>Link</xsl:text>
+
+  <xsl:for-each select="@rel">
+    <xsl:text> </xsl:text>
+    <xsl:call-template name="quoted-value"/>
+  </xsl:for-each>
+
+  <xsl:for-each select="@href">
+    <xsl:text> to </xsl:text>
+    <xsl:call-template name="quoted-value"/>
+  </xsl:for-each>
+  <xsl:call-template name="newline"/>
+
+  <xsl:apply-templates select="./@*[not(name() = 'rel' or name() = 'href')]"/>
+</xsl:template>
+
+<xsl:template match="swid:Link[@rel = 'supplemental']">
+  <xsl:text>Supplemental</xsl:text>
+
+  <xsl:for-each select="@href">
+    <xsl:text> to		</xsl:text>
+    <xsl:call-template name="quoted-value"/>
+  </xsl:for-each>
+  <xsl:if test="not(@href)">
+    <xsl:text> but href not specified</xsl:text>
+  </xsl:if>
+  <xsl:call-template name="newline"/>
+
+  <xsl:apply-templates select="./@*[not(name() = 'rel' or name() = 'href')]"/>
 </xsl:template>
 
 </xsl:stylesheet>

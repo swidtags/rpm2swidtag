@@ -1,0 +1,12 @@
+Tag id			[test.a.Example-OS-Distro-3.14.x86_64]
+Supplemental to		[swid:test.a.Example-OS-Distro-3.x86_64]
+File			[tests/swiddata2/distro-minor-supplemental.swidtag]
+Name			[Example OS Distribution]
+Version			[3.14.x86_64]
+Colloquial version	[3]
+Revision		[14]
+XML language		[en-US]
+Product			[Example OS]
+
+Entity [tagCreator] regid [a.test] name [Example Some Organization]
+Entity [otherRole] regid [a.test] name [Example Some Organization]

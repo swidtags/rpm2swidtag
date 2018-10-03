@@ -1,0 +1,11 @@
+Tag id			[test.a.Example-OS-Distro-3.x86_64]
+File			[tests/swiddata1/a.test/distro.swidtag]
+Name			[Example OS Distribution]
+Version			[3.x86_64]
+Colloquial version	[3]
+XML language		[en-US]
+Product			[Example OS]
+
+Entity [tagCreator] regid [a.test] name [Example A Organization]
+
+Link [license] to [http://www.apache.org/licenses/LICENSE-2.0]
