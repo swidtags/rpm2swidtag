@@ -1,6 +1,6 @@
-# rpm2swidtag
+# rpm2swidtag and swidq
 
-Exploring the rpm header information and producing SWID tag out of it
+Tools for producing SWID tags from rpm package headers and inspecting the SWID tags
 
 ## Usage
 
