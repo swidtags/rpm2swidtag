@@ -140,7 +140,9 @@
 </xsl:template>
 
 <xsl:template match="swid:Entity">
-  <xsl:call-template name="newline"/>
+  <xsl:if test="position() = 1">
+    <xsl:call-template name="newline"/>
+  </xsl:if>
   <xsl:text>Entity</xsl:text>
 
   <xsl:for-each select="@role">
