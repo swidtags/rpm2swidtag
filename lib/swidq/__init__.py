@@ -43,7 +43,7 @@ class SWIDTag:
 
 			for link in si.iter("{%s}Link" % SWID_XMLNS):
 				rel = link.get("rel")
-				if rel is None:
+				if rel is None or rel != 'supplemental':
 					continue
 				href = link.get("href")
 				if href is None:
