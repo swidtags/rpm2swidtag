@@ -83,6 +83,9 @@ class SWIDTag:
 	def get_supplemental_for(self):
 		return self.supplemental_for
 
+	def is_primary(self):
+		return self.supplemental_for is None
+
 class SWIDTagCollection:
 	def __init__(self):
 		self.by_tags = OrderedDict()
@@ -142,15 +145,11 @@ class SWIDTagCollection:
 			return self._cache_supplemental[tag.get_tagid()]
 
 	def __iter__(self):
-		if not self._cache_supplemental:
-			self.compute_supplemental()
-		self._iter = iter(self.by_tags)
-		return self
-
-	def __next__(self):
-		n = next(self._iter)
-		while self.by_tags[n].get_supplemental_for():
-			n = next(self._iter)
-		if n:
-			return self.by_tags[n]
-		raise StopIteration()
+		for tagid in self.by_tags:
+			tag = self.by_tags[tagid]
+			if tag.is_primary():
+				yield tag
+		for tagid in self.by_tags:
+			tag = self.by_tags[tagid]
+			if not tag.is_primary():
+				yield tag

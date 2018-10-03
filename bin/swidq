@@ -96,7 +96,14 @@ for f in dirs:
 				load_file(g)
 
 tags.compute_supplemental(stderr=stderr, prefix="%s: " % argv[0], debug=opts.debug, silent=opts.silent)
+seen = {}
 for tag in tags:
+	path = tag.get_path()
+	if not tag.is_primary():
+		if path in seen:
+			continue
+	seen[path] = True
+
 	matched = False
 	if opts.paths:
 		matched = True
@@ -123,10 +130,15 @@ for tag in tags:
 			t.process(tag).write_output(stdout.buffer)
 		continue
 
-	print("%s %s" % (tag.get_tagid(), tag.get_path()))
+	if not tag.is_primary():
+		stdout.write("- ")
+
+	stdout.write("%s %s\n" % (tag.get_tagid(), path))
 	if tags.supplemental_for(tag):
 		for stag in tags.supplemental_for(tag):
-			print("+ " + stag.get_tagid() + " " + stag.get_path())
+			spath = stag.get_path()
+			stdout.write("+ %s %s\n" % (stag.get_tagid(), spath))
+			seen[spath] = True
 
 if opts.debug:
 	stderr.write("%s: exitting.\n" % argv[0])
