@@ -70,6 +70,7 @@
   <xsl:apply-templates select="./@*[not(name() = 'tagId' or name() = 'name' or name() = 'version' or name() = 'versionScheme' or name() = 'media'
     or name() = 'xml:lang' or name() = 'xsi:schemaLocation' or name() = 'tagVersion')]"/>
   <xsl:apply-templates select="swid:Meta"/>
+  <xsl:apply-templates select="(swid:Payload|swid:Evidence)/swid:Resource[@type = 'rpm']"/>
   <xsl:apply-templates select="swid:Entity"/>
   <xsl:apply-templates select="swid:Link[not(@rel = 'supplemental')]"/>
 </xsl:template>
@@ -208,6 +209,21 @@
   <xsl:call-template name="newline"/>
 
   <xsl:apply-templates select="./@*[not(name() = 'rel' or name() = 'href')]"/>
+</xsl:template>
+
+<xsl:template match="swid:Resource[@type = 'rpm']">
+  <xsl:text>RPM resource</xsl:text>
+
+  <xsl:for-each select="@rpm">
+    <xsl:text>		</xsl:text>
+    <xsl:call-template name="quoted-value"/>
+  </xsl:for-each>
+  <xsl:if test="not(@rpm)">
+    <xsl:text> but rpm not specified</xsl:text>
+  </xsl:if>
+  <xsl:call-template name="newline"/>
+
+  <xsl:apply-templates select="./@*[not(name() = 'type' or name() = 'rpm')]"/>
 </xsl:template>
 
 </xsl:stylesheet>

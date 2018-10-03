@@ -86,6 +86,12 @@ class SWIDTag:
 	def is_primary(self):
 		return self.supplemental_for is None
 
+	def get_rpm_resources(self):
+		res = []
+		for rpm in self.xml.xpath("/swid:SoftwareIdentity/swid:*[name() = 'Evidence' or name() = 'Payload']/swid:Resource[@type = 'rpm']/@rpm", namespaces = { 'swid': SWID_XMLNS }):
+			res.append(rpm)
+		return res
+
 class SWIDTagCollection:
 	def __init__(self):
 		self.by_tags = OrderedDict()

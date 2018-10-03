@@ -272,6 +272,11 @@ bin/swidq -p -i tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.ou
 diff tests/swiddata2/distro-minor-supplemental.info tmp/swidq.out
 diff <( echo 'bin/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know' ) tmp/swidq.err
 
+bin/swidq --silent -c tests/swidq.conf --rpm pkg3-1.0.0-1.x86_64 > tmp/swidq.out 2> tmp/swidq.err
+diff <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ;
+	echo 'test.b.pkg3-1.0.0-1.x86_64 tests/swiddata1/b.test/pkg3.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
 # Testing errors
 set +e
 OUT=$( bin/swidq -p nonexistent 2>&1 )

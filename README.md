@@ -71,8 +71,8 @@ can be used. It will produce the `.swidtag` files in
 Produced SWID tags can be listed using the `swidq` utility:
 
 ```
-usage: swidq [-h] [-p] [-a] [-n] [-i] [-l] [--dump] [--debug] [--silent]
-             [-c FILE]
+usage: swidq [-h] [-p] [-a] [-n] [--rpm] [-i] [-l] [--dump] [--debug]
+             [--silent] [-c FILE]
              [... [... ...]]
 
 Querying SWID tags.
@@ -84,6 +84,7 @@ selection options:
   -p, --paths           process listed directories and SWID tag files
   -a, --all             match tagId/name with glob pattern, default '*'
   -n, --name            query name instead of tagId
+  --rpm                 query rpm Resource of tagId
 
 output options:
   -i, --info            output some SWID tag fields

@@ -7,5 +7,6 @@ Revision		[1.fc28]
 XML language		[en-US]
 Product			[pkg1]
 Summary			[Example rpm package]
+RPM resource		[pkg1-1.2.0-1.fc28.x86_64]
 
 Entity [tagCreator] regid [invalid.unavailable] name []

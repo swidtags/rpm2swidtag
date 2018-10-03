@@ -19,6 +19,7 @@ select_group = parser.add_argument_group("selection options")
 select_group.add_argument('-p', '--paths', action='store_true', help="process listed directories and SWID tag files")
 select_group.add_argument('-a', '--all', dest='all', action='store_true', help="match tagId/name with glob pattern, default '*'")
 select_group.add_argument('-n', '--name', action='store_true', help="query name instead of tagId")
+select_group.add_argument('--rpm', action='store_true', help="query rpm Resource of tagId")
 
 output_group = parser.add_argument_group("output options")
 output_group.add_argument('-i', '--info', action='store_true', help="output some SWID tag fields")
@@ -110,17 +111,27 @@ for tag in tags:
 	elif opts.all and len(opts.match) == 0:
 		matched = True
 	elif len(opts.match) > 0:
+		value = []
+		if opts.rpm:
+			value = tag.get_rpm_resources()
 		if opts.name:
-			value = tag.get_name()
-		else:
-			value = tag.get_tagid()
+			value.append(tag.get_name())
+		if not (opts.rpm or opts.name):
+			value = [ tag.get_tagid() ]
 		if opts.all:
 			for t in opts.match:
-				if re.compile(translate(t)).match(value):
+				m = re.compile(translate(t))
+				for v in value:
+					if m.match(v):
+						matched = True
+						break
+				if matched:
+					break
+		else:
+			for v in value:
+				if v in opts.match:
 					matched = True
 					break
-		elif value in opts.match:
-			matched = True
 
 	if not matched:
 		continue
