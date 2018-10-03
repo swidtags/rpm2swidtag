@@ -71,8 +71,8 @@ can be used. It will produce the `.swidtag` files in
 Produced SWID tags can be listed using the `swidq` utility:
 
 ```
-usage: swidq [-h] [-p] [-a] [-n] [--rpm] [-i] [-l] [--dump] [--debug]
-             [--silent] [-c FILE]
+usage: swidq [-h] [-p] [-a] [-n] [--rpm] [-i] [-l] [--dump]
+             [--output-stylesheet FILE] [--debug] [--silent] [-c FILE]
              [... [... ...]]
 
 Querying SWID tags.
@@ -90,6 +90,8 @@ output options:
   -i, --info            output some SWID tag fields
   -l, --list-files      list files from the SWID tag
   --dump                dump SWID tag content as indented text
+  --output-stylesheet FILE
+                        output via custom XSLT stylesheet
 
 other options:
   --debug               verbose debugging messages
