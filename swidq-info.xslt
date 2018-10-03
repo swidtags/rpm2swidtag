@@ -73,6 +73,7 @@
   <xsl:apply-templates select="(swid:Payload|swid:Evidence)/swid:Resource[@type = 'rpm']"/>
   <xsl:apply-templates select="swid:Entity"/>
   <xsl:apply-templates select="swid:Link[not(@rel = 'supplemental')]"/>
+  <xsl:apply-templates select="swid:Evidence"/>
 </xsl:template>
 
 <xsl:template match="
@@ -224,6 +225,28 @@
   <xsl:call-template name="newline"/>
 
   <xsl:apply-templates select="./@*[not(name() = 'type' or name() = 'rpm')]"/>
+</xsl:template>
+
+<xsl:template match="swid:Evidence">
+  <xsl:call-template name="newline"/>
+
+  <xsl:text>Evidence gathered at </xsl:text>
+  <xsl:for-each select="@date">
+    <xsl:call-template name="quoted-value"/>
+  </xsl:for-each>
+  <xsl:if test="not(@date)">
+    <xsl:text>unknown time</xsl:text>
+  </xsl:if>
+  <xsl:text> from </xsl:text>
+  <xsl:for-each select="@deviceId">
+    <xsl:call-template name="quoted-value"/>
+  </xsl:for-each>
+  <xsl:if test="not(@deviceId)">
+    <xsl:text>unknown device</xsl:text>
+  </xsl:if>
+  <xsl:call-template name="newline"/>
+
+  <xsl:apply-templates select="./@swid:*[not(name() = 'date' or name() = 'deviceId')]"/>
 </xsl:template>
 
 </xsl:stylesheet>

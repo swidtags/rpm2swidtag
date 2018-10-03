@@ -10,3 +10,5 @@ Summary			[Example rpm package]
 RPM resource		[pkg1-1.2.0-1.fc28.x86_64]
 
 Entity [tagCreator] regid [invalid.unavailable] name []
+
+Evidence gathered at [2018-01-01T12:13:14Z] from [machine.example.test]
