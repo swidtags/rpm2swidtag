@@ -277,6 +277,12 @@ diff <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ;
 	echo 'test.b.pkg3-1.0.0-1.x86_64 tests/swiddata1/b.test/pkg3.swidtag' ) tmp/swidq.out
 diff /dev/null tmp/swidq.err
 
+bin/swidq --silent -c tests/swidq.conf --rpm -a > tmp/swidq.out 2> tmp/swidq.err
+diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ;
+	echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ;
+	echo 'test.b.pkg3-1.0.0-1.x86_64 tests/swiddata1/b.test/pkg3.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
 # Testing errors
 set +e
 OUT=$( bin/swidq -p nonexistent 2>&1 )

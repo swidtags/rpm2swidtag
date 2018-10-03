@@ -98,6 +98,8 @@ for f in dirs:
 
 tags.compute_supplemental(stderr=stderr, prefix="%s: " % argv[0], debug=opts.debug, silent=opts.silent)
 seen = {}
+if opts.all and len(opts.match) == 0:
+	opts.match.append('*')
 for tag in tags:
 	path = tag.get_path()
 	if not tag.is_primary():
@@ -108,9 +110,7 @@ for tag in tags:
 	matched = False
 	if opts.paths:
 		matched = True
-	elif opts.all and len(opts.match) == 0:
-		matched = True
-	elif len(opts.match) > 0:
+	else:
 		value = []
 		if opts.rpm:
 			value = tag.get_rpm_resources()
