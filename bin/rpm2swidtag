@@ -19,7 +19,7 @@ def setup_opts():
 	group2.add_argument('--evidence-deviceid', type=str, dest='device', default=node(), help="Evidence/@deviceId string, defaults to hostname")
 	parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
 	parser.add_argument('--software-creator-from', metavar='FILE', help="set softwareCreator Entity to value in referenced file")
-	parser.add_argument('package', type=str, nargs=argparse.REMAINDER, help='package(s), glob(s) or file name(s)', metavar='...')
+	parser.add_argument('package', type=str, nargs='*', help='package(s), glob(s) or file name(s)', metavar='...')
 	return parser.parse_args()
 
 DATA_DIR = "/etc/rpm2swidtag"
