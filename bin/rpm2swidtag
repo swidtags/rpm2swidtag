@@ -74,7 +74,8 @@ def main():
 					glob=opts.all)
 		except Error as e:
 			stderr.write("%s: %s\n" % (argv[0], e.strerror))
-			exit(3)
+			exit_status = 3
+			continue
 
 		found = False
 		for h in l:
