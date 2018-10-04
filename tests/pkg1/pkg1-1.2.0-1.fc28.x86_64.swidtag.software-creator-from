@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="pkg1" tagId="unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64" version="1.2.0-1.fc28.x86_64" versionScheme="rpm">
+  <Entity name="" regid="invalid.unavailable" role="tagCreator"/>
+  <Meta product="pkg1" colloquialVersion="1.2.0" revision="1.fc28" arch="x86_64" summary="Example rpm package"/>
+  <Evidence date="2018-01-01T12:13:14Z" deviceId="machine.example.test" n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
+    <File size="9" name="testconfig.conf" location="/etc" sha256:hash="a11e9e5746f775b735b09d18d7edb13eb7774534146ed3e61d23ba11ce4ce396" n8060:mutable="true" key="true"/>
+    <Directory name="testdir" location="/usr/share">
+      <File size="0" name="emptyfile" sha256:hash="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" key="true"/>
+      <Directory name="testdir"/>
+      <File size="5" name="testfile" sha256:hash="f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2" key="true"/>
+      <File size="8" name="testsymlink" key="true"/>
+      <File size="7" name="testsymlink-to-dir" key="true"/>
+      <File size="7" name="testsymlink-to-missing" key="true"/>
+      <File size="11" name="testutf8-křížala" sha256:hash="ca501866faea5acff395b2ed6c59c16b4a0a40ad642ec35e12dbaa7bd891920b" key="true"/>
+      <File size="2" name="testutf8-sqrt-√36" sha256:hash="06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7" key="true"/>
+    </Directory>
+    <Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.x86_64"/>
+  </Evidence>
+  <Entity name="Example A Organization" regid="a.test" role="softwareCreator"/>
+</SoftwareIdentity>

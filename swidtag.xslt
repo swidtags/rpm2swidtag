@@ -21,6 +21,7 @@
 
 <xsl:param name="tagcreator-regid" select="/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid"/>
 <xsl:param name="tagcreator-name" select="/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@name"/>
+<xsl:param name="software-creator-from"/>
 
 <xsl:template match="/">
   <xsl:if test="not($name)">
@@ -47,6 +48,17 @@
   </xsl:attribute>
 </xsl:template>
 
+<xsl:template match="swid:SoftwareIdentity[@name]">
+  <xsl:copy>
+    <xsl:apply-templates select="@*|*|text()"/>
+    <xsl:if test="$software-creator-from">
+      <xsl:for-each select="document($software-creator-from)/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' softwareCreator ')]">
+        <Entity name="{@name}" regid="{@regid}" role="softwareCreator"/>
+      </xsl:for-each>
+    </xsl:if>
+  </xsl:copy>
+</xsl:template>
+
 <xsl:template match="swid:SoftwareIdentity[not(@name)]">
   <xsl:copy>
     <xsl:apply-templates select="@*"/>
@@ -65,6 +77,14 @@
     </xsl:if>
     <xsl:if test="$tagcreator-regid and not(swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')])">
       <Entity name="{$tagcreator-name}" regid="{$tagcreator-regid}" role="tagCreator"/>
+    </xsl:if>
+    <xsl:if test="$software-creator-from and not(swid:Entity[contains(concat(' ', @role, ' '), ' softwareCreator ')])">
+      <xsl:for-each select="document($software-creator-from)/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' softwareCreator ')]">
+        <Entity name="{@name}" regid="{@regid}" role="softwareCreator"/>
+      </xsl:for-each>
+    </xsl:if>
+    <xsl:if test="$software-creator-from">
+      <Entity role="{$software-creator-from}"/>
     </xsl:if>
     <xsl:apply-templates select="node()"/>
   </xsl:copy>

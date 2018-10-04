@@ -18,6 +18,7 @@ def setup_opts():
 	group2.add_argument('--authoritative', action='store_true', help="produce authoritative tag (per NIST.IR.8060) with Payload, rather than Evidence")
 	group2.add_argument('--evidence-deviceid', type=str, dest='device', default=node(), help="Evidence/@deviceId string, defaults to hostname")
 	parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
+	parser.add_argument('--software-creator-from', metavar='FILE', help="set softwareCreator Entity to value in referenced file")
 	parser.add_argument('package', type=str, nargs=argparse.REMAINDER, help='package(s), glob(s) or file name(s)', metavar='...')
 	return parser.parse_args()
 
@@ -44,6 +45,8 @@ def process_rpm_with_template(header, template, opts):
 		params['authoritative'] = 'true'
 	else:
 		params['deviceid'] = opts.device
+	if opts.software_creator_from:
+		params['software-creator-from'] = opts.software_creator_from
 	tag = template.generate_tag_for_header(header, params=params)
 	if opts.output_dir and not opts.print_tagid:
 		if opts.output_dir.endswith("/."):
