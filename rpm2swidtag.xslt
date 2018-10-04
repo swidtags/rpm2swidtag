@@ -45,10 +45,12 @@
 </xsl:template>
 
 <xsl:template match="swid:Payload/swid:Resource[@type = 'rpm']">
-  <xsl:copy>
-    <xsl:apply-templates select="@*"/>
-    <xsl:attribute name="rpm"><xsl:call-template name="nevra"/></xsl:attribute>
-  </xsl:copy>
+  <xsl:if test="$arch and not($arch = 'src.rpm')">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsl:attribute name="rpm"><xsl:call-template name="nevra"/></xsl:attribute>
+    </xsl:copy>
+  </xsl:if>
 </xsl:template>
 
 </xsl:stylesheet>
