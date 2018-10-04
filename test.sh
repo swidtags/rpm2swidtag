@@ -303,4 +303,14 @@ test "$OUT" == 'bin/swidq: no file matching [nonexistent]'
 # Test that README has up-to-date usage section
 diff -u <( bin/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
 
+
+# rpm2swidtag to swidq
+find . -name '*.rpm' | while read f ; do
+	diff -u <( rpm -qlp $f | grep -v '^(contains no files)' ) <( bin/rpm2swidtag -p $f | bin/swidq -p - -l )
+done
+
+if rpm -q bash ; then
+	diff -u <( rpm -ql bash ) <( bin/rpm2swidtag bash | bin/swidq -p - -l )
+fi
+
 echo OK.
