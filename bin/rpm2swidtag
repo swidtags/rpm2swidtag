@@ -6,83 +6,93 @@ from platform import node
 from rpm2swidtag import Template, Error, rpm
 import argparse
 
-parser = argparse.ArgumentParser(description='SWID tag parameters.')
-group1 = parser.add_mutually_exclusive_group()
-group1.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
-group1.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
-parser.add_argument('--regid', type=str, help="tag creator's regid")
-parser.add_argument('--output-dir', type=str, metavar='DIR',
-	help="write SWID tags files into regid subdirectory of DIR; or directly into DIR when the path ends with /.")
-group2 = parser.add_mutually_exclusive_group()
-group2.add_argument('--authoritative', action='store_true', help="produce authoritative tag (per NIST.IR.8060) with Payload, rather than Evidence")
-group2.add_argument('--evidence-deviceid', type=str, dest='device', default=node(), help="Evidence/@deviceId string, defaults to hostname")
-parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
-parser.add_argument('package', type=str, nargs=argparse.REMAINDER, help='package(s), glob(s) or file name(s)', metavar='...')
-opts = parser.parse_args()
+def setup_opts():
+	parser = argparse.ArgumentParser(description='SWID tag parameters.')
+	group1 = parser.add_mutually_exclusive_group()
+	group1.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
+	group1.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
+	parser.add_argument('--regid', type=str, help="tag creator's regid")
+	parser.add_argument('--output-dir', type=str, metavar='DIR',
+		help="write SWID tags files into regid subdirectory of DIR; or directly into DIR when the path ends with /.")
+	group2 = parser.add_mutually_exclusive_group()
+	group2.add_argument('--authoritative', action='store_true', help="produce authoritative tag (per NIST.IR.8060) with Payload, rather than Evidence")
+	group2.add_argument('--evidence-deviceid', type=str, dest='device', default=node(), help="Evidence/@deviceId string, defaults to hostname")
+	parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
+	parser.add_argument('package', type=str, nargs=argparse.REMAINDER, help='package(s), glob(s) or file name(s)', metavar='...')
+	return parser.parse_args()
 
 DATA_DIR = "/etc/rpm2swidtag"
-template = None
-try:
-	data_dir = getenv('RPM2SWIDTAG_TEMPLATE_DIR', DATA_DIR)
-	xml_template = getenv('RPM2SWIDTAG_TEMPLATE', data_dir + "/template.swidtag")
-	if opts.print_tagid:
-		xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag-tagid.xslt")
+def load_template(opts):
+	template = None
+	try:
+		data_dir = getenv('RPM2SWIDTAG_TEMPLATE_DIR', DATA_DIR)
+		xml_template = getenv('RPM2SWIDTAG_TEMPLATE', data_dir + "/template.swidtag")
+		if opts.print_tagid:
+			xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag-tagid.xslt")
+		else:
+			xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag.xslt")
+		return Template(xml_template, xslt_file)
+	except Error as e:
+		stderr.write("%s: %s\n" % (argv[0], e.strerror))
+		exit(5)
+
+def process_rpm_with_template(header, template, opts):
+	params = {}
+	if opts.regid:
+		params['tagcreator-regid'] = opts.regid
+	if opts.authoritative:
+		params['authoritative'] = 'true'
 	else:
-		xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag.xslt")
-	template = Template(xml_template, xslt_file)
-except Error as e:
-	stderr.write("%s: %s\n" % (argv[0], e.strerror))
-	exit(5)
-
-if opts.all and not opts.package:
-	opts.package = [ '*' ]
-
-exit_status = 0
-for p in opts.package:
-	l = []
-	msg = "for file [%s]" % p
-	if opts.rpmfile:
-		try:
-			l = [ rpm.read_from_file(p) ]
-		except Error as e:
-			stderr.write("%s: %s\n" % (argv[0], e.strerror))
-			exit(3)
+		params['deviceid'] = opts.device
+	tag = template.generate_tag_for_header(header, params=params)
+	if opts.output_dir and not opts.print_tagid:
+		if opts.output_dir.endswith("/."):
+			dir = opts.output_dir
+		else:
+			dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
+		if not path.exists(dir):
+			makedirs(dir)
+		tag.write_output(dir + '/' + tag.get_tagid() + '.swidtag')
 	else:
-		msg = "for package [%s]" % p
-		try:
-			# We only assume the use of _RPM2SWIDTAG_RPMDBPATH for testing, really
-			l = rpm.read_from_db(p, rpmdb_path=getenv('_RPM2SWIDTAG_RPMDBPATH'), glob=opts.all)
-		except Error as e:
-			stderr.write("%s: %s\n" % (argv[0], e.strerror))
-			exit(3)
+		tag.write_output(stdout.buffer)
 
-	found = False
-	for h in l:
-		found = True
+def main():
+	opts = setup_opts()
+	template = load_template(opts)
+
+	if opts.all and not opts.package:
+		opts.package = [ '*' ]
+
+	exit_status = 0
+	for p in opts.package:
 		try:
-			params = {}
-			if opts.regid:
-				params['tagcreator-regid'] = opts.regid
-			if opts.authoritative:
-				params['authoritative'] = 'true'
+			if opts.rpmfile:
+				l = [ rpm.read_from_file(p) ]
 			else:
-				params['deviceid'] = opts.device
-			tag = template.generate_tag_for_header(h, params=params)
-			if opts.output_dir and not opts.print_tagid:
-				if opts.output_dir.endswith("/."):
-					dir = opts.output_dir
+				# We only assume the use of _RPM2SWIDTAG_RPMDBPATH for testing, really
+				l = rpm.read_from_db(p, rpmdb_path=getenv('_RPM2SWIDTAG_RPMDBPATH'),
+					glob=opts.all)
+		except Error as e:
+			stderr.write("%s: %s\n" % (argv[0], e.strerror))
+			exit(3)
+
+		found = False
+		for h in l:
+			found = True
+			try:
+				process_rpm_with_template(h, template, opts)
+			except Error as e:
+				if opts.rpmfile:
+					msg = "for file [%s]" % p
 				else:
-					dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
-				if not path.exists(dir):
-					makedirs(dir)
-				tag.write_output(dir + '/' + tag.get_tagid() + '.swidtag')
-			else:
-				tag.write_output(stdout.buffer)
-		except Error as e:
-			stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
-			exit(6)
-	if not found:
-		stderr.write("%s: No package [%s] found in database\n" % (argv[0], p))
-		exit_status = 7
+					msg = "for package [%s]" % p
+				stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
+				exit(6)
+		if not found:
+			stderr.write("%s: No package [%s] found in database\n" % (argv[0], p))
+			exit_status = 7
 
-exit(exit_status)
+	return exit_status
+
+if __name__ == '__main__':
+        exit(main())

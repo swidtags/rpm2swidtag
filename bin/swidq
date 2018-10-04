@@ -14,147 +14,167 @@ CONFIG_FILE = "/etc/swid/swidq.conf"
 SWIDTAGS_DIRS = "/etc/swid/swidtags.d/*"
 STYLESHEET_DIR = "/usr/share/swidq/stylesheets"
 
-parser = argparse.ArgumentParser(description='Querying SWID tags.')
-select_group = parser.add_argument_group("selection options")
-select_group.add_argument('-p', '--paths', action='store_true', help="process listed directories and SWID tag files")
-select_group.add_argument('-a', '--all', dest='all', action='store_true', help="match tagId/name with glob pattern, default '*'")
-select_group.add_argument('-n', '--name', action='store_true', help="query name instead of tagId")
-select_group.add_argument('--rpm', action='store_true', help="query rpm Resource of tagId")
+def setup_opts():
+	parser = argparse.ArgumentParser(description='Querying SWID tags.')
+	select_group = parser.add_argument_group("selection options")
+	select_group.add_argument('-p', '--paths', action='store_true', help="process listed directories and SWID tag files")
+	select_group.add_argument('-a', '--all', dest='all', action='store_true', help="match tagId/name with glob pattern, default '*'")
+	select_group.add_argument('-n', '--name', action='store_true', help="query name instead of tagId")
+	select_group.add_argument('--rpm', action='store_true', help="query rpm Resource of tagId")
 
-output_group = parser.add_argument_group("output options")
-output_group.add_argument('-i', '--info', action='store_true', help="output some SWID tag fields")
-output_group.add_argument('-l', '--list-files', action='store_true', help="list files from the SWID tag")
-output_group.add_argument('--dump', action='store_true', help="dump SWID tag content as indented text")
-output_group.add_argument('--output-stylesheet', metavar='FILE', help="output via custom XSLT stylesheet")
+	output_group = parser.add_argument_group("output options")
+	output_group.add_argument('-i', '--info', action='store_true', help="output some SWID tag fields")
+	output_group.add_argument('-l', '--list-files', action='store_true', help="list files from the SWID tag")
+	output_group.add_argument('--dump', action='store_true', help="dump SWID tag content as indented text")
+	output_group.add_argument('--output-stylesheet', metavar='FILE', help="output via custom XSLT stylesheet")
 
-other_group = parser.add_argument_group("other options")
-other_group.add_argument('--debug', action='store_true', help="verbose debugging messages")
-other_group.add_argument('--silent', action='store_true', help="suppress non-fatal warnings")
-other_group.add_argument('-c', '--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
+	other_group = parser.add_argument_group("other options")
+	other_group.add_argument('--debug', action='store_true', help="verbose debugging messages")
+	other_group.add_argument('--silent', action='store_true', help="suppress non-fatal warnings")
+	other_group.add_argument('-c', '--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
 
-positional_group = parser.add_argument_group("remaining arguments")
-positional_group.add_argument('match', type=str, nargs='*', help='tagId, name, or path', metavar='...')
-opts = parser.parse_args()
+	positional_group = parser.add_argument_group("remaining arguments")
+	positional_group.add_argument('match', type=str, nargs='*', help='tagId, name, or path', metavar='...')
+	return parser.parse_args()
 
-stylesheet_dir = getenv('SWIDQ_STYLESHEET_DIR', STYLESHEET_DIR)
-transforms = []
-if opts.output_stylesheet:
-	transforms.append(XSLT(opts.output_stylesheet))
-if opts.dump:
-	transforms.append(XSLT(stylesheet_dir + '/swidq-dump.xslt'))
-if opts.info:
-	transforms.append(XSLT(stylesheet_dir + '/swidq-info.xslt'))
-if opts.list_files:
-	transforms.append(XSLT(stylesheet_dir + '/swidq-files.xslt'))
+def setup_transforms(opts):
+	stylesheet_dir = getenv('SWIDQ_STYLESHEET_DIR', STYLESHEET_DIR)
+	transforms = []
+	if opts.output_stylesheet:
+		transforms.append(XSLT(opts.output_stylesheet))
+	if opts.dump:
+		transforms.append(XSLT(stylesheet_dir + '/swidq-dump.xslt'))
+	if opts.info:
+		transforms.append(XSLT(stylesheet_dir + '/swidq-info.xslt'))
+	if opts.list_files:
+		transforms.append(XSLT(stylesheet_dir + '/swidq-files.xslt'))
+	return transforms
 
-config = ConfigParser(delimiters = '=', comment_prefixes = '#')
-config['swidq'] = { 'dir': SWIDTAGS_DIRS }
-config.read(opts.config)
-if opts.debug:
-	stderr.write("%s: config file [%s]\n" % (argv[0], opts.config))
-	for s in config.sections():
-		stderr.write("%s: config data [%s]\n" % (argv[0], s))
-		for k in config[s].keys():
-			stderr.write("%s: config data %s = %s\n" % (argv[0], k, config[s][k]))
-
-exit_status = 0
-tags = SWIDTagCollection()
-
-def load_file(f):
+def load_config(opts):
+	config = ConfigParser(delimiters = '=', comment_prefixes = '#')
+	config['swidq'] = { 'dir': SWIDTAGS_DIRS }
+	config.read(opts.config)
 	if opts.debug:
+		stderr.write("%s: config file [%s]\n" % (argv[0], opts.config))
+		for s in config.sections():
+			stderr.write("%s: config data [%s]\n" % (argv[0], s))
+			for k in config[s].keys():
+				stderr.write("%s: config data %s = %s\n" % (argv[0], k, config[s][k]))
+	return config
+
+def load_file(tags, f, debug=False, silent=False):
+	if debug:
 		stderr.write("%s: parsing [%s]\n" % (argv[0], f))
 	(tag, fatal, errors) = tags.load_swidtag_file(f)
-	if (fatal or (errors and not opts.silent)):
+	if (fatal or (errors and not silent)):
 		for e in errors:
 			stderr.write("%s: %s\n" % (argv[0], e))
 	if not tag:
 		return
-	if opts.debug:
+	if debug:
 		stderr.write("%s: %s\n" % (argv[0], tag.get_info()))
+	return tag
 
+def load_tag_collection(dirs, debug=False, silent=False):
+	exit_status = 0
+	tags = SWIDTagCollection()
 
-dirs = None
-if opts.paths:
-	dirs = opts.match
+	for f in dirs:
+		if isfile(f) or f == '-':
+			load_file(tags, f, debug, silent)
+		else:
+			fg = sorted(iglob(f))
+			if not fg:
+				stderr.write("%s: no file matching [%s]\n" % (argv[0], f))
+				exit_status = 1
+			for g in fg:
+				if isdir(g):
+					for gg in sorted(iglob(g + "/*.swidtag")):
+						load_file(tags, gg, debug, silent)
+				else:
+					load_file(tags, g, debug, silent)
 
-if dirs is None:
-	d = config.get('swidq', 'dir')
-	if d == '':
-		stderr.write("%s: no dir configured in [%s]\n" % (argv[0], opts.config))
-		exit(2)
-	dirs = re.split(r' +', d)
+	return (tags, exit_status)
 
-for f in dirs:
-	if isfile(f) or f == '-':
-		load_file(f)
-	else:
-		fg = sorted(iglob(f))
-		if not fg:
-			stderr.write("%s: no file matching [%s]\n" % (argv[0], f))
-			exit_status = 1
-		for g in fg:
-			if isdir(g):
-				for gg in sorted(iglob(g + "/*.swidtag")):
-					load_file(gg)
+def process_tag_collection(tags, transforms, opts):
+	tags.compute_supplemental(stderr=stderr, prefix="%s: " % argv[0], debug=opts.debug, silent=opts.silent)
+	seen = {}
+	if opts.all and len(opts.match) == 0:
+		opts.match.append('*')
+	for tag in tags:
+		path = tag.get_path()
+		if not tag.is_primary():
+			if path in seen:
+				continue
+		seen[path] = True
+
+		matched = False
+		if opts.paths:
+			matched = True
+		else:
+			value = []
+			if opts.rpm:
+				value = tag.get_rpm_resources()
+			if opts.name:
+				value.append(tag.get_name())
+			if not (opts.rpm or opts.name):
+				value = [ tag.get_tagid() ]
+			if opts.all:
+				for t in opts.match:
+					m = re.compile(translate(t))
+					for v in value:
+						if m.match(v):
+							matched = True
+							break
+					if matched:
+						break
 			else:
-				load_file(g)
-
-tags.compute_supplemental(stderr=stderr, prefix="%s: " % argv[0], debug=opts.debug, silent=opts.silent)
-seen = {}
-if opts.all and len(opts.match) == 0:
-	opts.match.append('*')
-for tag in tags:
-	path = tag.get_path()
-	if not tag.is_primary():
-		if path in seen:
-			continue
-	seen[path] = True
-
-	matched = False
-	if opts.paths:
-		matched = True
-	else:
-		value = []
-		if opts.rpm:
-			value = tag.get_rpm_resources()
-		if opts.name:
-			value.append(tag.get_name())
-		if not (opts.rpm or opts.name):
-			value = [ tag.get_tagid() ]
-		if opts.all:
-			for t in opts.match:
-				m = re.compile(translate(t))
 				for v in value:
-					if m.match(v):
+					if v in opts.match:
 						matched = True
 						break
-				if matched:
-					break
-		else:
-			for v in value:
-				if v in opts.match:
-					matched = True
-					break
 
-	if not matched:
-		continue
+		if not matched:
+			continue
 
-	if transforms:
-		for t in transforms:
-			t.process(tag).write_output(stdout.buffer)
-		continue
+		if transforms:
+			for t in transforms:
+				t.process(tag).write_output(stdout.buffer)
+			continue
 
-	if not tag.is_primary():
-		stdout.write("- ")
+		if not tag.is_primary():
+			stdout.write("- ")
 
-	stdout.write("%s %s\n" % (tag.get_tagid(), path))
-	if tags.supplemental_for(tag):
-		for stag in tags.supplemental_for(tag):
-			spath = stag.get_path()
-			stdout.write("+ %s %s\n" % (stag.get_tagid(), spath))
-			seen[spath] = True
+		stdout.write("%s %s\n" % (tag.get_tagid(), path))
+		if tags.supplemental_for(tag):
+			for stag in tags.supplemental_for(tag):
+				spath = stag.get_path()
+				stdout.write("+ %s %s\n" % (stag.get_tagid(), spath))
+				seen[spath] = True
 
-if opts.debug:
-	stderr.write("%s: exitting.\n" % argv[0])
+def main():
+	opts = setup_opts()
+	transforms = setup_transforms(opts)
+	config = load_config(opts)
 
-exit(exit_status)
+	dirs = None
+	if opts.paths:
+		dirs = opts.match
+
+	if dirs is None:
+		d = config.get('swidq', 'dir')
+		if d == '':
+			stderr.write("%s: no dir configured in [%s]\n" % (argv[0], opts.config))
+			exit(2)
+		dirs = re.split(r' +', d)
+
+	(tags, exit_status) = load_tag_collection(dirs, opts.debug, opts.silent)
+	process_tag_collection(tags, transforms, opts)
+
+	if opts.debug:
+		stderr.write("%s: exitting.\n" % argv[0])
+
+	return exit_status
+
+if __name__ == '__main__':
+	exit(main())
