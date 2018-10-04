@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="bash" tagId="unavailable.invalid.bash-4.4.23-4.fc30.x86_64" version="4.4.23-4.fc30.x86_64" versionScheme="rpm">
+  <Entity name="" regid="invalid.unavailable" role="tagCreator"/>
+  <Meta product="bash" colloquialVersion="4.4.23" revision="4.fc30" arch="x86_64" summary="The GNU Bourne Again shell"/>
+  <Evidence date="2018-10-04T09:16:51Z" deviceId="kvm-02-guest25.rhts.eng.brq.redhat.com" n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
+    <File size="18" name=".bash_logout" location="/etc/skel" sha256:hash="2584c4ba8b0d2a52d94023f420b7e356a1b1a3f2291ad5eba06683d58c48570d" n8060:mutable="true" key="true"/>
+    <File size="141" name=".bash_profile" location="/etc/skel" sha256:hash="28bc81aadfd6e6639675760dc11dddd4ed1fcbd08f423224a93c09802552b87e" n8060:mutable="true" key="true"/>
+    <File size="312" name=".bashrc" location="/etc/skel" sha256:hash="30a80bfce3d108d6878cf13dfb1f3a1ea15b141dbdc5bc5803f4ab40a2a39f9c" n8060:mutable="true" key="true"/>
+    <File size="33" name="alias" location="/usr/bin" sha256:hash="c277897660adddce26a75871188bdae7ffa73f571a6fb779090a4c92df33988d" key="true"/>
+    <File size="1190216" name="bash" location="/usr/bin" sha256:hash="c557f5726dd1d29f5dedc9e1d37c4ee73846ed00d4a79987c13174f8d973e9ff" key="true"/>
+    <File size="10" name="bashbug" location="/usr/bin" key="true"/>
+    <File size="7335" name="bashbug-64" location="/usr/bin" sha256:hash="9faa801c47559ac2bdfc402ee0c9680ea538c1747d1914c449f5181659746a54" key="true"/>
+    <File size="30" name="bg" location="/usr/bin" sha256:hash="5a864f2047a83aa767ac1a3fca577e5f3a8eb4d129b4b1974fb2009960a9a0be" key="true"/>
+    <File size="30" name="cd" location="/usr/bin" sha256:hash="3f794988bc9b6e734d06c6507b4335054d01760a741b60104a49543cf7a964ed" key="true"/>
+    <File size="35" name="command" location="/usr/bin" sha256:hash="aafc06c6657ccf32c0af350777aa38537ff90685345dc19078afaa26bbe4412a" key="true"/>
+    <File size="30" name="fc" location="/usr/bin" sha256:hash="86495d1781eeec50764ce4e629f316087c2b53054b999308f40580633601b270" key="true"/>
+    <File size="30" name="fg" location="/usr/bin" sha256:hash="0af28b724b8b1850fa6b4f232cf51229b2efed0333ebfb51d940798e28e0d625" key="true"/>
+    <File size="35" name="getopts" location="/usr/bin" sha256:hash="7f1a970be00f749e2c9a820592e8109ddb7efc76cd8f8f47b748a16feab8cabb" key="true"/>
+    <File size="32" name="hash" location="/usr/bin" sha256:hash="a5c3efd29eb134da49b68b78155c0338ab614eec99094bd07cdda7e99e53ddca" key="true"/>
+    <File size="32" name="jobs" location="/usr/bin" sha256:hash="1e4046021f3ae7abb820a995c8572cda3f3b4a4d14cb50e3bcb0f50f391a5bd2" key="true"/>
+    <File size="32" name="read" location="/usr/bin" sha256:hash="f0f717be7c907acc0c1c4b489d619663076e5f08ed56257d647d192d492a147b" key="true"/>
+    <File size="4" name="sh" location="/usr/bin" key="true"/>
+    <File size="32" name="type" location="/usr/bin" sha256:hash="36d5d35fee92010a0869fa9229d201b54f795217557105409e381f471a8038cd" key="true"/>
+    <File size="34" name="ulimit" location="/usr/bin" sha256:hash="d66bfb63a8afcea2c6d17561f27f8d3ddb49062f221c9b18d64e7c846c34ff94" key="true"/>
+    <File size="33" name="umask" location="/usr/bin" sha256:hash="975d986bf2124069a5781239ba169c894f3c0c152e3262cbddd64fff74e88171" key="true"/>
+    <File size="35" name="unalias" location="/usr/bin" sha256:hash="9631a027d22e68cb01c9753dc6cd44b9b210007cb0c1162cab12a715a2bcef60" key="true"/>
+    <File size="32" name="wait" location="/usr/bin" sha256:hash="238e0bce60ea5baff73d00fe4bb580335c5fb2c50fc3d9527f80fa57f5648550" key="true"/>
+    <Directory name=".build-id" location="/usr/lib">
+      <Directory name="48">
+        <File size="24" name="04c654c67d1555a98bb75a576cc00a88504bce" key="true"/>
+      </Directory>
+    </Directory>
+    <Directory name="bash" location="/usr/share/doc">
+      <File size="99966" name="FAQ" sha256:hash="24a49bf217b350e9c27dc8bcc1317bbad2c2a0d147e0bca72e09dc295b007124"/>
+      <File size="7072" name="INTRO" sha256:hash="88d4f438af6af108d5970aed3a88208a295b6dafc2d55b549169bb0a372ec1fb"/>
+      <File size="1693" name="RBASH" sha256:hash="be24c8b82aef28c89b11d1276a0cae1792f29802b847cd5f8b16481b7785d7b2"/>
+      <File size="1084" name="README" sha256:hash="255cce4868c3fd2887c050fc4e56edc3a246e3dfedd8a58c16e57eaeaf43bee5"/>
+      <File size="342306" name="bash.html" sha256:hash="685b744dd3aca1280935972160c523a1dbb55a6b3872f7d554b5cc7e1cb13f22"/>
+      <File size="774491" name="bashref.html" sha256:hash="c6e6a560dab921011c6dd746f7403605c9bd0e0b32dab4cc8177a7aa67dee86f"/>
+    </Directory>
+    <File size="134929" name="bash.info.gz" location="/usr/share/info" sha256:hash="144316c899b43b421a8a41db50d29ad80b310968573dc60fbe292a867218f254"/>
+    <Directory name="bash" location="/usr/share/licenses">
+      <File size="35147" name="COPYING" sha256:hash="8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"/>
+    </Directory>
+    <File size="1224" name="bash.mo" location="/usr/share/locale/af/LC_MESSAGES" sha256:hash="63f4b40d8f5aff8626046e1fbfa9581da61eb5c95807ec59c7f960f0e7995add" key="true"/>
+    <File size="219559" name="bash.mo" location="/usr/share/locale/bg/LC_MESSAGES" sha256:hash="02b977fd425ad7d6e39e19cdf678a84b0d5aaf5cb2ca12a6e456187419095671" key="true"/>
+    <File size="99978" name="bash.mo" location="/usr/share/locale/ca/LC_MESSAGES" sha256:hash="80ea288e396693f4bdcd0f1083502f92d2a02d458672abe01f80306359393a34" key="true"/>
+    <File size="163599" name="bash.mo" location="/usr/share/locale/cs/LC_MESSAGES" sha256:hash="d20e8c47fa7f903d3fb44e31436c14dff44e4b99841aaac6928c383b77a4d5d1" key="true"/>
+    <File size="79327" name="bash.mo" location="/usr/share/locale/da/LC_MESSAGES" sha256:hash="07a67fa276793e3c35767bfbf4c48f43a9fd1142c6fe3f1249b70136638b5289" key="true"/>
+    <File size="94101" name="bash.mo" location="/usr/share/locale/de/LC_MESSAGES" sha256:hash="20be77533fdb5a90fcc3027bb8d0bde0fed4679afe8cd814e9adbe5c9b26ec6a" key="true"/>
+    <File size="38710" name="bash.mo" location="/usr/share/locale/el/LC_MESSAGES" sha256:hash="40b37ab77fd0d204783feed0992a1f226e821f945a998836e4d41b5e1d82f660" key="true"/>
+    <File size="168863" name="bash.mo" location="/usr/share/locale/en@boldquot/LC_MESSAGES" sha256:hash="ddeb5f0e099d4d5ffba3e5c1a5b695b1dc690d9688c9fea160e274e82b77f013" key="true"/>
+    <File size="167255" name="bash.mo" location="/usr/share/locale/en@quot/LC_MESSAGES" sha256:hash="313c2056eeeb0ceeaa3f23ad767811eed8766c9f47064487001016194d079c44" key="true"/>
+    <File size="151825" name="bash.mo" location="/usr/share/locale/eo/LC_MESSAGES" sha256:hash="f5caf9cc0556e4e3235b13ca713bbe06eb5d860f7563641a53bc7b55872f6e2e" key="true"/>
+    <File size="95671" name="bash.mo" location="/usr/share/locale/es/LC_MESSAGES" sha256:hash="24be7de322122ba1506fe5fdd7be56fceb0af45a1391fe294fdde92884300443" key="true"/>
+    <File size="12133" name="bash.mo" location="/usr/share/locale/et/LC_MESSAGES" sha256:hash="6edf4a08b1d369aaa1a370014bee57bcab3fe615dddc879f8d60645d2afa2316" key="true"/>
+    <File size="81468" name="bash.mo" location="/usr/share/locale/fi/LC_MESSAGES" sha256:hash="667e81f15709410962674535c4c17cdfbd14f53e6c3b74d5ce9d7a636eca6f27" key="true"/>
+    <File size="167383" name="bash.mo" location="/usr/share/locale/fr/LC_MESSAGES" sha256:hash="9bdc909988d4c9760734da97223d17d705a91ee80943be82301a63754f39dd7e" key="true"/>
+    <File size="55927" name="bash.mo" location="/usr/share/locale/ga/LC_MESSAGES" sha256:hash="e6ce15c0f69f82ee71bdfb2a58e6da03ad967aa77974bbe5080eff7cba27ea99" key="true"/>
+    <File size="59107" name="bash.mo" location="/usr/share/locale/gl/LC_MESSAGES" sha256:hash="c9e2bd484d41feedf2bf224dfab4ec3a45027b9bfa6581119f97a121b982dfe4" key="true"/>
+    <File size="33869" name="bash.mo" location="/usr/share/locale/hr/LC_MESSAGES" sha256:hash="dbf367d634e5a5690813925996d0501efda54caa1dc076b6532d7b0ffa31dfcc" key="true"/>
+    <File size="160744" name="bash.mo" location="/usr/share/locale/hu/LC_MESSAGES" sha256:hash="8d30db27173586cb216a96c90946ec3380ca698ccc6a098b680484e775eb70b0" key="true"/>
+    <File size="99123" name="bash.mo" location="/usr/share/locale/id/LC_MESSAGES" sha256:hash="f766d03c8f3f7a57b2bf15b2d65bfd7ff1b1fe9d495e43fd403e173e74c600e4" key="true"/>
+    <File size="95487" name="bash.mo" location="/usr/share/locale/it/LC_MESSAGES" sha256:hash="45c6d072fba3e6460739acabcf952b99b7092037c7dbe9d55fb4be70c8d4089a" key="true"/>
+    <File size="110336" name="bash.mo" location="/usr/share/locale/ja/LC_MESSAGES" sha256:hash="6db5cfce8c6fbbdd3fd84071a69bd10887653ae3fb6877223d46a0eba3b2078a" key="true"/>
+    <File size="29236" name="bash.mo" location="/usr/share/locale/lt/LC_MESSAGES" sha256:hash="b73d483d348d7199459f1e9fc1e6d3a1c7f69170aacf5b28a8abb953e5079eca" key="true"/>
+    <File size="152775" name="bash.mo" location="/usr/share/locale/nb/LC_MESSAGES" sha256:hash="d089670f042a7bc77c9c606d95ab824132131a5584aa80ef73773c276bd125d3" key="true"/>
+    <File size="159651" name="bash.mo" location="/usr/share/locale/nl/LC_MESSAGES" sha256:hash="40b1ad582bdd7fa15a1fd8b5bd686965e19379378e94860965f448be96e4fa01" key="true"/>
+    <File size="163030" name="bash.mo" location="/usr/share/locale/pl/LC_MESSAGES" sha256:hash="190551a2d0a2a0edcd9f911618f34d24f28edf5377b58a17667a4fdb0747ea40" key="true"/>
+    <File size="162582" name="bash.mo" location="/usr/share/locale/pt_BR/LC_MESSAGES" sha256:hash="0dfc6505b824ac0818b8559492e8b3ef16610d84d2ce64e9408a53267d3ccc8a" key="true"/>
+    <File size="9312" name="bash.mo" location="/usr/share/locale/ro/LC_MESSAGES" sha256:hash="496e4cf9774d34559ad98b828d57565268ea485bb44dd07b1e7e308bc1bb61a7" key="true"/>
+    <File size="134863" name="bash.mo" location="/usr/share/locale/ru/LC_MESSAGES" sha256:hash="a976a9a419850eb0dd94328a255f5c5ed4d5fd96b078e2966a6db8674bf8a27c" key="true"/>
+    <File size="94657" name="bash.mo" location="/usr/share/locale/sk/LC_MESSAGES" sha256:hash="5e8c883b6a98e91210f7d74435dab975631495c667de96e0d5993c6e3b821bc9" key="true"/>
+    <File size="91641" name="bash.mo" location="/usr/share/locale/sl/LC_MESSAGES" sha256:hash="eed448df17e35b877fe0365cdeba3bdf282350f5b21a983e73cf7510525a4f44" key="true"/>
+    <File size="205678" name="bash.mo" location="/usr/share/locale/sr/LC_MESSAGES" sha256:hash="33e987de0167805f1a85e3623ab33a709e7308bd63656153c45f40459e913bf9" key="true"/>
+    <File size="156578" name="bash.mo" location="/usr/share/locale/sv/LC_MESSAGES" sha256:hash="2c65844daa20f36abdf0d3be3dd3d969f87d0540100974c6f8a64280c40d681c" key="true"/>
+    <File size="80056" name="bash.mo" location="/usr/share/locale/tr/LC_MESSAGES" sha256:hash="ac314659e5f754b951e671be1f3fd117d15cc08662ab6c2a2adb485554881c01" key="true"/>
+    <File size="209474" name="bash.mo" location="/usr/share/locale/uk/LC_MESSAGES" sha256:hash="db8e7a01ee2199be771c8c1864b745599ce59ad165c790bbd7e0f338249e935c" key="true"/>
+    <File size="168996" name="bash.mo" location="/usr/share/locale/vi/LC_MESSAGES" sha256:hash="68a4dfe06d7ad62c4f94388f2e57b09c4e6bc8ad49ddb3e1b1326488248b5dd2" key="true"/>
+    <File size="147592" name="bash.mo" location="/usr/share/locale/zh_CN/LC_MESSAGES" sha256:hash="a0edb23a68383ac04b004b32236f94a4c0a5acf3c43f61aefc93bb9dde30a409" key="true"/>
+    <File size="93961" name="bash.mo" location="/usr/share/locale/zh_TW/LC_MESSAGES" sha256:hash="596844ccf9d6de73d452089617727a15623d727bdd0935a1d86a5ed468454d41" key="true"/>
+    <File size="40" name="..1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name=":.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="[.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="alias.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="86439" name="bash.1.gz" location="/usr/share/man/man1" sha256:hash="3c6f5747337d5111cfe501f563848a534a5239e662a43c89800b7a0641c99e1a"/>
+    <File size="12" name="bashbug-64.1.gz" location="/usr/share/man/man1"/>
+    <File size="972" name="bashbug.1.gz" location="/usr/share/man/man1" sha256:hash="3af88d0f349522d9d041d52fe75e3a001893e0fee123106b1e0985544f7c0a54"/>
+    <File size="40" name="bg.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="bind.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="break.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="builtin.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="563" name="builtins.1.gz" location="/usr/share/man/man1" sha256:hash="c0ba4b05998e223299cdcd29e36af3998dc9d56368f832ec8163dc6ea2c9ef2b"/>
+    <File size="40" name="caller.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="cd.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="command.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="compgen.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="complete.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="compopt.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="continue.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="declare.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="dirs.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="disown.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="enable.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="eval.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="exec.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="exit.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="export.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="fc.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="fg.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="getopts.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="hash.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="help.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="history.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="jobs.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="let.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="local.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="logout.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="mapfile.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="popd.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="pushd.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="read.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="readonly.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="return.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="set.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="9" name="sh.1.gz" location="/usr/share/man/man1"/>
+    <File size="40" name="shift.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="shopt.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="source.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="suspend.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="times.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="trap.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="type.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="typeset.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="ulimit.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="umask.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="unalias.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="unset.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <File size="40" name="wait.1.gz" location="/usr/share/man/man1" sha256:hash="55e10cb00b262abf4a13e91e0bbb6040e1da2e428c9fb844430f4d0650c21ec0"/>
+    <Resource type="rpm" rpm="bash-4.4.23-4.fc30.x86_64"/>
+  </Evidence>
+</SoftwareIdentity>

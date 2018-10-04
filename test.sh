@@ -313,4 +313,8 @@ if rpm -q bash ; then
 	diff -u <( rpm -ql bash ) <( bin/rpm2swidtag bash | bin/swidq -p - -l )
 fi
 
+for f in tests/swid_generator/*.swidtag ; do
+	diff -u ${f/.swidtag/.files} <( bin/swidq -p $f -l )
+done
+
 echo OK.
