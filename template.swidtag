@@ -12,7 +12,7 @@
   version=""
   versionScheme="">
   <Entity name="" regid="invalid.unavailable" role="tagCreator"/>
-  <Meta product="" colloquialVersion="" revision="" summary=""/>
+  <Meta product="" colloquialVersion="" revision="" arch="" summary=""/>
   <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
     <Resource type="rpm"/>
   </Payload>

@@ -14,6 +14,7 @@ SoftwareIdentity
     @product: [pkg1]
     @colloquialVersion: [1.2.0]
     @revision: [1.fc28]
+    @arch: [x86_64]
     @summary: [Example rpm package]
   - Evidence
     @date: [2018-01-01T12:13:14Z]

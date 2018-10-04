@@ -17,6 +17,7 @@
 <xsl:param name="epoch" />
 <xsl:param name="arch" />
 <xsl:param name="summary" />
+<xsl:param name="arch" />
 
 <xsl:param name="tagcreator-regid" select="/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid"/>
 <xsl:param name="tagcreator-name" select="/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@name"/>
@@ -58,6 +59,7 @@
         <xsl:call-template name="meta_product_attr" />
         <xsl:call-template name="meta_cv_attr" />
         <xsl:call-template name="meta_revision_attr" />
+        <xsl:call-template name="meta_arch_attr" />
         <xsl:call-template name="meta_summary_attr" />
       </Meta>
     </xsl:if>
@@ -74,6 +76,7 @@
     <xsl:if test="not(@product)"> <xsl:call-template name="meta_product_attr" /> </xsl:if>
     <xsl:if test="not(@colloquialVersion)"> <xsl:call-template name="meta_cv_attr" /> </xsl:if>
     <xsl:if test="not(@revision)"> <xsl:call-template name="meta_revision_attr" /> </xsl:if>
+    <xsl:if test="not(@arch)"> <xsl:call-template name="meta_arch_attr" /> </xsl:if>
     <xsl:if test="not(@summary)"> <xsl:call-template name="meta_summary_attr" /> </xsl:if>
     <xsl:apply-templates select="node()"/>
   </xsl:copy>
@@ -130,6 +133,14 @@
   <xsl:attribute name="tagId">
     <xsl:call-template name="si_tagid_value"/>
   </xsl:attribute>
+</xsl:template>
+
+<xsl:template name="meta_arch_attr" match="swid:Meta/@arch">
+  <xsl:if test="$arch and not($arch = 'src.rpm')">
+    <xsl:attribute name="arch">
+      <xsl:value-of select="$arch" />
+    </xsl:attribute>
+  </xsl:if>
 </xsl:template>
 
 <xsl:template name="meta_summary_attr" match="swid:Meta/@summary">

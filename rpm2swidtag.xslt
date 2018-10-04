@@ -18,6 +18,7 @@
 <xsl:param name="epoch" select="f:package_tag('epoch')"/>
 <xsl:param name="arch" select="f:package_tag('arch')"/>
 <xsl:param name="summary" select="f:package_tag('summary')"/>
+<xsl:param name="arch" select="f:package_tag('arch')"/>
 
 <xsl:param name="authoritative" select="'false'"/>
 <xsl:param name="deviceid" select="'localhost.localdomain'"/>
