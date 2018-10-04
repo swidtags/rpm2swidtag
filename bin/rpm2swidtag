@@ -85,6 +85,7 @@ def main():
 			found = True
 			try:
 				process_rpm_with_template(h, template, opts)
+				stdout.flush()
 			except Error as e:
 				if opts.rpmfile:
 					msg = "for file [%s]" % p
@@ -92,6 +93,9 @@ def main():
 					msg = "for package [%s]" % p
 				stderr.write("%s: Error generating SWID tag %s: %s\n" % (argv[0], msg, e.strerror))
 				exit(6)
+			except BrokenPipeError as e:
+				stderr.close()
+				return exit_status
 		if not found:
 			stderr.write("%s: No package [%s] found in database\n" % (argv[0], p))
 			exit_status = 7

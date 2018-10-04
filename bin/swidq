@@ -169,7 +169,12 @@ def main():
 		dirs = re.split(r' +', d)
 
 	(tags, exit_status) = load_tag_collection(dirs, opts.debug, opts.silent)
-	process_tag_collection(tags, transforms, opts)
+	try:
+		process_tag_collection(tags, transforms, opts)
+		stdout.flush()
+	except BrokenPipeError as e:
+		stderr.close()
+		return exit_status
 
 	if opts.debug:
 		stderr.write("%s: exitting.\n" % argv[0])
