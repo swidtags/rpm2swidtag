@@ -37,8 +37,10 @@
 </xsl:template>
 
 <xsl:template match="swid:File | swid:Directory">
-  <xsl:call-template name="display-dir-file"/>
-  <xsl:call-template name="newline"/>
+  <xsl:if test="@name">
+    <xsl:call-template name="display-dir-file"/>
+    <xsl:call-template name="newline"/>
+  </xsl:if>
   <xsl:if test="name() = 'Directory'">
     <xsl:apply-templates select="swid:File | swid:Directory"/>
   </xsl:if>
