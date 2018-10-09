@@ -19,9 +19,12 @@
 </xsl:text>
 </xsl:template>
 
-<xsl:template name="quoted-value">
+<xsl:template name="quote-value" match="@*" mode="quote-value">
+  <xsl:param name="prefix"/>
+  <xsl:param name="value" select="."/>
+  <xsl:value-of select="$prefix"/>
   <xsl:text>[</xsl:text>
-  <xsl:value-of select="."/>
+  <xsl:value-of select="$value"/>
   <xsl:text>]</xsl:text>
 </xsl:template>
 
@@ -65,7 +68,7 @@
   <xsl:text>@</xsl:text>
   <xsl:value-of select="name()"/>
   <xsl:text>: </xsl:text>
-  <xsl:call-template name="quoted-value"/>
+  <xsl:apply-templates select="." mode="quote-value"/>
   <xsl:call-template name="newline"/>
 </xsl:template>
 
