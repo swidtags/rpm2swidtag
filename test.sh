@@ -193,7 +193,7 @@ diff /dev/null tmp/swidq.out
 diff /dev/null tmp/swidq.err
 
 bin/swidq --silent -c tests/swidq.conf -a > tmp/swidq.out 2> tmp/swidq.err
-diff <( cat tests/swidq-swiddata1-swiddata2.out ) tmp/swidq.out
+diff tests/swidq-swiddata1-swiddata2.out tmp/swidq.out
 diff /dev/null tmp/swidq.err
 
 bin/swidq -c tests/swidq.conf unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 --silent > tmp/swidq.out 2> tmp/swidq.err
@@ -277,13 +277,13 @@ diff <( echo 'bin/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swi
 
 bin/swidq --silent -c tests/swidq.conf --rpm pkg3-1.0.0-1.x86_64 > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ;
-	echo 'test.b.pkg3-1.0.0-1.x86_64 tests/swiddata1/b.test/pkg3.swidtag' ) tmp/swidq.out
+	echo "test.b.pkg3-1.0.0-1.x86_64 tests/swiddata3/b.test/pkg3.swidtag" ) tmp/swidq.out
 diff /dev/null tmp/swidq.err
 
 bin/swidq --silent -c tests/swidq.conf --rpm -a > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ;
 	echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ;
-	echo 'test.b.pkg3-1.0.0-1.x86_64 tests/swiddata1/b.test/pkg3.swidtag' ) tmp/swidq.out
+	echo "test.b.pkg3-1.0.0-1.x86_64 tests/swiddata3/b.test/pkg3.swidtag" ) tmp/swidq.out
 diff /dev/null tmp/swidq.err
 
 rm -f tmp/stylesheet.xslt

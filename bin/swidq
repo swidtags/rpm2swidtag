@@ -6,8 +6,8 @@ from configparser import ConfigParser
 import re
 from fnmatch import translate
 from glob import iglob
-from os import getenv
-from os.path import isfile, isdir
+from os import getenv, readlink
+from os.path import isfile, isdir, islink, dirname, normpath, join
 from swidq import SWIDTagCollection, XSLT
 
 CONFIG_FILE = "/etc/swid/swidq.conf"
@@ -75,11 +75,14 @@ def load_file(tags, f, debug=False, silent=False):
 		stderr.write("%s: %s\n" % (argv[0], tag.get_info()))
 	return tag
 
-def load_tag_collection(dirs, debug=False, silent=False):
+def load_tag_collection(dirs, resolve_dir_symlinks=False, debug=False, silent=False):
 	exit_status = 0
 	tags = SWIDTagCollection()
 
 	for f in dirs:
+		if resolve_dir_symlinks and islink(f):
+			target = readlink(f)
+			f = normpath(join(dirname(f), target))
 		if isfile(f) or f == '-':
 			load_file(tags, f, debug, silent)
 		else:
@@ -88,6 +91,9 @@ def load_tag_collection(dirs, debug=False, silent=False):
 				stderr.write("%s: no file matching [%s]\n" % (argv[0], f))
 				exit_status = 1
 			for g in fg:
+				if resolve_dir_symlinks and islink(g):
+					target = readlink(g)
+					g = normpath(join(dirname(g), target))
 				if isdir(g):
 					for gg in sorted(iglob(g + "/*.swidtag")):
 						load_file(tags, gg, debug, silent)
@@ -168,7 +174,7 @@ def main():
 			exit(2)
 		dirs = re.split(r' +', d)
 
-	(tags, exit_status) = load_tag_collection(dirs, opts.debug, opts.silent)
+	(tags, exit_status) = load_tag_collection(dirs, not(opts.paths), opts.debug, opts.silent)
 	try:
 		process_tag_collection(tags, transforms, opts)
 		stdout.flush()
