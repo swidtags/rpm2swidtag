@@ -15,5 +15,6 @@
   <Meta product="" colloquialVersion="" revision="" arch="" summary=""/>
   <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
     <Resource type="rpm"/>
+    <Resource type="rpm-signature"/>
   </Payload>
 </SoftwareIdentity>

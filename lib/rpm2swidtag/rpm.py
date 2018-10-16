@@ -1,6 +1,6 @@
 
 from os import open, O_RDONLY, close
-import rpm
+import rpm, re
 from rpm2swidtag import Error
 
 def read_from_file(file):
@@ -40,3 +40,7 @@ def is_source_package(h):
 	if h[rpm.RPMTAG_SOURCEPACKAGE]:
 		return True
 	return False
+
+def get_signature_key_id(h):
+	key = h.format('%|DSAHEADER?{%{DSAHEADER:pgpsig}}:{%|RSAHEADER?{%{RSAHEADER:pgpsig}}:{%|SIGGPG?{%{SIGGPG:pgpsig}}:{%|SIGPGP?{%{SIGPGP:pgpsig}}:{}|}|}|}|')
+	return re.sub(r'^.*Key ID \S{8}(\S{8})$', '\g<1>', key)

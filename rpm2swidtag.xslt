@@ -20,6 +20,8 @@
 <xsl:param name="summary" select="f:package_tag('summary')"/>
 <xsl:param name="arch" select="f:package_tag('arch')"/>
 
+<xsl:param name="sign-keys" select="f:package_tag('sign-keys')"/>
+
 <xsl:param name="authoritative" select="'false'"/>
 <xsl:param name="deviceid" select="'localhost.localdomain'"/>
 
@@ -49,6 +51,15 @@
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <xsl:attribute name="rpm"><xsl:call-template name="nevra"/></xsl:attribute>
+    </xsl:copy>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template match="swid:Payload/swid:Resource[@type = 'rpm-signature']">
+  <xsl:if test="$sign-keys">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsl:attribute name="key-id"><xsl:value-of select="$sign-keys"/></xsl:attribute>
     </xsl:copy>
   </xsl:if>
 </xsl:template>
