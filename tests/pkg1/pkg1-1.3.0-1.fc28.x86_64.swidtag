@@ -17,4 +17,5 @@
     <Resource type="rpm" rpm="pkg1-1.3.0-1.fc28.x86_64"/>
     <Resource type="rpm-signature" key-id="19d5c7dd"/>
   </Evidence>
+  <Entity name="Example A Organization" regid="a.test" role="softwareCreator"/>
 </SoftwareIdentity>
