@@ -21,6 +21,7 @@ def setup_opts():
 	group2 = parser.add_mutually_exclusive_group()
 	group2.add_argument('--authoritative', action='store_true', help="produce authoritative tag (per NIST.IR.8060) with Payload, rather than Evidence")
 	group2.add_argument('--evidence-deviceid', type=str, dest='device', default=node(), help="Evidence/@deviceId string, defaults to hostname")
+	parser.add_argument('--primary-only', action='store_true', help="do not generate supplemental tags")
 	parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
 	parser.add_argument('--software-creator-from', metavar='FILE', help="set softwareCreator Entity to value in referenced file")
 	other_group = parser.add_argument_group("config options")
@@ -49,6 +50,21 @@ def load_template(config, opts):
 		stderr.write("%s: %s\n" % (argv[0], e.strerror))
 		exit(5)
 
+def write_out_tag(tag, opts, supplemental=False):
+	if opts.output_dir and not opts.print_tagid:
+		if opts.output_dir.endswith("/."):
+			dir = opts.output_dir
+		else:
+			dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
+		if not path.exists(dir):
+			makedirs(dir)
+		tag.write_output(dir + '/' + tag.get_tagid() + '.swidtag')
+	else:
+		if opts.print_tagid and supplemental:
+			stdout.buffer.write(b"+ ")
+		tag.write_output(stdout.buffer)
+
+
 def process_rpm_with_template(header, template, opts, config):
 	params = {}
 	if opts.regid:
@@ -59,28 +75,26 @@ def process_rpm_with_template(header, template, opts, config):
 		params['deviceid'] = opts.device
 
 	signature_key_id = rpm.get_signature_key_id(header)
+	component_of = None
 	if signature_key_id:
 		for s in config.sections():
 			if not re.search(r'^link\s', s):
 				continue
 			if config.get(s, 'key-id') \
-				and config.get(s, 'key-id') == signature_key_id \
-				and config.get(s, 'software-creator-file'):
-				params['software-creator-from'] = config.get(s, 'software-creator-file')
+				and config.get(s, 'key-id') == signature_key_id:
+				p = config.get(s, 'software-creator-file', fallback=None)
+				if p:
+					params['software-creator-from'] = path.abspath(p)
+				p = config.get(s, 'component-of-file', fallback=None)
+				if p:
+					component_of = path.abspath(p)
 				break
 	if opts.software_creator_from and 'software-creator-from' not in params:
 		params['software-creator-from'] = path.abspath(opts.software_creator_from)
-	tag = template.generate_tag_for_header(header, params=params)
-	if opts.output_dir and not opts.print_tagid:
-		if opts.output_dir.endswith("/."):
-			dir = opts.output_dir
-		else:
-			dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
-		if not path.exists(dir):
-			makedirs(dir)
-		tag.write_output(dir + '/' + tag.get_tagid() + '.swidtag')
-	else:
-		tag.write_output(stdout.buffer)
+	write_out_tag(template.generate_tag_for_header(header, params=params), opts)
+	if not opts.primary_only and component_of:
+		params['component-of'] = component_of
+		write_out_tag(template.generate_tag_for_header(header, params=params), opts, supplemental=True)
 
 def main():
 	opts = setup_opts()

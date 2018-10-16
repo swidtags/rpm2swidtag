@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" tagId="unavailable.invalid.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64">
+  <Link rel="supplemental" href="swid:test.a.Example-OS-Distro-3.x86_64"/>
+  <Link rel="component" href="swid:unavailable.invalid.pkg1-1.3.0-1.fc28.x86_64"/>
+  <Entity name="" regid="invalid.unavailable" role="tagCreator"/>
+  <Entity name="Example A Organization" regid="a.test" role="softwareCreator"/>
+</SoftwareIdentity>

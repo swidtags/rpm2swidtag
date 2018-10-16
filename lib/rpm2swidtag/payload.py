@@ -69,6 +69,8 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 			output_parent.append(e)
 
 	def cleanup_namespaces(self, e):
+		if e is None:
+			return
 		for i in e:
 			if 'payload-generated-42' in i.nsmap:
 				etree.cleanup_namespaces(i, top_nsmap=i.getparent().nsmap)

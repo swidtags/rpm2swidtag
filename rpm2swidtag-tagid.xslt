@@ -11,8 +11,18 @@
 <xsl:output method="text" omit-xml-declaration="yes" indent="no" encoding="utf8"/>
 
 <xsl:template match="swid:SoftwareIdentity">
-<xsl:text></xsl:text>
-  <xsl:call-template name="si_tagid_value" /><xsl:text>
+  <xsl:call-template name="si_tagid_value" />
+  <xsl:text>
+</xsl:text>
+</xsl:template>
+
+<xsl:template match="swid:SoftwareIdentity" mode="component-of">
+  <xsl:call-template name="component_of_tagid">
+    <xsl:with-param name="component_tagid">
+      <xsl:call-template name="si_tagid_value" />
+    </xsl:with-param>
+  </xsl:call-template>
+  <xsl:text>
 </xsl:text>
 </xsl:template>
 

@@ -67,14 +67,18 @@ rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tmp/x86_64/pkg2-0.0.1-1.git0
 rpm --dbpath $(pwd)/tmp/rpmdb -qa
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf pkg1-1.3.0 | normalize > tmp/pkg-generated.swidtag
+cat tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/pkg1-1.3.0.swidtag.with-supplemental
+diff tmp/pkg1-1.3.0.swidtag.with-supplemental tmp/pkg-generated.swidtag
+
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --primary-only pkg1-1.3.0 | normalize > tmp/pkg-generated.swidtag
 diff tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf pkg1 | normalize > tmp/pkg-generated.swidtag
-cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag > tmp/pkg1-1.2.0-and-1.3.0.swidtag
+cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/pkg1-1.2.0-and-1.3.0.swidtag
 diff tmp/pkg1-1.2.0-and-1.3.0.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf -a 'pkg*' | normalize > tmp/pkg-generated.swidtag
-cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
+cat tmp/pkg1-1.2.0-and-1.3.0.swidtag tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
 diff tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf -a | normalize > tmp/pkg-generated.swidtag
@@ -87,6 +91,7 @@ mkdir -p tmp/compare-dir/example.test
 for i in pkg1-1.2.0-1.fc28.x86_64 pkg1-1.3.0-1.fc28.x86_64 pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64 ; do
 	sed 's/unavailable.invalid/test.example/;s/invalid.unavailable/example.test/' tests/${i%%-*}/$i.swidtag > tmp/compare-dir/example.test/test.example.$i.swidtag
 done
+sed 's/unavailable.invalid/test.example/;s/invalid.unavailable/example.test/' tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/compare-dir/example.test/test.example.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 diff -ru tmp/output-dir tmp/compare-dir
 
 rm -rf tmp/output-dir
@@ -97,7 +102,7 @@ rmdir tmp/compare-dir/example.test
 diff -ru tmp/output-dir tmp/compare-dir
 
 OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --print-tagid pkg1 )
-test "$OUT" == "$( echo -e 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64\nunavailable.invalid.pkg1-1.3.0-1.fc28.x86_64' )"
+test "$OUT" == "$( echo -e 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64\nunavailable.invalid.pkg1-1.3.0-1.fc28.x86_64\n+ unavailable.invalid.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64' )"
 
 # Testing errors
 set +e
@@ -155,7 +160,6 @@ ERR=$?
 set -e
 test "$ERR" -eq 7
 normalize_i /tmp/pkg-generated.swidtag
-cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
 test "$OUT" == 'bin/rpm2swidtag: No package [x] found in database'
 diff tmp/pkg1-and-pkg2.swidtag /tmp/pkg-generated.swidtag
 
@@ -309,7 +313,7 @@ diff -u <( bin/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md 
 
 # rpm2swidtag to swidq
 find . -name '*.rpm' | while read f ; do
-	diff -u <( rpm -qlp $f | grep -v '^(contains no files)' ) <( bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p $f | bin/swidq -p - -l )
+	diff -u <( rpm -qlp $f | grep -v '^(contains no files)' ) <( bin/rpm2swidtag --config=tests/rpm2swidtag.conf --primary-only -p $f | bin/swidq -p - -l )
 done
 
 if rpm -q bash ; then
