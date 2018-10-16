@@ -8,6 +8,7 @@ Tools for producing SWID tags from rpm package headers and inspecting the SWID t
 usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] [--output-dir DIR]
                    [--authoritative | --evidence-deviceid DEVICE]
                    [--print-tagid] [--software-creator-from FILE]
+                   [--config FILE]
                    [... [... ...]]
 
 SWID tag parameters.
@@ -29,6 +30,9 @@ optional arguments:
   --print-tagid         compute and print tagId(s) to standard output
   --software-creator-from FILE
                         set softwareCreator Entity to value in referenced file
+
+config options:
+  --config FILE         location of the configuration file
 ```
 
 ## Customizing the output

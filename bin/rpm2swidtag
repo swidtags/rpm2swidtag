@@ -5,6 +5,10 @@ from os import getenv, path, makedirs
 from platform import node
 from rpm2swidtag import Template, Error, rpm
 import argparse
+from configparser import ConfigParser
+
+TEMPLATE_DIR = "/etc/rpm2swidtag"
+CONFIG_FILE = "/etc/rpm2swidtag/rpm2swidtag.conf"
 
 def setup_opts():
 	parser = argparse.ArgumentParser(description='SWID tag parameters.')
@@ -19,19 +23,27 @@ def setup_opts():
 	group2.add_argument('--evidence-deviceid', type=str, dest='device', default=node(), help="Evidence/@deviceId string, defaults to hostname")
 	parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
 	parser.add_argument('--software-creator-from', metavar='FILE', help="set softwareCreator Entity to value in referenced file")
+	other_group = parser.add_argument_group("config options")
+	other_group.add_argument('--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
 	parser.add_argument('package', type=str, nargs='*', help='package(s), glob(s) or file name(s)', metavar='...')
 	return parser.parse_args()
 
-DATA_DIR = "/etc/rpm2swidtag"
-def load_template(opts):
+def load_config(opts):
+	config = ConfigParser(delimiters = '=', comment_prefixes = '#')
+	config['rpm2swidtag'] = { 'config-file': opts.config, 'template-dir': TEMPLATE_DIR }
+	config.read(opts.config)
+	return config
+
+def load_template(config, opts):
 	template = None
 	try:
-		data_dir = getenv('RPM2SWIDTAG_TEMPLATE_DIR', DATA_DIR)
-		xml_template = getenv('RPM2SWIDTAG_TEMPLATE', data_dir + "/template.swidtag")
+		template_dir = path.join(path.dirname(config.get('rpm2swidtag', 'config-file')),
+			config.get('rpm2swidtag', 'template-dir'))
+		xml_template = getenv('RPM2SWIDTAG_TEMPLATE', template_dir + "/template.swidtag")
 		if opts.print_tagid:
-			xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag-tagid.xslt")
+			xslt_file = getenv('RPM2SWIDTAG_XSLT', template_dir + "/rpm2swidtag-tagid.xslt")
 		else:
-			xslt_file = getenv('RPM2SWIDTAG_XSLT', data_dir + "/rpm2swidtag.xslt")
+			xslt_file = getenv('RPM2SWIDTAG_XSLT', template_dir + "/rpm2swidtag.xslt")
 		return Template(xml_template, xslt_file)
 	except Error as e:
 		stderr.write("%s: %s\n" % (argv[0], e.strerror))
@@ -61,7 +73,8 @@ def process_rpm_with_template(header, template, opts):
 
 def main():
 	opts = setup_opts()
-	template = load_template(opts)
+	config = load_config(opts)
+	template = load_template(config, opts)
 
 	if opts.all and not opts.package:
 		opts.package = [ '*' ]
