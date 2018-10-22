@@ -62,11 +62,11 @@ SWID tag, using stylesheet `/etc/rpm2swidtag/rpm2swidtag-tagid.xslt`.
 To generate SWID tags for all packages in the rpm database
 
 ```
-rpm2swidtag -a --regid $(hostname -f) --output-dir /usr/share
+rpm2swidtag -a --regid $(hostname -f) --output-dir /usr/lib/swidtag
 ```
 
 can be used. It will produce the `.swidtag` files in
-`/usr/share/$(hostname -f)` directory.
+`/usr/lib/swidtag/$(hostname -f)` directory.
 
 ## Listing SWID tags
 
