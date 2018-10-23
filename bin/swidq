@@ -26,6 +26,7 @@ def setup_opts():
 	output_group.add_argument('-i', '--info', action='store_true', help="output some SWID tag fields")
 	output_group.add_argument('-l', '--list-files', action='store_true', help="list files from the SWID tag")
 	output_group.add_argument('--dump', action='store_true', help="dump SWID tag content as indented text")
+	output_group.add_argument('--xml', action='store_true', help="output SWID tags as XML")
 	output_group.add_argument('--output-stylesheet', metavar='FILE', help="output via custom XSLT stylesheet")
 
 	other_group = parser.add_argument_group("other options")
@@ -40,6 +41,8 @@ def setup_opts():
 def setup_transforms(opts):
 	stylesheet_dir = getenv('SWIDQ_STYLESHEET_DIR', STYLESHEET_DIR)
 	transforms = []
+	if opts.xml:
+		transforms.append(XSLT(stylesheet_dir + '/swidq-xml.xslt'))
 	if opts.output_stylesheet:
 		transforms.append(XSLT(opts.output_stylesheet))
 	if opts.dump:

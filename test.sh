@@ -291,6 +291,10 @@ diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.tes
 	echo "test.b.pkg3-1.0.0-1.x86_64 tests/swiddata3/b.test/pkg3.swidtag" ) tmp/swidq.out
 diff /dev/null tmp/swidq.err
 
+bin/swidq --xml -p tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.xmlns.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
 rm -f tmp/stylesheet.xslt
 ln -s ../swidq-dump.xslt tmp/stylesheet.xslt
 (
