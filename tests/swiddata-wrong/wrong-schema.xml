@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2013-error/schema.xsd"
+  xml:lang="en-US"
+  name="Example OS Distribution" tagId="test.a.Example-OS-Distro-3.x86_64" version="3.x86_64">
+  <Entity name="Example A Organization" regid="a.test" role="tagCreator softwareCreator"/>
+  <Link rel="license" href="http://www.apache.org/licenses/LICENSE-2.0"/>
+  <Meta product="Example OS" colloquialVersion="3"/>
+</SoftwareIdentity>

@@ -314,6 +314,26 @@ set -e
 test "$ERR" -eq 1
 test "$OUT" == 'bin/swidq: no file matching [nonexistent]'
 
+bin/swidq -p tests/swiddata-wrong/SoftwareIdentity-in-SoftwareIdentity.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff <( echo 'test.a.Example-OS-Distro-3.x86_64 tests/swiddata-wrong/SoftwareIdentity-in-SoftwareIdentity.swidtag' ) tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
+bin/swidq -p tests/swiddata-wrong/wrong-schema.xml > tmp/swidq.out 2> tmp/swidq.err
+diff /dev/null tmp/swidq.out
+diff <( echo 'bin/swidq: file [tests/swiddata-wrong/wrong-schema.xml] does not have SoftwareIdentity in the SWID 2015 namespace, found [{http://standards.iso.org/iso/19770/-2/2013-error/schema.xsd}SoftwareIdentity]' ) tmp/swidq.err
+
+bin/swidq -p tests/swiddata-wrong/wrong-root.xml > tmp/swidq.out 2> tmp/swidq.err
+diff /dev/null tmp/swidq.out
+diff <( echo 'bin/swidq: file [tests/swiddata-wrong/wrong-root.xml] does not have SoftwareIdentity in the SWID 2015 namespace, found [{http://standards.iso.org/iso/19770/-2/2015/schema.xsd}Entity]' ) tmp/swidq.err
+
+bin/swidq -p tests/swiddata-wrong/missing-tagId.xml > tmp/swidq.out 2> tmp/swidq.err
+diff /dev/null tmp/swidq.out
+diff <( echo 'bin/swidq: file [tests/swiddata-wrong/missing-tagId.xml] does not have SoftwareIdentity/@tagId' ) tmp/swidq.err
+
+bin/swidq -p tests/swiddata-wrong/missing-name.xml > tmp/swidq.out 2> tmp/swidq.err
+diff /dev/null tmp/swidq.out
+diff <( echo 'bin/swidq: file [tests/swiddata-wrong/missing-name.xml] does not have SoftwareIdentity/@name' ) tmp/swidq.err
+
 # Test that README has up-to-date usage section
 diff -u <( bin/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
 

@@ -30,29 +30,39 @@ class SWIDTag:
 			self.errors = [ "error parsing file [%s]: %s" % (file, str(e)) ]
 			return
 
+		si = self.xml.getroot()
+		roottag = si.tag
+		if roottag != "{%s}SoftwareIdentity" % SWID_XMLNS:
+			self.errors = [ "file [%s] does not have SoftwareIdentity in the SWID 2015 namespace, found [%s]" % (file, roottag) ]
+			return
+
+		tagid = si.get("tagId")
+		if tagid is None:
+			self.errors = [ "file [%s] does not have SoftwareIdentity/@tagId" % file ]
+			return
+		name = si.get("name")
+		if name is None:
+			self.errors = [ "file [%s] does not have SoftwareIdentity/@name" % file ]
+			return
+
+		self.tagid = tagid
+		self.name = name
+
 		errors = []
 		supplemental_for = []
-		for si in self.xml.iter("{%s}SoftwareIdentity" % SWID_XMLNS):
-			tagid = si.get("tagId")
-			if tagid is None:
-				errors.append("file [%s] does not have SoftwareIdentity/@tagId" % file)
-				break
-			self.tagid = tagid
-			self.tagversion = int(si.get("tagVersion", 0))
-			self.name = si.get("name")
 
-			for link in si.iter("{%s}Link" % SWID_XMLNS):
-				rel = link.get("rel")
-				if rel is None or rel != 'supplemental':
-					continue
-				href = link.get("href")
-				if href is None:
-					errors.append("file [%s] has Link with @rel='supplemental' but no @href" % file)
-					break
-				if not href.startswith("swid:"):
-					errors.append("file [%s] supplemental Link @href [%s] is not supported" % (file, href))
-					break
-				supplemental_for.append(href)
+		for link in si.iterfind("{%s}Link" % SWID_XMLNS):
+			rel = link.get("rel")
+			if rel is None or rel != 'supplemental':
+				continue
+			href = link.get("href")
+			if href is None:
+				errors.append("file [%s] has Link with @rel='supplemental' but no @href" % file)
+				break
+			if not href.startswith("swid:"):
+				errors.append("file [%s] supplemental Link @href [%s] is not supported" % (file, href))
+				break
+			supplemental_for.append(href)
 
 		if len(errors) > 0:
 			self.errors = errors
@@ -69,7 +79,7 @@ class SWIDTag:
 		return self.tagid
 
 	def get_tagversion(self):
-		return self.tagversion
+		return int(self.xml.getroot().get("tagVersion", 0))
 
 	def get_name(self):
 		return self.name
