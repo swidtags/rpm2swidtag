@@ -1,8 +1,10 @@
 test.a.Example-OS-Distro-3.x86_64 tests/swiddata1/a.test/distro.swidtag
 + test.a.Example-OS-Distro-3.14.x86_64 tests/swiddata2/distro-minor-supplemental.swidtag
 unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag
-test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag
+test.a.pkg3-1.0.0-1.x86_64 tests/swiddata1/a.test/pkg3.swidtag
 test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag
 test.b.pkg3-1.0.0-1.x86_64 tests/swiddata3/b.test/pkg3.swidtag
+test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag
+test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag
 ! test.a.Example-OS-Distro-3.14.x86_64-sup2 tests/swiddata2/distro-minor-supplemental-2.swidtag
 - test.a.Example-OS-Distro-3.15.x86_64 tests/swiddata2/missing-tag-supplemental.swidtag

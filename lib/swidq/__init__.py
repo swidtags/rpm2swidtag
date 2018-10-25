@@ -94,38 +94,30 @@ class SWIDTag:
 
 class SWIDTagCollection:
 	def __init__(self):
-		self.by_tags = OrderedDict()
-		self.by_filenames = {}
+		self.by_tags = {}
+		self.by_filenames = OrderedDict()
 		self._cache_supplemental = None
 
 	def get_by_tagid(self, tagid):
-		if tagid in self.by_tags:
-			return self.by_tags[tagid]
-		return None
+		return self.by_tags.get(tagid)
 
 	def load_swidtag_file(self, file):
 		swidtag = SWIDTag(file)
 		if swidtag.get_errors():
 			return((None, True, swidtag.get_errors()))
-		tagid = swidtag.get_tagid()
-		previous = self.get_by_tagid(tagid)
-		msgs = None
-		if previous:
-			prev_tagversion = previous.get_tagversion()
-			prev_path = previous.get_path()
-			if prev_tagversion >= swidtag.get_tagversion():
-				return((None, False, [ "skipping [%s] as existing file [%s] has already tagVersion [%s]" % (swidtag.get_path(), prev_path, prev_tagversion) ]))
-			msgs = [ "[%s] overriding previous file [%s] which had lower tagVersion [%s]" % (swidtag.get_path(), prev_path, prev_tagversion) ]
-			del self.by_filenames[prev_path]
 		file = swidtag.get_path()
-		self.by_filenames[file] = tagid
-		self.by_tags[tagid] = swidtag
+		self.by_filenames[file] = swidtag
+		tagid = swidtag.get_tagid()
+		if tagid in self.by_tags:
+			self.by_tags[tagid].append(file)
+		else:
+			self.by_tags[tagid] = [ file ]
 		self._cache_supplemental = None
-		return((swidtag, False, msgs))
+		return((swidtag, False, None))
 
 	def compute_supplemental(self, stderr=None, prefix="", debug=False, silent=True):
 		self._cache_supplemental = {}
-		for tag in self.by_tags.values():
+		for tag in self.by_filenames.values():
 			supplemental_for = tag.get_supplemental_for()
 			if not supplemental_for:
 				continue
@@ -151,11 +143,9 @@ class SWIDTagCollection:
 			return self._cache_supplemental[tag.get_tagid()]
 
 	def __iter__(self):
-		for tagid in self.by_tags:
-			tag = self.by_tags[tagid]
+		for tag in self.by_filenames.values():
 			if tag.is_primary():
 				yield tag
-		for tagid in self.by_tags:
-			tag = self.by_tags[tagid]
+		for tag in self.by_filenames.values():
 			if not tag.is_primary():
 				yield tag
