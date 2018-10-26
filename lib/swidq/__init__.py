@@ -1,10 +1,13 @@
 
 from lxml import etree
 from collections import OrderedDict
-from urllib.parse import urljoin
+from os.path import dirname, join, normpath
 import re
 
 SWID_XMLNS = 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd'
+
+def resolve_path(base, target):
+	return normpath(join(dirname(base), target))
 
 class XSLT:
 	def __init__(self, file):
@@ -159,7 +162,7 @@ class SWIDTagCollection:
 							self._add_to_cache_supplemental(f, tag, stderr=stderr, prefix=prefix, debug=debug)
 						continue
 				elif s[0] == 'file':
-					t = urljoin(tag.get_path(), s[1])
+					t = resolve_path(tag.get_path(), s[1])
 					if t in self.by_filenames:
 						self._add_to_cache_supplemental(t, tag, stderr=stderr, prefix=prefix, debug=debug)
 						continue

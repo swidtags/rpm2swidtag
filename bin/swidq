@@ -7,8 +7,8 @@ import re
 from fnmatch import translate
 from glob import iglob
 from os import getenv, readlink
-from os.path import isfile, isdir, islink, dirname, normpath, join
-from swidq import SWIDTagCollection, XSLT
+from os.path import isfile, isdir, islink
+from swidq import SWIDTagCollection, XSLT, resolve_path
 
 CONFIG_FILE = "/etc/swid/swidq.conf"
 SWIDTAGS_DIRS = "/etc/swid/swidtags.d/*"
@@ -85,7 +85,7 @@ def load_tag_collection(dirs, resolve_dir_symlinks=False, debug=False, silent=Fa
 	for f in dirs:
 		if resolve_dir_symlinks and islink(f):
 			target = readlink(f)
-			f = normpath(join(dirname(f), target))
+			f = resolve_path(f, target)
 		if isfile(f) or f == '-':
 			load_file(tags, f, debug, silent)
 		else:
@@ -96,7 +96,7 @@ def load_tag_collection(dirs, resolve_dir_symlinks=False, debug=False, silent=Fa
 			for g in fg:
 				if resolve_dir_symlinks and islink(g):
 					target = readlink(g)
-					g = normpath(join(dirname(g), target))
+					g = resolve_path(g, target)
 				if isdir(g):
 					for gg in sorted(iglob(g + "/*.swidtag")):
 						load_file(tags, gg, debug, silent)
