@@ -110,6 +110,7 @@ def process_tag_collection(tags, transforms, opts):
 	seen = {}
 	if opts.all and len(opts.match) == 0:
 		opts.match.append('*')
+	separator = None
 	for tag in tags:
 		path = tag.get_path()
 		if tag.is_supplemental():
@@ -147,6 +148,11 @@ def process_tag_collection(tags, transforms, opts):
 			continue
 
 		if transforms:
+			if separator:
+				stdout.write("%s\n" % separator)
+				stdout.flush()
+			else:
+				separator = "---"
 			for t in transforms:
 				t.process(tag).write_output(stdout.buffer)
 			continue
