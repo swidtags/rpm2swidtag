@@ -2,9 +2,22 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:swid="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
+  xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0"
 >
 
 <xsl:output method="text" omit-xml-declaration="yes" indent="no" encoding="utf8"/>
+
+<xsl:variable name="separator">
+  <xsl:choose>
+    <xsl:when test="/swid:SoftwareIdentity/swid:Evidence/@n8060:pathSeparator != ''">
+      <xsl:value-of select="/swid:SoftwareIdentity/swid:Evidence/@n8060:pathSeparator"/>
+    </xsl:when>
+    <xsl:when test="/swid:SoftwareIdentity/swid:Payload/@n8060:pathSeparator != ''">
+      <xsl:value-of select="/swid:SoftwareIdentity/swid:Payload/@n8060:pathSeparator"/>
+    </xsl:when>
+    <xsl:otherwise>/</xsl:otherwise>
+  </xsl:choose>
+</xsl:variable>
 
 <xsl:template match="/swid:SoftwareIdentity">
   <xsl:apply-templates select="swid:Payload | swid:Evidence"/>
@@ -22,8 +35,8 @@
 <xsl:template match="swid:File/@location | swid:Directory/@location | swid:File/@root | swid:Directory/@root">
   <xsl:if test="normalize-space(.) != ''">
     <xsl:value-of select="."/>
-    <xsl:if test=". != '/'">
-      <xsl:text>/</xsl:text>
+    <xsl:if test=". != $separator">
+      <xsl:value-of select="$separator"/>
     </xsl:if>
   </xsl:if>
 </xsl:template>
@@ -31,7 +44,7 @@
 <xsl:template name="display-dir-file">
   <xsl:for-each select="parent::swid:Directory">
     <xsl:call-template name="display-dir-file"/>
-    <xsl:text>/</xsl:text>
+    <xsl:value-of select="$separator"/>
   </xsl:for-each>
   <xsl:apply-templates select="@root"/>
   <xsl:apply-templates select="@location"/>
