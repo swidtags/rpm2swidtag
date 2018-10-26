@@ -1,0 +1,4 @@
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
+  name="Minial SWID tag" tagId="test.a.minimal">
+  <Entity name="Example A Organization" regid="a.test" role="tagCreator softwareCreator"/>
+</SoftwareIdentity>

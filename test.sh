@@ -260,6 +260,14 @@ bin/swidq --dump -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tm
 diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.dump tmp/swidq.out
 diff /dev/null tmp/swidq.err
 
+bin/swidq --dump -p tests/swiddata1/a.test/minimal.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff tests/swiddata1/a.test/minimal.dump tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
+bin/swidq --info -p tests/swiddata1/a.test/minimal.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff tests/swiddata1/a.test/minimal.info tmp/swidq.out
+diff /dev/null tmp/swidq.err
+
 bin/swidq -i -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.info tmp/swidq.out
 diff /dev/null tmp/swidq.err
