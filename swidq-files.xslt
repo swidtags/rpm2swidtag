@@ -22,7 +22,9 @@
 <xsl:template match="swid:File/@location | swid:Directory/@location | swid:File/@root | swid:Directory/@root">
   <xsl:if test="normalize-space(.) != ''">
     <xsl:value-of select="."/>
-    <xsl:text>/</xsl:text>
+    <xsl:if test=". != '/'">
+      <xsl:text>/</xsl:text>
+    </xsl:if>
   </xsl:if>
 </xsl:template>
 
