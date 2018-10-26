@@ -10,6 +10,11 @@
   <Entity name="Example X Organization" regid="x.test" role="role-x">
     <Meta x-s1-attrib="role-x-from-s1"/>
   </Entity>
-  <Link rel="supplemental" href="swid:test.a.p1"/>
-  <Link rel="supplemental" href="swid:test.m.p2"/>
+  <!--
+    Since XPath 1.0 does not support default namespace and neither does
+    lxml, we use "swid:" prefix here. The standard and the XML schema
+    annotation seems to assume that the SWID schema can be addressed
+    without prefix.
+  -->
+  <Link rel="supplemental" href="swidpath://swid:SoftwareIdentity[@name='Primary SWID tag']"/>
 </SoftwareIdentity>

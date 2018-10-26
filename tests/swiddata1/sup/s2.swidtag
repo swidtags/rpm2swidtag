@@ -5,6 +5,6 @@
   name="Supplementing p2 and s1" tagId="test.o.s2" supplemental="true">
   <Meta s2-attrib="s2"/>
   <Entity name="Example O Organization" regid="o.test" role="tagCreator"/>
-  <Link rel="supplemental" href="swid:test.a.s12"/>
+  <Link rel="supplemental" href="../sup/s12.swidtag"/>
   <Link rel="supplemental" href="swid:test.m.p2"/>
 </SoftwareIdentity>
