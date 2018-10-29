@@ -162,6 +162,7 @@ class SWIDTagCollection:
 			self.compute_supplemental()
 		if tag.get_tagid() in self._cache_supplemental:
 			return self._cache_supplemental[tag.get_tagid()]
+		return []
 
 	def __iter__(self):
 		for tag in self.by_filenames.values():

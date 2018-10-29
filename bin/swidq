@@ -105,6 +105,13 @@ def load_tag_collection(dirs, resolve_dir_symlinks=False, debug=False, silent=Fa
 
 	return (tags, exit_status)
 
+def list_supplemental(tags, tag, seen, indent=""):
+	for stag in tags.supplemental_for(tag):
+		spath = stag.get_path()
+		stdout.write("%s+ %s %s\n" % (indent, stag.get_tagid(), spath))
+		seen[spath] = True
+		list_supplemental(tags, stag, seen, indent=indent + "  ")
+
 def process_tag_collection(tags, transforms, opts):
 	tags.compute_supplemental(stderr=stderr, prefix="%s: " % argv[0], debug=opts.debug, silent=opts.silent)
 	seen = {}
@@ -157,25 +164,13 @@ def process_tag_collection(tags, transforms, opts):
 				t.process(tag).write_output(stdout.buffer)
 			continue
 
+		sup_indent = ""
 		if tag.is_supplemental():
-			unmatched = "- "
-			if tag.get_supplemental_for():
-				for href in tag.get_supplemental_for():
-					if not href.startswith("swid:"):
-						continue
-					if tags.get_by_tagid(href[5:]):
-						# this is supplemental pointing to supplemental
-						# which we currently do not support
-						unmatched = "! "
-						break
-			stdout.write(unmatched)
+			stdout.write("- ")
+			sup_indent = "  "
 
 		stdout.write("%s %s\n" % (tag.get_tagid(), path))
-		if tags.supplemental_for(tag):
-			for stag in tags.supplemental_for(tag):
-				spath = stag.get_path()
-				stdout.write("+ %s %s\n" % (stag.get_tagid(), spath))
-				seen[spath] = True
+		list_supplemental(tags, tag, seen, indent=sup_indent)
 
 def main():
 	opts = setup_opts()

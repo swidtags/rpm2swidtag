@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd"
+  xml:lang="en-US"
+  supplemental="true"
+  name="Supplementing p1 and p2" tagId="test.a.s11">
+  <Meta s1-attrib-sup="s11"/>
+  <Entity name="Example A Organization" regid="a.test" role="tagCreator"/>
+  <Link rel="supplemental" href="swid:test.a.s1"/>
+</SoftwareIdentity>
