@@ -119,6 +119,13 @@ def list_supplemental(tags, tag, seen=set(), indent=""):
 			collect_seen.update(list_supplemental(tags, stag, local_seen, indent=indent + "  "))
 	return collect_seen
 
+def mark_supplemental_seen(tags, tag, seen):
+	for stag in tags.supplemental_for(tag):
+		spath = stag.get_path()
+		if spath not in seen:
+			seen.add(spath)
+			mark_supplemental_seen(tags, stag, seen)
+
 def process_tag_collection(tags, transforms, opts):
 	tags.compute_supplemental(stderr=stderr, prefix="%s: " % argv[0], debug=opts.debug, silent=opts.silent)
 	seen = set()
@@ -167,8 +174,10 @@ def process_tag_collection(tags, transforms, opts):
 				stdout.flush()
 			else:
 				separator = "---"
+			supplemented = tag.with_supplemented(tags)
 			for t in transforms:
-				t.process(tag).write_output(stdout.buffer)
+				t.process(supplemented).write_output(stdout.buffer)
+			mark_supplemental_seen(tags, tag, seen)
 			continue
 
 		sup_indent = ""

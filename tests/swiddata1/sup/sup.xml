@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" name="Primary SWID tag" tagId="test.a.p1" version="s1">
+  <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="version" path="tests/swiddata1/sup/s1.swidtag"/>
+  <Entity name="Example A Organization" regid="a.test" role="tagCreator softwareCreator"/>
+  <Meta s1-attrib="s1" s1-attrib-sup="s11" s11-s12-attrib-match="defined in s11 and s12">
+    <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s1-attrib" path="tests/swiddata1/sup/s1.swidtag"/>
+    <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s1-attrib-sup" path="tests/swiddata1/sup/s11.swidtag"/>
+    <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s11-s12-attrib-match" path="tests/swiddata1/sup/s11.swidtag"/>
+  </Meta>
+  <Entity name="Example A Organization" regid="a.test" role="softwareCreator">
+    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s1.swidtag"/>
+  </Entity>
+  <Entity name="Example RS Organization" regid="s.test" role="role-r">
+    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s1.swidtag"/>
+  </Entity>
+  <Entity name="Example RS Organization" regid="s.test" role="role-s">
+    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s1.swidtag"/>
+  </Entity>
+  <Entity name="Example F Organization" regid="f.test" role="role-f">
+    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s11.swidtag"/>
+  </Entity>
+  <supplemental xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s1.swidtag">
+    <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd" xml:lang="en-US" name="Supplementing p1 and p2" tagId="test.a.s1" supplemental="true" version="s1">
+      <Meta s1-attrib="s1" s1-attrib-sup="s11" s11-s12-attrib-match="defined in s11 and s12">
+        <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s1-attrib-sup" path="tests/swiddata1/sup/s11.swidtag"/>
+        <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s11-s12-attrib-match" path="tests/swiddata1/sup/s11.swidtag"/>
+      </Meta>
+      <Entity name="Example A Organization" regid="a.test" role="softwareCreator"/>
+      <Entity name="Example A Organization" regid="a.test" role="tagCreator"/>
+      <Entity name="Example RS Organization" regid="s.test" role="role-r role-s"/>
+      <!--
+    Since XPath 1.0 does not support default namespace and neither does
+    lxml, we use "swid:" prefix here. The standard and the XML schema
+    annotation seems to assume that the SWID schema can be addressed
+    without prefix.
+  -->
+      <Link rel="supplemental" href="swidpath://swid:SoftwareIdentity[@name='Primary SWID tag']"/>
+      <Entity name="Example F Organization" regid="f.test" role="role-f">
+        <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s11.swidtag"/>
+      </Entity>
+      <supplemental xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s11.swidtag">
+        <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd" xml:lang="en-US" supplemental="true" name="Supplementing p1 and p2" tagId="test.a.s11">
+          <Meta s1-attrib-sup="s11" s11-s12-attrib-match="defined in s11 and s12"/>
+          <Entity name="Example M Organization" regid="m.test" role="tagCreator"/>
+          <Link rel="supplemental" href="swid:test.a.s1"/>
+          <Link rel="supplemental" href="swidpath://swid:SoftwareIdentity[swid:Meta[@s1-attrib = 's1']]"/>
+          <Link rel="supplemental" href="./s1.swidtag"/>
+          <Link rel="supplemental" href="swid:test.a.s11"/>
+          <Entity name="Example F Organization" regid="f.test" role="role-f"/>
+          <supplemental xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s11.swidtag" break-loop="true"/>
+        </SoftwareIdentity>
+      </supplemental>
+    </SoftwareIdentity>
+  </supplemental>
+</SoftwareIdentity>
+---
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd" xml:lang="en-US" name="Primary SWID tag" tagId="test.m.p2" version="s1" versionScheme="scheme-from-s2">
+  <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="version" path="tests/swiddata1/sup/s1.swidtag"/>
+  <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="versionScheme" path="tests/swiddata1/sup/s2.swidtag"/>
+  <Meta product="Some product" colloquialVersion="3" s1-attrib="s1" s11-s12-attrib-match="defined in s11 and s12" s2-attrib="s2">
+    <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s1-attrib" path="tests/swiddata1/sup/s1.swidtag"/>
+    <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s11-s12-attrib-match" path="tests/swiddata1/sup/s11.swidtag"/>
+    <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s11-s12-attrib-match" path="tests/swiddata1/sup/s12.swidtag"/>
+    <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s2-attrib" path="tests/swiddata1/sup/s2.swidtag"/>
+  </Meta>
+  <Entity name="Example A Organization" regid="a.test" role="softwareCreator"/>
+  <Entity name="Example O Organization" regid="o.test" role="tagCreator"/>
+  <Entity name="Example RS Organization" regid="s.test" role="role-r">
+    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s1.swidtag"/>
+    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s2.swidtag"/>
+  </Entity>
+  <Entity name="Example RS Organization" regid="s.test" role="role-s">
+    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s1.swidtag"/>
+  </Entity>
+  <Entity name="Example F Organization" regid="f.test" role="role-f">
+    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s11.swidtag"/>
+  </Entity>
+  <Entity name="Example X Organization" regid="x.test" role="role-x">
+    <Meta x-s2-attrib="role-x-from-s2"/>
+    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s2.swidtag"/>
+  </Entity>
+  <supplemental xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s1.swidtag">
+    <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd" xml:lang="en-US" name="Supplementing p1 and p2" tagId="test.a.s1" supplemental="true" version="s1">
+      <Meta s1-attrib="s1" s1-attrib-sup="s11" s11-s12-attrib-match="defined in s11 and s12">
+        <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s1-attrib-sup" path="tests/swiddata1/sup/s11.swidtag"/>
+        <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s11-s12-attrib-match" path="tests/swiddata1/sup/s11.swidtag"/>
+      </Meta>
+      <Entity name="Example A Organization" regid="a.test" role="softwareCreator"/>
+      <Entity name="Example A Organization" regid="a.test" role="tagCreator"/>
+      <Entity name="Example RS Organization" regid="s.test" role="role-r role-s"/>
+      <!--
+    Since XPath 1.0 does not support default namespace and neither does
+    lxml, we use "swid:" prefix here. The standard and the XML schema
+    annotation seems to assume that the SWID schema can be addressed
+    without prefix.
+  -->
+      <Link rel="supplemental" href="swidpath://swid:SoftwareIdentity[@name='Primary SWID tag']"/>
+      <Entity name="Example F Organization" regid="f.test" role="role-f">
+        <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s11.swidtag"/>
+      </Entity>
+      <supplemental xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s11.swidtag">
+        <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd" xml:lang="en-US" supplemental="true" name="Supplementing p1 and p2" tagId="test.a.s11">
+          <Meta s1-attrib-sup="s11" s11-s12-attrib-match="defined in s11 and s12"/>
+          <Entity name="Example M Organization" regid="m.test" role="tagCreator"/>
+          <Link rel="supplemental" href="swid:test.a.s1"/>
+          <Link rel="supplemental" href="swidpath://swid:SoftwareIdentity[swid:Meta[@s1-attrib = 's1']]"/>
+          <Link rel="supplemental" href="./s1.swidtag"/>
+          <Link rel="supplemental" href="swid:test.a.s11"/>
+          <Entity name="Example F Organization" regid="f.test" role="role-f"/>
+          <supplemental xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s11.swidtag" break-loop="true"/>
+        </SoftwareIdentity>
+      </supplemental>
+    </SoftwareIdentity>
+  </supplemental>
+  <supplemental xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s2.swidtag">
+    <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd" xml:lang="en-US" name="Supplementing p2 and s1" tagId="test.o.s2" versionScheme="scheme-from-s2" supplemental="true">
+      <Meta s2-attrib="s2" s1-attrib-sup="s12" s11-s12-attrib-match="defined in s11 and s12">
+        <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s1-attrib-sup" path="tests/swiddata1/sup/s12.swidtag"/>
+        <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s11-s12-attrib-match" path="tests/swiddata1/sup/s12.swidtag"/>
+      </Meta>
+      <Entity name="Example O Organization" regid="o.test" role="tagCreator"/>
+      <Link rel="supplemental" href="../sup/s12.swidtag"/>
+      <Link rel="supplemental" href="swid:test.m.p2"/>
+      <Entity role="role-r" name="Example RS Organization" regid="s.test"/>
+      <Entity name="Example X Organization" regid="x.test" role="role-x">
+        <Meta x-s2-attrib="role-x-from-s2"/>
+      </Entity>
+      <supplemental xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s12.swidtag">
+        <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd" xml:lang="en-US" supplemental="true" name="Supplementing p1 and p2" tagId="test.a.s12">
+          <Meta s1-attrib-sup="s12" s2-attrib="s12 shouldn't propagate" s11-s12-attrib-match="defined in s11 and s12"/>
+          <Entity name="Example A Organization" regid="a.test" role="tagCreator"/>
+          <Link rel="supplemental" href="swid:test.o.s2"/>
+          <supplemental xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s2.swidtag" break-loop="true"/>
+        </SoftwareIdentity>
+      </supplemental>
+    </SoftwareIdentity>
+  </supplemental>
+</SoftwareIdentity>

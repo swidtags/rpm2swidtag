@@ -1,0 +1,245 @@
+File [tests/swiddata1/sup/p1.swidtag]
+SoftwareIdentity
+  @name: [Primary SWID tag]
+  @tagId: [test.a.p1]
+  @version: [s1] << [tests/swiddata1/sup/s1.swidtag]
+  - Entity
+    @name: [Example A Organization]
+    @regid: [a.test]
+    @role: [tagCreator softwareCreator]
+  - Meta
+    @s1-attrib: [s1] << [tests/swiddata1/sup/s1.swidtag]
+    @s1-attrib-sup: [s11] << [tests/swiddata1/sup/s11.swidtag]
+    @s11-s12-attrib-match: [defined in s11 and s12] << [tests/swiddata1/sup/s11.swidtag]
+  - Entity << [tests/swiddata1/sup/s1.swidtag]
+    @name: [Example A Organization]
+    @regid: [a.test]
+    @role: [softwareCreator]
+  - Entity << [tests/swiddata1/sup/s1.swidtag]
+    @name: [Example RS Organization]
+    @regid: [s.test]
+    @role: [role-r]
+  - Entity << [tests/swiddata1/sup/s1.swidtag]
+    @name: [Example RS Organization]
+    @regid: [s.test]
+    @role: [role-s]
+  - Entity << [tests/swiddata1/sup/s11.swidtag]
+    @name: [Example F Organization]
+    @regid: [f.test]
+    @role: [role-f]
+  + Supplemented by [tests/swiddata1/sup/s1.swidtag]
+    - SoftwareIdentity
+      @xsi:schemaLocation: [http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd]
+      @xml:lang: [en-US]
+      @name: [Supplementing p1 and p2]
+      @tagId: [test.a.s1]
+      @supplemental: [true]
+      @version: [s1]
+      - Meta
+        @s1-attrib: [s1]
+        @s1-attrib-sup: [s11] << [tests/swiddata1/sup/s11.swidtag]
+        @s11-s12-attrib-match: [defined in s11 and s12] << [tests/swiddata1/sup/s11.swidtag]
+      - Entity
+        @name: [Example A Organization]
+        @regid: [a.test]
+        @role: [softwareCreator]
+      - Entity
+        @name: [Example A Organization]
+        @regid: [a.test]
+        @role: [tagCreator]
+      - Entity
+        @name: [Example RS Organization]
+        @regid: [s.test]
+        @role: [role-r role-s]
+      - Link
+        @rel: [supplemental]
+        @href: [swidpath://swid:SoftwareIdentity[@name='Primary SWID tag']]
+      - Entity << [tests/swiddata1/sup/s11.swidtag]
+        @name: [Example F Organization]
+        @regid: [f.test]
+        @role: [role-f]
+      + Supplemented by [tests/swiddata1/sup/s11.swidtag]
+        - SoftwareIdentity
+          @xsi:schemaLocation: [http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd]
+          @xml:lang: [en-US]
+          @supplemental: [true]
+          @name: [Supplementing p1 and p2]
+          @tagId: [test.a.s11]
+          - Meta
+            @s1-attrib-sup: [s11]
+            @s11-s12-attrib-match: [defined in s11 and s12]
+          - Entity
+            @name: [Example M Organization]
+            @regid: [m.test]
+            @role: [tagCreator]
+          - Link
+            @rel: [supplemental]
+            @href: [swid:test.a.s1]
+          - Link
+            @rel: [supplemental]
+            @href: [swidpath://swid:SoftwareIdentity[swid:Meta[@s1-attrib = 's1']]]
+          - Link
+            @rel: [supplemental]
+            @href: [./s1.swidtag]
+          - Link
+            @rel: [supplemental]
+            @href: [swid:test.a.s11]
+          - Entity
+            @name: [Example F Organization]
+            @regid: [f.test]
+            @role: [role-f]
+          ! Supplemented by [tests/swiddata1/sup/s11.swidtag] ... breaking loop
+---
+File [tests/swiddata1/sup/p2.swidtag]
+SoftwareIdentity
+  @xsi:schemaLocation: [http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd]
+  @xml:lang: [en-US]
+  @name: [Primary SWID tag]
+  @tagId: [test.m.p2]
+  @version: [s1] << [tests/swiddata1/sup/s1.swidtag]
+  @versionScheme: [scheme-from-s2] << [tests/swiddata1/sup/s2.swidtag]
+  - Meta
+    @product: [Some product]
+    @colloquialVersion: [3]
+    @s1-attrib: [s1] << [tests/swiddata1/sup/s1.swidtag]
+    @s11-s12-attrib-match: [defined in s11 and s12] << [tests/swiddata1/sup/s11.swidtag] [tests/swiddata1/sup/s12.swidtag]
+    @s2-attrib: [s2] << [tests/swiddata1/sup/s2.swidtag]
+  - Entity
+    @name: [Example A Organization]
+    @regid: [a.test]
+    @role: [softwareCreator]
+  - Entity
+    @name: [Example O Organization]
+    @regid: [o.test]
+    @role: [tagCreator]
+  - Entity << [tests/swiddata1/sup/s1.swidtag] [tests/swiddata1/sup/s2.swidtag]
+    @name: [Example RS Organization]
+    @regid: [s.test]
+    @role: [role-r]
+  - Entity << [tests/swiddata1/sup/s1.swidtag]
+    @name: [Example RS Organization]
+    @regid: [s.test]
+    @role: [role-s]
+  - Entity << [tests/swiddata1/sup/s11.swidtag]
+    @name: [Example F Organization]
+    @regid: [f.test]
+    @role: [role-f]
+  - Entity << [tests/swiddata1/sup/s2.swidtag]
+    @name: [Example X Organization]
+    @regid: [x.test]
+    @role: [role-x]
+    - Meta
+      @x-s2-attrib: [role-x-from-s2]
+  + Supplemented by [tests/swiddata1/sup/s1.swidtag]
+    - SoftwareIdentity
+      @xsi:schemaLocation: [http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd]
+      @xml:lang: [en-US]
+      @name: [Supplementing p1 and p2]
+      @tagId: [test.a.s1]
+      @supplemental: [true]
+      @version: [s1]
+      - Meta
+        @s1-attrib: [s1]
+        @s1-attrib-sup: [s11] << [tests/swiddata1/sup/s11.swidtag]
+        @s11-s12-attrib-match: [defined in s11 and s12] << [tests/swiddata1/sup/s11.swidtag]
+      - Entity
+        @name: [Example A Organization]
+        @regid: [a.test]
+        @role: [softwareCreator]
+      - Entity
+        @name: [Example A Organization]
+        @regid: [a.test]
+        @role: [tagCreator]
+      - Entity
+        @name: [Example RS Organization]
+        @regid: [s.test]
+        @role: [role-r role-s]
+      - Link
+        @rel: [supplemental]
+        @href: [swidpath://swid:SoftwareIdentity[@name='Primary SWID tag']]
+      - Entity << [tests/swiddata1/sup/s11.swidtag]
+        @name: [Example F Organization]
+        @regid: [f.test]
+        @role: [role-f]
+      + Supplemented by [tests/swiddata1/sup/s11.swidtag]
+        - SoftwareIdentity
+          @xsi:schemaLocation: [http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd]
+          @xml:lang: [en-US]
+          @supplemental: [true]
+          @name: [Supplementing p1 and p2]
+          @tagId: [test.a.s11]
+          - Meta
+            @s1-attrib-sup: [s11]
+            @s11-s12-attrib-match: [defined in s11 and s12]
+          - Entity
+            @name: [Example M Organization]
+            @regid: [m.test]
+            @role: [tagCreator]
+          - Link
+            @rel: [supplemental]
+            @href: [swid:test.a.s1]
+          - Link
+            @rel: [supplemental]
+            @href: [swidpath://swid:SoftwareIdentity[swid:Meta[@s1-attrib = 's1']]]
+          - Link
+            @rel: [supplemental]
+            @href: [./s1.swidtag]
+          - Link
+            @rel: [supplemental]
+            @href: [swid:test.a.s11]
+          - Entity
+            @name: [Example F Organization]
+            @regid: [f.test]
+            @role: [role-f]
+          ! Supplemented by [tests/swiddata1/sup/s11.swidtag] ... breaking loop
+  + Supplemented by [tests/swiddata1/sup/s2.swidtag]
+    - SoftwareIdentity
+      @xsi:schemaLocation: [http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd]
+      @xml:lang: [en-US]
+      @name: [Supplementing p2 and s1]
+      @tagId: [test.o.s2]
+      @versionScheme: [scheme-from-s2]
+      @supplemental: [true]
+      - Meta
+        @s2-attrib: [s2]
+        @s1-attrib-sup: [s12] << [tests/swiddata1/sup/s12.swidtag]
+        @s11-s12-attrib-match: [defined in s11 and s12] << [tests/swiddata1/sup/s12.swidtag]
+      - Entity
+        @name: [Example O Organization]
+        @regid: [o.test]
+        @role: [tagCreator]
+      - Link
+        @rel: [supplemental]
+        @href: [../sup/s12.swidtag]
+      - Link
+        @rel: [supplemental]
+        @href: [swid:test.m.p2]
+      - Entity
+        @role: [role-r]
+        @name: [Example RS Organization]
+        @regid: [s.test]
+      - Entity
+        @name: [Example X Organization]
+        @regid: [x.test]
+        @role: [role-x]
+        - Meta
+          @x-s2-attrib: [role-x-from-s2]
+      + Supplemented by [tests/swiddata1/sup/s12.swidtag]
+        - SoftwareIdentity
+          @xsi:schemaLocation: [http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd]
+          @xml:lang: [en-US]
+          @supplemental: [true]
+          @name: [Supplementing p1 and p2]
+          @tagId: [test.a.s12]
+          - Meta
+            @s1-attrib-sup: [s12]
+            @s2-attrib: [s12 shouldn't propagate]
+            @s11-s12-attrib-match: [defined in s11 and s12]
+          - Entity
+            @name: [Example A Organization]
+            @regid: [a.test]
+            @role: [tagCreator]
+          - Link
+            @rel: [supplemental]
+            @href: [swid:test.o.s2]
+          ! Supplemented by [tests/swiddata1/sup/s2.swidtag] ... breaking loop

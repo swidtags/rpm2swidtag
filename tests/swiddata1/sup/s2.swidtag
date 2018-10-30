@@ -2,9 +2,13 @@
 <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd"
   xml:lang="en-US"
-  name="Supplementing p2 and s1" tagId="test.o.s2" supplemental="true">
+  name="Supplementing p2 and s1" tagId="test.o.s2" versionScheme="scheme-from-s2" supplemental="true">
   <Meta s2-attrib="s2"/>
   <Entity name="Example O Organization" regid="o.test" role="tagCreator"/>
   <Link rel="supplemental" href="../sup/s12.swidtag"/>
   <Link rel="supplemental" href="swid:test.m.p2"/>
+  <Entity role="role-r" name="Example RS Organization" regid="s.test"/>
+  <Entity name="Example X Organization" regid="x.test" role="role-x">
+    <Meta x-s2-attrib="role-x-from-s2"/>
+  </Entity>
 </SoftwareIdentity>

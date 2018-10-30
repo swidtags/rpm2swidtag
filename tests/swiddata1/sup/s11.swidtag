@@ -4,7 +4,11 @@
   xml:lang="en-US"
   supplemental="true"
   name="Supplementing p1 and p2" tagId="test.a.s11">
-  <Meta s1-attrib-sup="s11"/>
-  <Entity name="Example A Organization" regid="a.test" role="tagCreator"/>
+  <Meta s1-attrib-sup="s11" s11-s12-attrib-match="defined in s11 and s12"/>
+  <Entity name="Example M Organization" regid="m.test" role="tagCreator"/>
   <Link rel="supplemental" href="swid:test.a.s1"/>
+  <Link rel="supplemental" href="swidpath://swid:SoftwareIdentity[swid:Meta[@s1-attrib = 's1']]"/>
+  <Link rel="supplemental" href="./s1.swidtag"/>
+  <Link rel="supplemental" href="swid:test.a.s11"/>
+  <Entity name="Example F Organization" regid="f.test" role="role-f"/>
 </SoftwareIdentity>

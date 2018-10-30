@@ -2,6 +2,7 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:swid="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
+  xmlns:swidq="http://adelton.fedorapeople.org/swidq"
   xmlns:t="display-template"
 >
 
@@ -130,13 +131,14 @@
     <xsl:with-param name="label" select="$label"/>
   </xsl:call-template>
   <xsl:apply-templates select="." mode="quote-value"/>
+  <xsl:variable name="name" select="name()"/>
+  <xsl:apply-templates select="../swidq:attr-source[@name = $name]" mode="supplemental-info"/>
   <xsl:call-template name="newline"/>
 </xsl:template>
 
 <xsl:template match="swid:SoftwareIdentity/@version" mode="quote-value">
   <xsl:apply-imports select="." mode="quote-value"/>
-  <xsl:apply-templates select="../@versionScheme" mode="quote-value">
-  </xsl:apply-templates>
+  <xsl:apply-templates select="../@versionScheme" mode="quote-value"/>
 </xsl:template>
 
 <xsl:template match="swid:SoftwareIdentity/@versionScheme" mode="quote-value">
@@ -158,8 +160,10 @@
   <xsl:apply-templates select="@name" mode="quote-value">
     <xsl:with-param name="prefix" select="' name '"/>
   </xsl:apply-templates>
+  <xsl:apply-templates select="./swidq:element-source" mode="supplemental-info"/>
   <xsl:call-template name="newline"/>
   <xsl:apply-templates select="./@*[not(name() = 'role' or name() = 'regid' or name() = 'name')]"/>
+  <xsl:apply-templates select="swid:*"/>
 </xsl:template>
 
 <xsl:template match="swid:Link">
@@ -177,6 +181,7 @@
   <xsl:if test="not(@href)">
     <xsl:text>with unspecified @href</xsl:text>
   </xsl:if>
+  <xsl:apply-templates select="./swidq:element-source" mode="supplemental-info"/>
   <xsl:call-template name="newline"/>
   <xsl:apply-templates select="./@*[not(name() = 'rel' or name() = 'href')]"/>
 </xsl:template>

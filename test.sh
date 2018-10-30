@@ -288,6 +288,18 @@ bin/swidq -p -i tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.ou
 diff <( echo 'bin/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know' ) tmp/swidq.err
 diff tests/swiddata2/distro-minor-supplemental.info tmp/swidq.out
 
+bin/swidq -p tests/swiddata1/sup --info > tmp/swidq.out 2> tmp/swidq.err
+diff /dev/null tmp/swidq.err
+diff tests/swiddata1/sup/sup.info tmp/swidq.out
+
+bin/swidq -p tests/swiddata1/sup --output-stylesheet=swidq-xml-supplemental-structure.xslt > tmp/swidq.out 2> tmp/swidq.err
+diff /dev/null tmp/swidq.err
+diff tests/swiddata1/sup/sup.xml tmp/swidq.out
+
+bin/swidq -p tests/swiddata1/sup --dump > tmp/swidq.out 2> tmp/swidq.err
+diff /dev/null tmp/swidq.err
+diff tests/swiddata1/sup/sup.dump tmp/swidq.out
+
 bin/swidq --silent -c tests/swidq.conf --rpm pkg3-1.0.0-1.x86_64 > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata1/a.test/pkg3.swidtag' ;

@@ -5,5 +5,5 @@
   name="Primary SWID tag" tagId="test.m.p2">
   <Meta product="Some product" colloquialVersion="3"/>
   <Entity name="Example A Organization" regid="a.test" role="softwareCreator"/>
-  <Entity name="Example M Organization" regid="m.test" role="tagCreator"/>
+  <Entity name="Example O Organization" regid="o.test" role="tagCreator"/>
 </SoftwareIdentity>

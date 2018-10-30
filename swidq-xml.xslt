@@ -3,7 +3,8 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:swid="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
   xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
-  exclude-result-prefixes="swid"
+  xmlns:swidq="http://adelton.fedorapeople.org/swidq"
+  exclude-result-prefixes="swid swidq"
 >
 
 <xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="utf-8"/>
@@ -23,6 +24,10 @@
 
 <xsl:template match="@*|node()">
   <xsl:copy-of select="."/>
+</xsl:template>
+
+<xsl:template match="swidq:*">
+  <!-- do not show the supplemental tags -->
 </xsl:template>
 
 </xsl:stylesheet>

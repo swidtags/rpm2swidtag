@@ -4,5 +4,6 @@
   name="Example OS Distribution" tagId="test.a.Example-OS-Distro-3.14.x86_64-sup2" version="3.14.x86_64" supplemental="true">
   <Entity name="Example Some Organization" regid="x.test" role="tagCreator"/>
   <Link rel="supplemental" href="swid:test.a.Example-OS-Distro-3.14.x86_64"/>
+  <Link rel="null" href="/dev/null"/>
   <Meta product="supplemental tag to supplemental tag" custom-attr="42"/>
 </SoftwareIdentity>
