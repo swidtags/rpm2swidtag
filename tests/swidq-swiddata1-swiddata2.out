@@ -10,12 +10,16 @@ test.a.p1 tests/swiddata1/sup/p1.swidtag
   + test.a.s11 tests/swiddata1/sup/s11.swidtag
   + test.a.s12 tests/swiddata1/sup/s12.swidtag
     + test.o.s2 tests/swiddata1/sup/s2.swidtag
+      + test.a.s12 tests/swiddata1/sup/s12.swidtag ... breaking loop
 test.m.p2 tests/swiddata1/sup/p2.swidtag
 + test.a.s1 tests/swiddata1/sup/s1.swidtag
   + test.a.s11 tests/swiddata1/sup/s11.swidtag
   + test.a.s12 tests/swiddata1/sup/s12.swidtag
     + test.o.s2 tests/swiddata1/sup/s2.swidtag
+      + test.a.s12 tests/swiddata1/sup/s12.swidtag ... breaking loop
 + test.o.s2 tests/swiddata1/sup/s2.swidtag
+  + test.a.s12 tests/swiddata1/sup/s12.swidtag
+    + test.o.s2 tests/swiddata1/sup/s2.swidtag ... breaking loop
 test.b.pkg3-1.0.0-1.x86_64 tests/swiddata3/b.test/pkg3.swidtag
 test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag
 test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag

@@ -7,4 +7,5 @@
   <Meta s1-attrib-sup="s12"/>
   <Entity name="Example A Organization" regid="a.test" role="tagCreator"/>
   <Link rel="supplemental" href="swid:test.a.s1"/>
+  <Link rel="supplemental" href="swid:test.o.s2"/>
 </SoftwareIdentity>

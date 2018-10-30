@@ -105,16 +105,23 @@ def load_tag_collection(dirs, resolve_dir_symlinks=False, debug=False, silent=Fa
 
 	return (tags, exit_status)
 
-def list_supplemental(tags, tag, seen, indent=""):
+def list_supplemental(tags, tag, seen=set(), indent=""):
+	collect_seen = set( { tag.get_path(): True } )
 	for stag in tags.supplemental_for(tag):
 		spath = stag.get_path()
-		stdout.write("%s+ %s %s\n" % (indent, stag.get_tagid(), spath))
-		seen[spath] = True
-		list_supplemental(tags, stag, seen, indent=indent + "  ")
+		breaking_loop = ""
+		if spath in seen and len(tags.supplemental_for(stag)) > 0:
+			breaking_loop = " ... breaking loop"
+		stdout.write("%s+ %s %s%s\n" % (indent, stag.get_tagid(), spath, breaking_loop))
+		if not breaking_loop:
+			local_seen = set(seen)
+			local_seen.add(spath)
+			collect_seen.update(list_supplemental(tags, stag, local_seen, indent=indent + "  "))
+	return collect_seen
 
 def process_tag_collection(tags, transforms, opts):
 	tags.compute_supplemental(stderr=stderr, prefix="%s: " % argv[0], debug=opts.debug, silent=opts.silent)
-	seen = {}
+	seen = set()
 	if opts.all and len(opts.match) == 0:
 		opts.match.append('*')
 	separator = None
@@ -123,7 +130,7 @@ def process_tag_collection(tags, transforms, opts):
 		if tag.is_supplemental():
 			if path in seen:
 				continue
-		seen[path] = True
+		seen.add(path)
 
 		matched = False
 		if opts.paths:
@@ -170,7 +177,7 @@ def process_tag_collection(tags, transforms, opts):
 			sup_indent = "  "
 
 		stdout.write("%s %s\n" % (tag.get_tagid(), path))
-		list_supplemental(tags, tag, seen, indent=sup_indent)
+		seen.update(list_supplemental(tags, tag, indent=sup_indent))
 
 def main():
 	opts = setup_opts()
