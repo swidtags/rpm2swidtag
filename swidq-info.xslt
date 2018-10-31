@@ -136,9 +136,16 @@
   <xsl:call-template name="newline"/>
 </xsl:template>
 
-<xsl:template match="swid:SoftwareIdentity/@version" mode="quote-value">
-  <xsl:apply-imports select="." mode="quote-value"/>
+<xsl:template match="swid:SoftwareIdentity/@version" mode="label-and-quote">
+  <xsl:param name="label"/>
+  <xsl:call-template name="display-label">
+    <xsl:with-param name="label" select="$label"/>
+  </xsl:call-template>
+  <xsl:apply-templates select="." mode="quote-value"/>
+  <xsl:apply-templates select="../swidq:attr-source[@name = 'version']" mode="supplemental-info"/>
   <xsl:apply-templates select="../@versionScheme" mode="quote-value"/>
+  <xsl:apply-templates select="../swidq:attr-source[@name = 'versionScheme']" mode="supplemental-info"/>
+  <xsl:call-template name="newline"/>
 </xsl:template>
 
 <xsl:template match="swid:SoftwareIdentity/@versionScheme" mode="quote-value">
@@ -225,6 +232,32 @@
   </xsl:if>
   <xsl:call-template name="newline"/>
   <xsl:apply-templates select="./@swid:*[not(name() = 'date' or name() = 'deviceId')]"/>
+</xsl:template>
+
+<xsl:template match="swid:SoftwareIdentity/swidq:attr-source" mode="supplemental-info">
+  <xsl:variable name="path" select="@path"/>
+  <xsl:variable name="our_regid" select="../swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid"/>
+  <xsl:choose>
+    <xsl:when test="..//swidq:supplemental[@path = $path]/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid = $our_regid">
+      <xsl:text> (+)</xsl:text>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:text> (*)</xsl:text>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<xsl:template match="swidq:attr-source | swidq:element-source" mode="supplemental-info">
+  <xsl:variable name="path" select="@path"/>
+  <xsl:variable name="our_regid" select="../../swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid"/>
+  <xsl:choose>
+    <xsl:when test="../..//swidq:supplemental[@path = $path]/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid = $our_regid">
+      <xsl:text> (+)</xsl:text>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:text> (*)</xsl:text>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>
