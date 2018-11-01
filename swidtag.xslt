@@ -202,6 +202,7 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:attribute>
+    <xsl:call-template name="si_name_attr"/>
     <xsl:attribute name="supplemental">true</xsl:attribute>
     <Link rel="supplemental">
       <xsl:attribute name="href">
