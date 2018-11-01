@@ -18,7 +18,7 @@ setup(
 		('/etc/rpm2swidtag', ['rpm2swidtag.conf', 'template.swidtag', 'swidtag.xslt', 'rpm2swidtag.xslt', 'rpm2swidtag-tagid.xslt']),
 		('/etc/swid', ['swidq.conf']),
 		('/etc/swid/swidtags.d', []),
-		('/usr/share/swidq/stylesheets', ['swidq-info.xslt', 'swidq-dump.xslt', 'swidq-files.xslt']),
+		('/usr/share/swidq/stylesheets', ['swidq-info.xslt', 'swidq-dump.xslt', 'swidq-files.xslt', 'swidq-xml.xslt']),
 	],
 	install_requires = ['rpm', 'lxml'],
 )
