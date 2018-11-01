@@ -7,9 +7,6 @@
     <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s1-attrib-sup" path="tests/swiddata1/sup/s11.swidtag"/>
     <attr-source xmlns="http://adelton.fedorapeople.org/swidq" name="s11-s12-attrib-match" path="tests/swiddata1/sup/s11.swidtag"/>
   </Meta>
-  <Entity name="Example A Organization" regid="a.test" role="softwareCreator">
-    <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s1.swidtag"/>
-  </Entity>
   <Entity name="Example RS Organization" regid="s.test" role="role-r">
     <element-source xmlns="http://adelton.fedorapeople.org/swidq" path="tests/swiddata1/sup/s1.swidtag"/>
   </Entity>

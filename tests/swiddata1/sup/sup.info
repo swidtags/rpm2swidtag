@@ -7,7 +7,6 @@ Version			[s1] (+)
     @s11-s12-attrib-match: [defined in s11 and s12] (*)
 
 Entity [tagCreator softwareCreator] regid [a.test] name [Example A Organization]
-Entity [softwareCreator] regid [a.test] name [Example A Organization] (+)
 Entity [role-r] regid [s.test] name [Example RS Organization] (+)
 Entity [role-s] regid [s.test] name [Example RS Organization] (+)
 Entity [role-f] regid [f.test] name [Example F Organization] (*)

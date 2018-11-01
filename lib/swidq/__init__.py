@@ -267,6 +267,12 @@ class SWIDTag:
 						if __class__._elements_match(ne, t):
 							__class__._add_element_source(t, spath, to_existing=True)
 							break
+						te = deepcopy(t)
+						te.set("role", r)
+						if __class__._elements_match(ne, te) \
+							and t.find("{%s}element-source" % SWIDQ_XMLNS) is None:
+							__class__._add_element_source(t, spath, to_existing=True)
+							break
 					else:
 						__class__._add_element_source(ne, spath)
 						self.xml.getroot().append(ne)
