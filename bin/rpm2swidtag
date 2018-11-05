@@ -6,6 +6,7 @@ from platform import node
 from rpm2swidtag import Template, Error, rpm
 import argparse, re
 from configparser import ConfigParser
+from glob import iglob
 
 TEMPLATE_DIR = "/etc/rpm2swidtag"
 CONFIG_FILE = "/etc/rpm2swidtag/rpm2swidtag.conf"
@@ -33,6 +34,7 @@ def load_config(opts):
 	config = ConfigParser(delimiters = '=', comment_prefixes = '#')
 	config['rpm2swidtag'] = { 'config-file': opts.config, 'template-dir': TEMPLATE_DIR }
 	config.read(opts.config)
+	config.read(sorted(iglob(opts.config + ".d/*.conf")))
 	return config
 
 def load_template(config, opts):
