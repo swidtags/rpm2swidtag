@@ -84,14 +84,19 @@ def process_rpm_with_template(header, template, opts, config):
 				continue
 			if config.get(s, 'key-id') \
 				and config.get(s, 'key-id') == signature_key_id:
-				p = config.get(s, 'software-creator-file', fallback=None)
-				if p:
-					params['software-creator-from'] = path.abspath(p)
-				p = config.get(s, 'component-of-file', fallback=None)
-				if p:
-					component_of = path.abspath(p)
+				creator_from = config.get(s, 'software-creator-file', fallback=None)
+				if creator_from:
+					creator_from = path.abspath(creator_from)
+				if creator_from and path.isfile(creator_from):
+					params['software-creator-from'] = creator_from
+
+				component_of = config.get(s, 'component-of-file', fallback=None)
+				if component_of:
+					component_of = path.abspath(component_of)
+				if component_of and not path.isfile(component_of):
+					component_of = None
 				break
-	if opts.software_creator_from and 'software-creator-from' not in params:
+	if opts.software_creator_from:
 		params['software-creator-from'] = path.abspath(opts.software_creator_from)
 	write_out_tag(template.generate_tag_for_header(header, params=params), opts)
 	if not opts.primary_only and component_of:
