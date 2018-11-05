@@ -1,4 +1,5 @@
 Tag id			[test.a.Example-OS-Distro-3.14.x86_64]
+Tag is supplemental
 Supplemental to		[swid:test.a.Example-OS-Distro-3.x86_64]
 File			[tests/swiddata2/distro-minor-supplemental.swidtag]
 Name			[Example OS Distribution]

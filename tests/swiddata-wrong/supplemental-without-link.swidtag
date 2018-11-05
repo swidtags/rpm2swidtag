@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
+  xml:lang="en-US"
+  name="Supplemental tag without supplemental Link" tagId="test.a.Example-OS-Distro-3.14.x86_64" version="3.14.x86_64" supplemental="true">
+  <Entity name="Example Some Organization" regid="a.test" role="tagCreator"/>
+</SoftwareIdentity>

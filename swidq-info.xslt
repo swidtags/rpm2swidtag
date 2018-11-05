@@ -16,6 +16,7 @@
 <t:SoftwareIdentity>
   <line attr="tagId" required="true">Tag id</line>
   <line attr="tagVersion">Tag version</line>
+  <line attr="supplemental">Tag is supplemental</line>
   <display-supplemental>Supplemental to</display-supplemental>
   <display-file>File</display-file>
   <line attr="name" required="true">Name</line>
@@ -67,6 +68,14 @@
   <xsl:apply-templates select="$source/swid:Meta/@*[name() = $attr]" mode="label-and-quote">
     <xsl:with-param name="label" select="."/>
   </xsl:apply-templates>
+</xsl:template>
+
+<xsl:template match="t:SoftwareIdentity/line[@attr = 'supplemental']">
+  <xsl:param name="source"/>
+  <xsl:if test="$source[@supplemental = 'true']">
+    <xsl:value-of select="text()"/>
+    <xsl:call-template name="newline"/>
+  </xsl:if>
 </xsl:template>
 
 <xsl:template match="t:SoftwareIdentity/display-supplemental">

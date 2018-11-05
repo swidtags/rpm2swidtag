@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
   xml:lang="en-US"
-  name="Example OS Distribution" tagId="test.a.Example-OS-Distro-3.15.x86_64" version="3.15.x86_64">
+  name="Example OS Distribution" tagId="test.a.Example-OS-Distro-3.15.x86_64" version="3.15.x86_64" supplemental="true">
   <Entity name="Example Some Organization" regid="a.test" role="tagCreator"/>
   <Entity name="Example Some Organization" regid="a.test" role="otherRole"/>
   <Link rel="supplemental" href="swid:test.example.missing.Example-OS-Distro-3.x86_64"/>

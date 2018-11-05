@@ -342,6 +342,14 @@ bin/swidq -p tests/swiddata-wrong/missing-name.xml > tmp/swidq.out 2> tmp/swidq.
 diff /dev/null tmp/swidq.out
 diff <( echo 'bin/swidq: file [tests/swiddata-wrong/missing-name.xml] does not have SoftwareIdentity/@name' ) tmp/swidq.err
 
+bin/swidq -p tests/swiddata-wrong/supplemental-without-link.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff /dev/null tmp/swidq.out
+diff <( echo 'bin/swidq: file [tests/swiddata-wrong/supplemental-without-link.swidtag] is supplemental but does not have any supplemental Link' ) tmp/swidq.err
+
+bin/swidq -p tests/swiddata-wrong/supplemental-without-attribute.swidtag > tmp/swidq.out 2> tmp/swidq.err
+diff /dev/null tmp/swidq.out
+diff <( echo "bin/swidq: file [tests/swiddata-wrong/supplemental-without-attribute.swidtag] has Link with @rel='supplemental' but not @supplemental='true'") tmp/swidq.err
+
 # Test that README has up-to-date usage section
 diff -u <( bin/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
 

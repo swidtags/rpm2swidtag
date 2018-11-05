@@ -17,6 +17,7 @@ class SWIDTag:
 		self.path = file
 		self.xml = None
 		self.errors = None
+		self.supplemental = False
 		self.supplemental_for = None
 		self.tagid = None
 		self.tagversion = None
@@ -48,6 +49,9 @@ class SWIDTag:
 		self.tagid = tagid
 		self.name = name
 
+		if si.get("supplemental", "false") == "true":
+			self.supplemental = True
+
 		errors = []
 		supplemental_for = []
 
@@ -55,6 +59,9 @@ class SWIDTag:
 			rel = link.get("rel")
 			if rel is None or rel != 'supplemental':
 				continue
+			if not self.supplemental:
+				errors.append("file [%s] has Link with @rel='supplemental' but not @supplemental='true'" % file)
+				break
 			href = link.get("href")
 			if href is None:
 				errors.append("file [%s] has Link with @rel='supplemental' but no @href" % file)
@@ -64,10 +71,14 @@ class SWIDTag:
 				break
 			supplemental_for.append(href)
 
+		if self.supplemental:
+			if len(supplemental_for) > 0:
+				self.supplemental_for = supplemental_for
+			else:
+				errors.append("file [%s] is supplemental but does not have any supplemental Link" % file)
+
 		if len(errors) > 0:
 			self.errors = errors
-		if len(supplemental_for) > 0:
-			self.supplemental_for = supplemental_for
 
 	def get_xml(self):
 		return self.xml
@@ -93,8 +104,8 @@ class SWIDTag:
 	def get_supplemental_for(self):
 		return self.supplemental_for
 
-	def is_primary(self):
-		return self.supplemental_for is None
+	def is_supplemental(self):
+		return self.supplemental
 
 	def get_rpm_resources(self):
 		res = []
@@ -154,8 +165,8 @@ class SWIDTagCollection:
 
 	def __iter__(self):
 		for tag in self.by_filenames.values():
-			if tag.is_primary():
+			if not tag.is_supplemental():
 				yield tag
 		for tag in self.by_filenames.values():
-			if not tag.is_primary():
+			if tag.is_supplemental():
 				yield tag
