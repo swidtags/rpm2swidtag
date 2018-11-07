@@ -12,7 +12,7 @@ TEMPLATE_DIR = "/etc/rpm2swidtag"
 CONFIG_FILE = "/etc/rpm2swidtag/rpm2swidtag.conf"
 
 def setup_opts():
-	parser = argparse.ArgumentParser(description='SWID tag parameters.')
+	parser = argparse.ArgumentParser(description='Generating SWID tags for rpm packages.')
 	group1 = parser.add_mutually_exclusive_group()
 	group1.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
 	group1.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')

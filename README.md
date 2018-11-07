@@ -11,7 +11,7 @@ usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] [--output-dir DIR]
                    [--software-creator-from FILE] [--config FILE]
                    [... [... ...]]
 
-SWID tag parameters.
+Generating SWID tags for rpm packages.
 
 positional arguments:
   ...                   package(s), glob(s) or file name(s)
