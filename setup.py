@@ -7,12 +7,13 @@ except ImportError:
 
 setup(
 	name = 'rpm2swidtag',
-	version = '0.5.6',
+	version = '0.5.7',
 	description = 'Tools for producing SWID tags from rpm package headers and inspecting the SWID tags',
 	author = 'Jan Pazdziora',
 	license = 'Apache License 2.0',
 	package_dir = {'': 'lib'},
 	packages = ['rpm2swidtag', 'swidq'],
+	py_modules = ['dnf.cli.commands.rpm2swidtag', 'dnf-plugins.rpm2swidtag'],
 	scripts = ['bin/rpm2swidtag', 'bin/swidq'],
 	data_files = [
 		('/etc/rpm2swidtag', ['rpm2swidtag.conf', 'template.swidtag', 'swidtag.xslt', 'rpm2swidtag.xslt', 'rpm2swidtag-tagid.xslt']),
