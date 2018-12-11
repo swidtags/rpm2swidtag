@@ -16,7 +16,10 @@ def setup_opts():
 	group1 = parser.add_mutually_exclusive_group()
 	group1.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
 	group1.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
-	parser.add_argument('--regid', type=str, help="tag creator's regid")
+	parser.add_argument('--regid', type=str, help=argparse.SUPPRESS)
+	parser.add_argument('--software-creator-from', metavar='FILE', help=argparse.SUPPRESS)
+	parser.add_argument('--tag-creator', type=str, metavar='SOURCE-FILE, REGID or "REGID NAME"', help="tagCreator Entity attributes")
+	parser.add_argument('--software-creator', type=str, metavar='SOURCE-FILE, REGID or "REGID NAME"', help="softwareCreator Entity attributes")
 	parser.add_argument('--output-dir', type=str, metavar='DIR',
 		help="write SWID tags files into regid subdirectory of DIR; or directly into DIR when the path ends with /.")
 	group2 = parser.add_mutually_exclusive_group()
@@ -24,11 +27,31 @@ def setup_opts():
 	group2.add_argument('--evidence-deviceid', type=str, dest='device', default=node(), help="Evidence/@deviceId string, defaults to hostname")
 	parser.add_argument('--primary-only', action='store_true', help="do not generate supplemental tags")
 	parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
-	parser.add_argument('--software-creator-from', metavar='FILE', help="set softwareCreator Entity to value in referenced file")
 	other_group = parser.add_argument_group("config options")
 	other_group.add_argument('--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
 	parser.add_argument('package', type=str, nargs='*', help='package(s), glob(s) or file name(s)', metavar='...')
-	return parser.parse_args()
+	opts = parser.parse_args()
+
+	error = False
+	if opts.tag_creator and (opts.tag_creator.startswith("/") or opts.tag_creator.startswith("./")):
+		abs_path = path.abspath(opts.tag_creator)
+		if not path.isfile(abs_path):
+			stderr.write("%s: --tag-creator specifies file %s which does not exists, skipping\n" % (argv[0], opts.tag_creator))
+			error = True
+	if opts.software_creator and (opts.software_creator.startswith("/") or opts.software_creator.startswith("./")):
+		abs_path = path.abspath(opts.software_creator)
+		if not path.isfile(abs_path):
+			stderr.write("%s: --software-creator specifies file %s which does not exists, skipping\n" % (argv[0], opts.software_creator))
+			error = True
+	if error:
+		exit(1)
+
+	if opts.regid:
+		stderr.write("%s: --regid is obsolete, use --tag-creator instead\n" % argv[0])
+	if opts.software_creator_from:
+		stderr.write("%s: --software-creator-from is obsolete, use --software-creator instead\n" % argv[0])
+
+	return opts
 
 def load_config(opts):
 	config = ConfigParser(delimiters = '=', comment_prefixes = '#')
@@ -69,8 +92,13 @@ def write_out_tag(tag, opts, supplemental=False):
 
 def process_rpm_with_template(header, template, opts, config):
 	params = {}
+	if opts.tag_creator:
+		if opts.tag_creator.startswith("/") or opts.tag_creator.startswith("./"):
+			params['tag-creator-from'] = path.abspath(opts.tag_creator)
+		else:
+			params['tag-creator-regid'], _, params['tag-creator-name'] = opts.tag_creator.partition(" ")
 	if opts.regid:
-		params['tagcreator-regid'] = opts.regid
+		params['tag-creator-regid'], params['tag-creator-name'] = opts.regid, None
 	if opts.authoritative:
 		params['authoritative'] = 'true'
 	else:
@@ -96,8 +124,17 @@ def process_rpm_with_template(header, template, opts, config):
 				if component_of and not path.isfile(component_of):
 					component_of = None
 				break
+	if opts.software_creator:
+		if opts.software_creator.startswith("/") or opts.software_creator.startswith("./"):
+			params['software-creator-from'] = path.abspath(opts.software_creator)
+		else:
+			params['software-creator-regid'], params['software-creator-name'] = opts.software_creator.split(" ", 1)
 	if opts.software_creator_from:
 		params['software-creator-from'] = path.abspath(opts.software_creator_from)
+
+	for k in list(params):
+		if params[k] is None:
+			del params[k]
 	write_out_tag(template.generate_tag_for_header(header, params=params), opts)
 	if not opts.primary_only and component_of:
 		params['component-of'] = component_of

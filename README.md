@@ -8,10 +8,12 @@ Utility `rpm2swidtag` creates SWID tags for rpm packages, installed in
 rpm database or rpm files:
 
 ```
-usage: rpm2swidtag [-h] [-a | -p] [--regid REGID] [--output-dir DIR]
+usage: rpm2swidtag [-h] [-a | -p]
+                   [--tag-creator SOURCE-FILE, REGID or "REGID NAME"]
+                   [--software-creator SOURCE-FILE, REGID or "REGID NAME"]
+                   [--output-dir DIR]
                    [--authoritative | --evidence-deviceid DEVICE]
-                   [--primary-only] [--print-tagid]
-                   [--software-creator-from FILE] [--config FILE]
+                   [--primary-only] [--print-tagid] [--config FILE]
                    [... [... ...]]
 
 Generating SWID tags for rpm packages.
@@ -23,7 +25,10 @@ optional arguments:
   -h, --help            show this help message and exit
   -a, --all             query all packages with glob pattern
   -p, --package         process rpm package file
-  --regid REGID         tag creator's regid
+  --tag-creator SOURCE-FILE, REGID or "REGID NAME"
+                        tagCreator Entity attributes
+  --software-creator SOURCE-FILE, REGID or "REGID NAME"
+                        softwareCreator Entity attributes
   --output-dir DIR      write SWID tags files into regid subdirectory of DIR;
                         or directly into DIR when the path ends with /.
   --authoritative       produce authoritative tag (per NIST.IR.8060) with
@@ -32,8 +37,6 @@ optional arguments:
                         Evidence/@deviceId string, defaults to hostname
   --primary-only        do not generate supplemental tags
   --print-tagid         compute and print tagId(s) to standard output
-  --software-creator-from FILE
-                        set softwareCreator Entity to value in referenced file
 
 config options:
   --config FILE         location of the configuration file

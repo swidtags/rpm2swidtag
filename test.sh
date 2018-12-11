@@ -39,6 +39,18 @@ diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.deviceid.swidtag tmp/pkg-generated.swid
 bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --regid=example.test tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid tmp/pkg-generated-regid.swidtag
 
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=example.test tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid tmp/pkg-generated-regid.swidtag
+
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator="example.test Example Corp." tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid-name tmp/pkg-generated-regid.swidtag
+
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=./tests/swiddata1/sup/p1.swidtag tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid-name-ref tmp/pkg-generated-regid.swidtag
+
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --software-creator=./tests/swiddata1/sup/p1.swidtag tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-regid-name-ref tmp/pkg-generated-regid.swidtag
+
 bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/pkg1-1.2.0-1.fc28.src.rpm | normalize > tmp/pkg-generated-src.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.src.swidtag tmp/pkg-generated-src.swidtag
 
@@ -53,6 +65,9 @@ diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-creator-from tmp/pkg-g
 
 RPM2SWIDTAG_TEMPLATE=template-minimal.swidtag bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-minimal.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.minimal tmp/pkg-from-minimal.swidtag
+
+RPM2SWIDTAG_TEMPLATE=template-extra.swidtag bin/rpm2swidtag --tag-creator="z.test Example Z" --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-extra.swidtag
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.extra tmp/pkg-from-extra.swidtag
 
 RPM2SWIDTAG_XSLT=tests/xslt/swidtag.xslt bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-custom-tagid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.custom-tagid tmp/pkg-custom-tagid.swidtag
