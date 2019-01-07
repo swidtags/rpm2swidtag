@@ -13,7 +13,8 @@ usage: rpm2swidtag [-h] [-a | -p]
                    [--software-creator SOURCE-FILE, REGID or "REGID NAME"]
                    [--output-dir DIR]
                    [--authoritative | --evidence-deviceid DEVICE]
-                   [--primary-only] [--print-tagid] [--config FILE]
+                   [--primary-only] [--print-tagid]
+                   [--preserve-signing-template] [--config FILE]
                    [... [... ...]]
 
 Generating SWID tags for rpm packages.
@@ -37,6 +38,9 @@ optional arguments:
                         Evidence/@deviceId string, defaults to hostname
   --primary-only        do not generate supplemental tags
   --print-tagid         compute and print tagId(s) to standard output
+  --preserve-signing-template
+                        keep the XML signing template in the output (for
+                        subsequent signing)
 
 config options:
   --config FILE         location of the configuration file

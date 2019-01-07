@@ -27,6 +27,7 @@ def setup_opts():
 	group2.add_argument('--evidence-deviceid', type=str, dest='device', default=node(), help="Evidence/@deviceId string, defaults to hostname")
 	parser.add_argument('--primary-only', action='store_true', help="do not generate supplemental tags")
 	parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
+	parser.add_argument('--preserve-signing-template', action='store_true', help="keep the XML signing template in the output (for subsequent signing)")
 	other_group = parser.add_argument_group("config options")
 	other_group.add_argument('--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
 	parser.add_argument('package', type=str, nargs='*', help='package(s), glob(s) or file name(s)', metavar='...')
@@ -131,6 +132,9 @@ def process_rpm_with_template(header, template, opts, config):
 			params['software-creator-regid'], params['software-creator-name'] = opts.software_creator.split(" ", 1)
 	if opts.software_creator_from:
 		params['software-creator-from'] = path.abspath(opts.software_creator_from)
+
+	if opts.preserve_signing_template:
+		params['preserve-signing-template'] = "true"
 
 	for k in list(params):
 		if params[k] is None:

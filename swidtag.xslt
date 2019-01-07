@@ -5,6 +5,7 @@
   xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:str="http://exslt.org/strings"
+  xmlns:xmlsig="http://www.w3.org/2000/09/xmldsig#"
   exclude-result-prefixes="swid"
   >
 
@@ -41,6 +42,8 @@
 <xsl:param name="software-creator-name"/>
 <xsl:param name="software-creator-from"/>
 <xsl:param name="component-of"/>
+
+<xsl:param name="preserve-signing-template"/>
 
 <xsl:template match="/">
   <xsl:if test="not($name)">
@@ -233,6 +236,7 @@
     </Link>
     <xsl:apply-templates select="swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]" mode="component-of"/>
     <xsl:call-template name="tag-and-software-creator"/>
+    <xsl:apply-templates select="xmlsig:Signature"/>
   </xsl:copy>
 </xsl:template>
 
@@ -273,6 +277,12 @@
         </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
+</xsl:template>
+
+<xsl:template match="xmlsig:Signature">
+  <xsl:if test="$preserve-signing-template = 'true'">
+    <xsl:copy-of select="."/>
+  </xsl:if>
 </xsl:template>
 
 </xsl:stylesheet>
