@@ -1,7 +1,7 @@
 test_task:
   container:
     matrix:
-      image: registry.fedoraproject.org/fedora:28
-      image: registry.fedoraproject.org/fedora:27
+      image: registry.fedoraproject.org/fedora:rawhide
+      image: registry.fedoraproject.org/fedora:latest
   build_script: tests/build.sh
   test_script: make test
