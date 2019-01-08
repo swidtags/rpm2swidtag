@@ -4,7 +4,7 @@ set -e
 set -x
 
 DNF=dnf
-$DNF install -y rpm-build gcc make "$DNF-command(builddep)"
+$DNF install -y rpm-build make "$DNF-command(builddep)"
 make spec
 $DNF builddep -y dist/rpm2swidtag.spec
 make rpm

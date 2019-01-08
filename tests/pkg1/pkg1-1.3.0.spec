@@ -7,7 +7,7 @@ Group: System Environment/Daemons
 URL: https://www.example.com/
 Source0: testfile
 
-BuildRequires: gcc
+BuildRequires: bash
 Requires: glibc
 
 %description
