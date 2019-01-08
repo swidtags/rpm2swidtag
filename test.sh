@@ -3,6 +3,12 @@
 set -e
 set -x
 
+# Content packaged to .tar.gz via MANIFEST.in does not preserve symlinks
+if ! [ -L tests/swiddata1/symlinked ] ; then
+	rm -rf tests/swiddata1/symlinked
+	ln -s ../swiddata3/b.test tests/swiddata1/symlinked
+fi
+
 mkdir -p tmp
 
 if ! [ -f tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkg1-1.2.0-1.fc28.src.rpm ] ; then
