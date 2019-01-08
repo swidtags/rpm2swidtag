@@ -7,6 +7,10 @@ rpm:
 	python3 setup.py bdist_rpm --binary-only --install-script=bdist_rpm/install_script
 	ls -l dist/*.noarch.rpm
 
+spec:
+	python3 setup.py bdist_rpm --spec-only --install-script=bdist_rpm/install_script
+	ls -l dist/*.spec
+
 test:
 	./test.sh
 

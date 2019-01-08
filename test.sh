@@ -64,10 +64,10 @@ diff tests/hello-rpm/hello-2.0-1.x86_64-signed.swidtag tmp/pkg-generated-src.swi
 bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm --software-creator-from tests/swiddata1/a.test/distro.swidtag | normalize > tmp/pkg-generated.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-creator-from tmp/pkg-generated.swidtag
 
-RPM2SWIDTAG_TEMPLATE=template-minimal.swidtag bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-minimal.swidtag
+RPM2SWIDTAG_TEMPLATE=tests/template-minimal.swidtag bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-minimal.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.minimal tmp/pkg-from-minimal.swidtag
 
-RPM2SWIDTAG_TEMPLATE=template-extra.swidtag bin/rpm2swidtag --tag-creator="z.test Example Z" --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-extra.swidtag
+RPM2SWIDTAG_TEMPLATE=tests/template-extra.swidtag bin/rpm2swidtag --tag-creator="z.test Example Z" --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-extra.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.extra tmp/pkg-from-extra.swidtag
 
 RPM2SWIDTAG_XSLT=tests/xslt/swidtag.xslt bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-custom-tagid.swidtag
@@ -336,7 +336,7 @@ bin/swidq -p tests/swiddata1/sup --info > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/sup/sup.info tmp/swidq.out
 
-bin/swidq -p tests/swiddata1/sup --output-stylesheet=swidq-xml-supplemental-structure.xslt > tmp/swidq.out 2> tmp/swidq.err
+bin/swidq -p tests/swiddata1/sup --output-stylesheet=tests/swidq-xml-supplemental-structure.xslt > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/sup/sup.xml tmp/swidq.out
 

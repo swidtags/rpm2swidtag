@@ -5,7 +5,7 @@
   exclude-result-prefixes="swidq"
 >
 
-<xsl:import href="swidq-xml.xslt"/>
+<xsl:import href="../swidq-xml.xslt"/>
 
 <xsl:template match="swidq:*">
   <xsl:element name="{local-name()}" namespace="http://adelton.fedorapeople.org/swidq">
