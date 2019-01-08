@@ -39,7 +39,7 @@ class rpm2swidtagCommand(commands.Command):
 				self._purge_dir()
 				hostname = platform.uname()[1]
 				print("Running %s --all ..." % self.RPM2SWIDTAG)
-				run([self.RPM2SWIDTAG, "--regid", hostname, "--output-dir", path.join(self.dir, "."), "--all"])
+				run([self.RPM2SWIDTAG, "--tag-creator", hostname, "--output-dir", path.join(self.dir, "."), "--all"])
 			elif not path.isdir(self.dir):
 				makedirs(self.dir)
 			if not path.islink(self.swidtags_d_symlink):

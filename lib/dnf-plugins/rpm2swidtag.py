@@ -36,7 +36,7 @@ class rpm2swidtag(Plugin):
 		hostname = platform.uname()[1]
 		for i in self.install_set:
 			logger.debug('Will rpm2swidtag for %s' % i)
-			if run([self.RPM2SWIDTAG, "--regid", hostname, "--output-dir", path.join(self.dir, "."), str(i)]).returncode == 0:
+			if run([self.RPM2SWIDTAG, "--tag-creator", hostname, "--output-dir", path.join(self.dir, "."), str(i)]).returncode == 0:
 				run([self.SWIDQ, "--rpm", str(i)])
 
 		for i in self.remove_set:

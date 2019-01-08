@@ -58,8 +58,8 @@ for these files, using environment variables `RPM2SWIDTAG_TEMPLATE`
 and/or `RPM2SWIDTAG_XSLT`.
 
 The `tagCreator` `Entity` can thus be changed in the input template.
-Alternatively, `--regid` option can be used to change the
-`tagCreator`'s `@regid` attribute on a command line.
+Alternatively, `--tag-creator` option can be used to change the
+`tagCreator`'s `@regid` and `@name` attributes on a command line.
 
 When customizing the XSLT stylesheet,
 `{http://adelton.fedorapeople.org/rpm2swidtag}package_tag(tag)`
@@ -77,7 +77,7 @@ SWID tag, using stylesheet `/etc/rpm2swidtag/rpm2swidtag-tagid.xslt`.
 To generate SWID tags for all packages in the rpm database
 
 ```
-rpm2swidtag -a --regid $(hostname -f) --output-dir /usr/lib/swidtag
+rpm2swidtag -a --tag-creator $(hostname -f) --output-dir /usr/lib/swidtag
 ```
 
 can be used. It will produce the `.swidtag` files in

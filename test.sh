@@ -43,7 +43,7 @@ diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/pkg-generated.swidtag
 bin/rpm2swidtag --config=./tests/rpm2swidtag.conf --evidence-deviceid specific.machine.example.test -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | sed 's/<Evidence date="[^"]*Z"/<Evidence date="2018-01-01T12:13:14Z"/' > tmp/pkg-generated.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.deviceid.swidtag tmp/pkg-generated.swidtag
 
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --regid=example.test tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=example.test tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid tmp/pkg-generated-regid.swidtag
 
 bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=example.test tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
@@ -107,7 +107,7 @@ _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidt
 diff tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
 
 rm -rf tmp/output-dir tmp/compare-dir
-_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --regid=example.test --output-dir=tmp/output-dir -a
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir -a
 find tmp/output-dir -type f | while read f ; do normalize_i $f ; done
 mkdir -p tmp/compare-dir/example.test
 for i in pkg1-1.2.0-1.fc28.x86_64 pkg1-1.3.0-1.fc28.x86_64 pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64 ; do
@@ -117,7 +117,7 @@ sed 's/unavailable.invalid/test.example/;s/invalid.unavailable/example.test/' te
 diff -ru tmp/output-dir tmp/compare-dir
 
 rm -rf tmp/output-dir
-_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --regid=example.test --output-dir=tmp/output-dir/. -a
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/. -a
 find tmp/output-dir -type f | while read f ; do normalize_i $f ; done
 mv tmp/compare-dir/example.test/* tmp/compare-dir
 rmdir tmp/compare-dir/example.test
