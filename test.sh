@@ -10,7 +10,8 @@ if ! [ -f tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkg1-1.2.0-1.f
 fi
 if ! [ -f tmp/x86_64/pkg1-1.3.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkg1-1.3.0-1.fc28.src.rpm ] ; then
 	rpmbuild -ba -D 'dist .fc28' -D "_sourcedir $(pwd)/tests/pkg1" -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" tests/pkg1/pkg1-1.3.0.spec
-	rpmsign --addsign --key-id=19D5C7DD -D '_gpg_path tests/gnupg' ./tmp/x86_64/pkg1-1.3.0-1.fc28.x86_64.rpm
+	cp -rp tests/gnupg tmp/gnupg
+	rpmsign --addsign --key-id=19D5C7DD -D '_gpg_path tmp/gnupg' ./tmp/x86_64/pkg1-1.3.0-1.fc28.x86_64.rpm
 fi
 if ! [ -f tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm ] || ! [ -f tmp/pkg2-0.0.1-1.git0f5628a6.fc28.src.rpm ] ; then
 	rpmbuild -ba -D 'dist .fc28' -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" tests/pkg2/pkg2.spec
@@ -116,7 +117,8 @@ mv tmp/compare-dir/example.test/* tmp/compare-dir
 rmdir tmp/compare-dir/example.test
 diff -ru tmp/output-dir tmp/compare-dir
 
-SIGNDIR=tests/signing
+SIGNDIR=tmp/signing
+mkdir -p $SIGNDIR
 if [ -f $SIGNDIR/test-ca.key -a -f $SIGNDIR/test-ca.crt ] ; then
 	echo "Found $SIGNDIR/test-ca.key and $SIGNDIR/test-ca.crt, will use them."
 else
