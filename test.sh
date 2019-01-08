@@ -3,6 +3,11 @@
 set -e
 set -x
 
+if [ "$( rpm --eval '%{_arch}' )" != "x86_64" ] ; then
+	echo "The test data is only prepared for x86_64 platform." >&2
+	exit 1
+fi
+
 # Content packaged to .tar.gz via MANIFEST.in does not preserve symlinks
 if ! [ -L tests/swiddata1/symlinked ] ; then
 	rm -rf tests/swiddata1/symlinked
