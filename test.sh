@@ -132,7 +132,7 @@ else
 fi
 
 PASSWORD=password$RANDOM
-openssl pkcs12 -export -passout pass:$PASSWORD -out $SIGNDIR/test.pkcs12 -inkey $SIGNDIR/test.key -in $SIGNDIR/test.crt
+openssl pkcs12 -export -passout pass:$PASSWORD -out $SIGNDIR/test.pkcs12 -inkey $SIGNDIR/test.key -in <( cat $SIGNDIR/test-ca.crt $SIGNDIR/test.crt )
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/sign-input/. -a --preserve-signing-template
 mkdir tmp/output-dir/signed
