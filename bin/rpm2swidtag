@@ -3,10 +3,11 @@
 from sys import argv, exit, stderr, stdout
 from os import getenv, path, makedirs
 from platform import node
-from rpm2swidtag import Template, Error, rpm
+from rpm2swidtag import Template, Error, rpm, repodata
 import argparse, re
 from configparser import ConfigParser
 from glob import iglob
+import io
 
 TEMPLATE_DIR = "/etc/rpm2swidtag"
 CONFIG_FILE = "/etc/rpm2swidtag/rpm2swidtag.conf"
@@ -16,6 +17,7 @@ def setup_opts():
 	group1 = parser.add_mutually_exclusive_group()
 	group1.add_argument('-a', '--all', dest='all', action='store_true', help='query all packages with glob pattern')
 	group1.add_argument('-p', '--package', dest='rpmfile', action='store_true', help='process rpm package file')
+	group1.add_argument('--repo', type=str, metavar='DIR', help="create SWID tag information for yum/dnf repo")
 	parser.add_argument('--regid', type=str, help=argparse.SUPPRESS)
 	parser.add_argument('--software-creator-from', metavar='FILE', help=argparse.SUPPRESS)
 	parser.add_argument('--tag-creator', type=str, metavar='SOURCE-FILE, REGID or "REGID NAME"', help="tagCreator Entity attributes")
@@ -92,7 +94,7 @@ def write_out_tag(tag, opts, supplemental=False):
 		tag.write_output(stdout.buffer)
 
 
-def process_rpm_with_template(header, template, opts, config):
+def process_rpm_with_template(header, template, opts, config, return_xml_list=False):
 	params = {}
 	if opts.tag_creator:
 		if opts.tag_creator.startswith("/") or opts.tag_creator.startswith("./"):
@@ -137,25 +139,52 @@ def process_rpm_with_template(header, template, opts, config):
 	if opts.sign_pem or opts.preserve_signing_template:
 		params['preserve-signing-template'] = "true"
 
+	ret = []
 	for k in list(params):
 		if params[k] is None:
 			del params[k]
 	tag = template.generate_tag_for_header(header, params=params)
 	if opts.sign_pem:
 		tag = tag.sign_pem(opts.sign_pem)
-	write_out_tag(tag, opts)
+	if return_xml_list:
+		ret.append(tag)
+	else:
+		write_out_tag(tag, opts)
 
 	if not opts.primary_only and component_of:
 		params['component-of'] = component_of
 		tag = template.generate_tag_for_header(header, params=params)
 		if opts.sign_pem:
 			tag = tag.sign_pem(opts.sign_pem)
-		write_out_tag(tag, opts, supplemental=True)
+		if return_xml_list:
+			ret.append(tag)
+		else:
+			write_out_tag(tag, opts, supplemental=True)
+
+	if return_xml_list:
+		return ret
+
+def process_repo(repo, template, opts, config):
+	repomd = repodata.Repodata(repo).repomd
+	packages = repomd.primary.packages
+
+	swidtags = repodata.Swidtags(repomd.repo)
+	for p in packages:
+		f = path.join(repo, p)
+		h = rpm.read_from_file(f)
+		swidtags.add(p, process_rpm_with_template(h, template, opts, config, return_xml_list=True))
+	swidtags.save()
 
 def main():
 	opts = setup_opts()
 	config = load_config(opts)
 	template = load_template(config, opts)
+
+	if opts.repo:
+		try:
+			return process_repo(opts.repo, template, opts, config)
+		except Error as e:
+			stderr.write("%s: %s\n" % (argv[0], e.strerror))
 
 	if opts.all and not opts.package:
 		opts.package = [ '*' ]

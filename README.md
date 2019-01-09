@@ -8,7 +8,7 @@ Utility `rpm2swidtag` creates SWID tags for rpm packages, installed in
 rpm database or rpm files:
 
 ```
-usage: rpm2swidtag [-h] [-a | -p]
+usage: rpm2swidtag [-h] [-a | -p | --repo DIR]
                    [--tag-creator SOURCE-FILE, REGID or "REGID NAME"]
                    [--software-creator SOURCE-FILE, REGID or "REGID NAME"]
                    [--sign-pem KEYFILE.pem[,CA.pem[...]]] [--output-dir DIR]
@@ -26,6 +26,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -a, --all             query all packages with glob pattern
   -p, --package         process rpm package file
+  --repo DIR            create SWID tag information for yum/dnf repo
   --tag-creator SOURCE-FILE, REGID or "REGID NAME"
                         tagCreator Entity attributes
   --software-creator SOURCE-FILE, REGID or "REGID NAME"
@@ -84,6 +85,13 @@ rpm2swidtag -a --tag-creator $(hostname -f) --output-dir /usr/lib/swidtag
 
 can be used. It will produce the `.swidtag` files in
 `/usr/lib/swidtag/$(hostname -f)` directory.
+
+### SWID tags for yum/dnf repository
+
+Running `rpm2swidtag` with `--repo` option will produce SWID tags
+for yum/dnf repository and put them into single XML file which
+is then referenced from repository's top-level `repomd.xml` metadata
+file with type `swidtags`.
 
 ## Listing SWID tags
 
