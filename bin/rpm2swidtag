@@ -20,6 +20,7 @@ def setup_opts():
 	parser.add_argument('--software-creator-from', metavar='FILE', help=argparse.SUPPRESS)
 	parser.add_argument('--tag-creator', type=str, metavar='SOURCE-FILE, REGID or "REGID NAME"', help="tagCreator Entity attributes")
 	parser.add_argument('--software-creator', type=str, metavar='SOURCE-FILE, REGID or "REGID NAME"', help="softwareCreator Entity attributes")
+	parser.add_argument('--sign-pem', metavar='KEYFILE.pem[,CA.pem[...]]', help="PEM files with key and certificates")
 	parser.add_argument('--output-dir', type=str, metavar='DIR',
 		help="write SWID tags files into regid subdirectory of DIR; or directly into DIR when the path ends with /.")
 	group2 = parser.add_mutually_exclusive_group()
@@ -133,16 +134,23 @@ def process_rpm_with_template(header, template, opts, config):
 	if opts.software_creator_from:
 		params['software-creator-from'] = path.abspath(opts.software_creator_from)
 
-	if opts.preserve_signing_template:
+	if opts.sign_pem or opts.preserve_signing_template:
 		params['preserve-signing-template'] = "true"
 
 	for k in list(params):
 		if params[k] is None:
 			del params[k]
-	write_out_tag(template.generate_tag_for_header(header, params=params), opts)
+	tag = template.generate_tag_for_header(header, params=params)
+	if opts.sign_pem:
+		tag = tag.sign_pem(opts.sign_pem)
+	write_out_tag(tag, opts)
+
 	if not opts.primary_only and component_of:
 		params['component-of'] = component_of
-		write_out_tag(template.generate_tag_for_header(header, params=params), opts, supplemental=True)
+		tag = template.generate_tag_for_header(header, params=params)
+		if opts.sign_pem:
+			tag = tag.sign_pem(opts.sign_pem)
+		write_out_tag(tag, opts, supplemental=True)
 
 def main():
 	opts = setup_opts()

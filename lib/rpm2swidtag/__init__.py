@@ -2,6 +2,8 @@
 from lxml import etree
 from sys import stderr
 import sys
+import io
+import subprocess
 
 XMLNS = 'http://adelton.fedorapeople.org/rpm2swidtag'
 SWID_XMLNS = 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd'
@@ -51,6 +53,25 @@ class Tag:
 		r = self.xml.xpath("/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid",
 			namespaces = { 'swid': SWID_XMLNS })
 		return r[0]
+
+	def sign_pem(self, pem_opt):
+		return SignedTag(self, pem_opt)
+
+class SignedTag(Tag):
+	def __init__(self, tag, pem_opt):
+		in_data = io.BytesIO()
+		tag.write_output(in_data)
+		result = subprocess.run(['xmlsec1', '--sign',
+			'--enabled-reference-uris', 'empty',
+			'--privkey-pem', pem_opt, '-'],
+			input=in_data.getvalue(),
+			capture_output=True, close_fds=False)
+		if result.returncode != 0:
+			raise Error("Error signing using [%s]: %s" % (pem_opt, result.stderr))
+		self.xml = etree.parse(io.BytesIO(result.stdout))
+
+	def write_output(self, file):
+		self.xml.write(file, xml_declaration=True, encoding="utf-8", pretty_print=True)
 
 class Template:
 	def __init__(self, xml_template, xslt):
