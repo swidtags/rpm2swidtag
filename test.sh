@@ -148,13 +148,15 @@ PASSWORD=password$RANDOM
 openssl pkcs12 -export -passout pass:$PASSWORD -out $SIGNDIR/test.pkcs12 -inkey $SIGNDIR/test.key -in <( cat $SIGNDIR/test-ca.crt $SIGNDIR/test.crt )
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/sign-input/. -a --preserve-signing-template
-mkdir tmp/output-dir/signed
+mkdir tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-pem
 ( cd tmp/output-dir/sign-input && ls ) | while read i ; do
-	xmlsec1 --sign --pkcs12 $SIGNDIR/test.pkcs12 --pwd $PASSWORD --enabled-reference-uris empty tmp/output-dir/sign-input/$i > tmp/output-dir/signed/$i
+	xmlsec1 --sign --pkcs12 $SIGNDIR/test.pkcs12 --pwd $PASSWORD --enabled-reference-uris empty tmp/output-dir/sign-input/$i > tmp/output-dir/signed-pkcs12/$i
+	xmlsec1 --sign --privkey-pem $SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --enabled-reference-uris empty tmp/output-dir/sign-input/$i > tmp/output-dir/signed-pem/$i
 done
-for i in tmp/output-dir/signed/* ; do
+for i in tmp/output-dir/signed-pkcs12/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt - < $i
 done
+diff -ru tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-pem
 
 OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --print-tagid pkg1 )
 test "$OUT" == "$( echo -e 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64\nunavailable.invalid.pkg1-1.3.0-1.fc28.x86_64\n+ unavailable.invalid.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64' )"
