@@ -65,7 +65,7 @@ class SignedTag(Tag):
 			'--enabled-reference-uris', 'empty',
 			'--privkey-pem', pem_opt, '-'],
 			input=in_data.getvalue(),
-			capture_output=True, close_fds=False)
+			stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=False)
 		if result.returncode != 0:
 			raise Error("Error signing using [%s]: %s" % (pem_opt, result.stderr))
 		self.xml = etree.parse(io.BytesIO(result.stdout))
