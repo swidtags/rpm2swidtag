@@ -144,14 +144,14 @@ else
 	openssl x509 -req -sha256 -extfile tests/signing/code-signing.config -extensions code-signing -in $SIGNDIR/test.csr -CA $SIGNDIR/test-ca.crt -CAkey $SIGNDIR/test-ca.key -CAcreateserial -out $SIGNDIR/test.crt
 fi
 
-_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/signed-internal/. -a --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/signed-internal/. -a --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --authoritative
 # XML declaration produced by XSLT output is different than the XML write gives us
 sed -i 's#^<?xml version='"'"'1\.0'"'"' encoding='"'"'UTF-8'"'"'?>$#<?xml version="1.0" encoding="utf-8"?>#' tmp/output-dir/signed-internal/*
 
 PASSWORD=password$RANDOM
 openssl pkcs12 -export -passout pass:$PASSWORD -out $SIGNDIR/test.pkcs12 -inkey $SIGNDIR/test.key -in <( cat $SIGNDIR/test-ca.crt $SIGNDIR/test.crt )
 
-_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/sign-input/. -a --preserve-signing-template
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/sign-input/. -a --preserve-signing-template --authoritative
 mkdir tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-pem
 ( cd tmp/output-dir/sign-input && ls ) | while read i ; do
 	xmlsec1 --sign --pkcs12 $SIGNDIR/test.pkcs12 --pwd $PASSWORD --enabled-reference-uris empty tmp/output-dir/sign-input/$i > tmp/output-dir/signed-pkcs12/$i
