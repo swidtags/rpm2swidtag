@@ -128,40 +128,24 @@ mv tmp/compare-dir/example.test/* tmp/compare-dir
 rmdir tmp/compare-dir/example.test
 diff -ru tmp/output-dir tmp/compare-dir
 
-SIGNDIR=tmp/signing
-mkdir -p $SIGNDIR
-if [ -f $SIGNDIR/test-ca.key -a -f $SIGNDIR/test-ca.crt ] ; then
-	echo "Found $SIGNDIR/test-ca.key and $SIGNDIR/test-ca.crt, will use them."
-else
-	echo "Generating $SIGNDIR/test-ca.key and $SIGNDIR/test-ca.crt."
-	openssl req -x509 -newkey rsa:4096 -nodes -keyout $SIGNDIR/test-ca.key -out $SIGNDIR/test-ca.crt -subj '/CN=Testing CA'
-fi
-if [ -f $SIGNDIR/test.crt ] ; then
-	echo "Found $SIGNDIR/test.crt, will use it."
-else
-	echo "Generating $SIGNDIR/test.crt."
-	openssl req -new -newkey rsa:4096 -nodes -keyout $SIGNDIR/test.key -out $SIGNDIR/test.csr -subj '/CN=Testing certificate for SWID tag signing'
-	openssl x509 -req -sha256 -extfile tests/signing/code-signing.config -extensions code-signing -in $SIGNDIR/test.csr -CA $SIGNDIR/test-ca.crt -CAkey $SIGNDIR/test-ca.key -CAcreateserial -out $SIGNDIR/test.crt
-fi
 
+SIGNDIR=tests/signing
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/signed-internal/. -a --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --authoritative
 # XML declaration produced by XSLT output is different than the XML write gives us
 sed -i 's#^<?xml version='"'"'1\.0'"'"' encoding='"'"'UTF-8'"'"'?>$#<?xml version="1.0" encoding="utf-8"?>#' tmp/output-dir/signed-internal/*
 
-PASSWORD=password$RANDOM
-openssl pkcs12 -export -passout pass:$PASSWORD -out $SIGNDIR/test.pkcs12 -inkey $SIGNDIR/test.key -in <( cat $SIGNDIR/test-ca.crt $SIGNDIR/test.crt )
-
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/sign-input/. -a --preserve-signing-template --authoritative
 mkdir tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-pem
 ( cd tmp/output-dir/sign-input && ls ) | while read i ; do
-	xmlsec1 --sign --pkcs12 $SIGNDIR/test.pkcs12 --pwd $PASSWORD --enabled-reference-uris empty tmp/output-dir/sign-input/$i > tmp/output-dir/signed-pkcs12/$i
+	xmlsec1 --sign --pkcs12 $SIGNDIR/test.pkcs12 --pwd password8263 --enabled-reference-uris empty tmp/output-dir/sign-input/$i > tmp/output-dir/signed-pkcs12/$i
 	xmlsec1 --sign --privkey-pem $SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --enabled-reference-uris empty tmp/output-dir/sign-input/$i > tmp/output-dir/signed-pem/$i
 done
 for i in tmp/output-dir/signed-internal/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt - < $i
 done
-diff -ru tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-pem
-diff -ru tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-internal
+diff -ru tmp/output-dir/signed-internal tests/pkg-signed
+diff -ru tmp/output-dir/signed-pkcs12 tests/pkg-signed
+diff -ru tmp/output-dir/signed-pem tests/pkg-signed
 
 OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --print-tagid pkg1 )
 test "$OUT" == "$( echo -e 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64\nunavailable.invalid.pkg1-1.3.0-1.fc28.x86_64\n+ unavailable.invalid.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64' )"
