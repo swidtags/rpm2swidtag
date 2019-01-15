@@ -152,3 +152,13 @@ The `dnf rpm2swidtag enable` enables the DNF plugin by creating symlink
 adds (or removes or updates) packages then results in needed SWID tags
 being placed into (or removed from)
 `/var/lib/swidtag/rpm2swidtag-generated`.
+
+## Author
+
+Written by Jan Pazdziora, 2018--2019.
+
+## License
+
+Copyright 2018--2019, Red Hat, Inc.
+
+Licensed under the Apache License, Version 2.0.
