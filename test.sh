@@ -27,6 +27,9 @@ fi
 if ! [ -f tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm ] || ! [ -f tmp/pkg2-0.0.1-1.git0f5628a6.fc28.src.rpm ] ; then
 	rpmbuild -ba -D 'dist .fc28' -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" -D "_rpmfilename %{_build_name_fmt}" tests/pkg2/pkg2.spec
 fi
+if ! [ -f tmp/x86_64/pkgdep-1.0.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkgdep-1.0.0-1.fc28.src.rpm ] ; then
+	rpmbuild -ba -D 'dist .fc28' -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" -D "_rpmfilename %{_build_name_fmt}" tests/pkgdep/pkgdep.spec
+fi
 
 function normalize() {
 	sed 's/<Evidence date="[^"]*Z" deviceId="[^"]*"/<Evidence date="2018-01-01T12:13:14Z" deviceId="machine.example.test"/'
@@ -428,5 +431,27 @@ fi
 for f in tests/swid_generator/*.swidtag ; do
 	diff -u ${f/.swidtag/.files} <( bin/swidq -p $f -l )
 done
+
+
+# Test dnf plugin
+createrepo_c tmp/x86_64
+mkdir -p tmp/dnflib
+cp -rp /usr/lib/python3.*/site-packages/dnf lib/dnf tmp/dnflib
+cp -rp lib/dnf-plugins tmp/dnflib
+rm -rf tmp/dnfroot
+mkdir -p tmp/dnfroot/bin
+cp -p bin/rpm2swidtag bin/swidq tmp/dnfroot/bin/
+sed -i 's#CONFIG_FILE =.*#CONFIG_FILE = "tests/rpm2swidtag.conf"#' tmp/dnfroot/bin/rpm2swidtag
+sed -i 's#CONFIG_FILE =.*#CONFIG_FILE = "tests/dnf-swidq.conf"#' tmp/dnfroot/bin/swidq
+sed -i 's#RPM2SWIDTAG =.*#RPM2SWIDTAG = "tmp/dnfroot/bin/rpm2swidtag"#' tmp/dnflib/dnf/cli/commands/rpm2swidtag.py
+sed -i 's#SWIDQ =.*#SWIDQ = "tmp/dnfroot/bin/swidq"#' tmp/dnflib/dnf-plugins/rpm2swidtag.py
+PYTHONPATH=tmp/dnflib fakeroot dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag enable
+test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
+test -d tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
+SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib fakechroot fakeroot dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg1
+echo 'f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 tmp/dnfroot/usr/share/testdir/testfile' | sha256sum -c
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64.swidtag
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64.swidtag
 
 echo OK.

@@ -8,7 +8,7 @@ URL: https://www.example.com/
 Source0: testfile
 
 BuildRequires: bash
-Requires: glibc
+Requires: pkgdep
 
 %description
 This is an example rpm package to test generating SWID tags.

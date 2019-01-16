@@ -12,12 +12,21 @@ class rpm2swidtagCommand(commands.Command):
 
 	name = 'rpm2swidtag'
 	dirname = "%s-generated" % name
-	dir = "/var/lib/swidtag/%s-generated" % name
-	swidtags_d = "/etc/swid/swidtags.d"
+	dir = "var/lib/swidtag/%s-generated" % name
+	swidtags_d = "etc/swid/swidtags.d"
 	swidtags_d_symlink = path.join(swidtags_d, dirname)
 
 	RPM2SWIDTAG = "/usr/bin/rpm2swidtag"
 	UNLINK = "/usr/bin/rm"
+
+	def __init__(self, cli):
+		super(rpm2swidtagCommand, self).__init__(cli)
+		root = self.base.conf.installroot
+		if not root:
+			root = "/"
+		self.dir = path.join(root, self.dir)
+		self.swidtags_d = path.join(root, self.swidtags_d)
+		self.swidtags_d_symlink = path.join(root, self.swidtags_d_symlink)
 
 	def configure(self):
 		self.cli.demands.available_repos = False

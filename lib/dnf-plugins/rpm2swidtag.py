@@ -10,7 +10,6 @@ from dnf.cli.commands.rpm2swidtag import rpm2swidtagCommand
 class rpm2swidtag(Plugin):
 
 	name = rpm2swidtagCommand.name
-	dirname = rpm2swidtagCommand.dirname
 	dir = rpm2swidtagCommand.dir
 	swidtags_d = rpm2swidtagCommand.swidtags_d
 	swidtags_d_symlink = rpm2swidtagCommand.swidtags_d_symlink
@@ -22,6 +21,12 @@ class rpm2swidtag(Plugin):
 		super().__init__(base, cli)
 		self.install_set = None
 		self.remove_set = None
+		root = base.conf.installroot
+		if not root:
+			root = "/"
+		self.dir = path.join(root, self.dir)
+		self.swidtags_d = path.join(root, self.swidtags_d)
+		self.swidtags_d_symlink = path.join(root, self.swidtags_d_symlink)
 		if cli:
 			cli.register_command(rpm2swidtagCommand)
 
