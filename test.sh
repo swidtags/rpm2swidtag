@@ -445,10 +445,16 @@ sed -i 's#CONFIG_FILE =.*#CONFIG_FILE = "tests/rpm2swidtag.conf"#' tmp/dnfroot/b
 sed -i 's#CONFIG_FILE =.*#CONFIG_FILE = "tests/dnf-swidq.conf"#' tmp/dnfroot/bin/swidq
 sed -i 's#RPM2SWIDTAG =.*#RPM2SWIDTAG = "tmp/dnfroot/bin/rpm2swidtag"#' tmp/dnflib/dnf/cli/commands/rpm2swidtag.py
 sed -i 's#SWIDQ =.*#SWIDQ = "tmp/dnfroot/bin/swidq"#' tmp/dnflib/dnf-plugins/rpm2swidtag.py
-PYTHONPATH=tmp/dnflib fakeroot dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag enable
+FAKEROOT=
+FAKECHROOT=
+if [ "$UID" != 0 ] ; then
+	FAKEROOT=fakeroot
+	FAKECHROOT=fakechroot
+fi
+PYTHONPATH=tmp/dnflib $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag enable
 test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 test -d tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
-SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib fakechroot fakeroot dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg1
+SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg1
 echo 'f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 tmp/dnfroot/usr/share/testdir/testfile' | sha256sum -c
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64.swidtag
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
