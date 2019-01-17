@@ -4,7 +4,7 @@ from os import path, stat
 from hashlib import sha256
 from io import BytesIO
 from gzip import GzipFile
-from rpm2swidtag import Error
+from rpm2swidtag import Error, SWID_XMLNS
 
 REPO_XMLNS = "http://linux.duke.edu/metadata/repo"
 COMMON_XMLNS = "http://linux.duke.edu/metadata/common"
@@ -59,10 +59,18 @@ class Primary:
 		return self.xml.xpath("/common:metadata/common:package[@type = 'rpm']/common:location/@href", namespaces = { 'common': COMMON_XMLNS })
 
 class Swidtags:
-	def __init__(self, repo):
+	def __init__(self, repo, file=None):
 		self.repo = repo
 		self.href = None
-		self.xml = etree.Element("{%s}metadata" % SWIDTAGLIST_XMLNS, nsmap={ None: SWIDTAGLIST_XMLNS })
+		self.location_index = None
+		self.file = file
+		if self.file:
+			self.xml = etree.parse(self.file)
+			self.location_index = {}
+			for p in self.xml.xpath("/swidtags:metadata/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
+				self.location_index[p.get("href")] = p
+		else:
+			self.xml = etree.Element("{%s}metadata" % SWIDTAGLIST_XMLNS, nsmap={ None: SWIDTAGLIST_XMLNS })
 
 	def add(self, package, swidtags):
 		pxml = etree.Element("{%s}package" % SWIDTAGLIST_XMLNS)
@@ -83,7 +91,7 @@ class Swidtags:
 		self.path = path.join(self.repo.path, self.href)
 		with open(self.path, "wb") as f:
 			f.write(value_gz)
-		timestamp = int(stat(self.path).st_mtime)
+		timestamp = str(int(stat(self.path).st_mtime))
 
 		self.repomd_xml = etree.Element("{%s}data" % REPO_XMLNS)
 		self.repomd_xml.set("type", "swidtags")
@@ -95,7 +103,7 @@ class Swidtags:
 		oc.set("type", "sha256")
 		oc.text = sha256(value).hexdigest()
 		etree.SubElement(self.repomd_xml, "{%s}location" % REPO_XMLNS).set("href", self.href)
-		etree.SubElement(self.repomd_xml, "{%s}timestamp" % REPO_XMLNS).text = str(timestamp)
+		etree.SubElement(self.repomd_xml, "{%s}timestamp" % REPO_XMLNS).text = timestamp
 		etree.SubElement(self.repomd_xml, "{%s}size" % REPO_XMLNS).text = str(len(value_gz))
 		etree.SubElement(self.repomd_xml, "{%s}open-size" % REPO_XMLNS).text = str(len(value))
 
@@ -104,5 +112,18 @@ class Swidtags:
 			s.getparent().remove(s)
 		for t in repomd.xml.xpath("/repo:repomd", namespaces = { 'repo': REPO_XMLNS }):
 			t.append(self.repomd_xml)
+		for t in repomd.xml.xpath("/repo:repomd/repo:revision", namespaces = { 'repo': REPO_XMLNS }):
+			t.text = timestamp
 		repomd.save()
+
+	def value_for(self, location):
+		if location in self.location_index:
+			ret = {}
+			for e in self.location_index[location]:
+				for t in e.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):
+					if t not in ret:
+						ret[t] = {}
+					ret[t][e.get("tagId")] = etree.parse(BytesIO(etree.tostring(e)), etree.XMLParser(remove_blank_text = True))
+			return ret
+		return None
 

@@ -161,6 +161,10 @@ adds (or removes or updates) packages then results in needed SWID tags
 being placed into (or removed from)
 `/var/lib/swidtag/rpm2swidtag-generated`.
 
+When the dnf repository includes collection of SWID tags for its packages,
+these SWID tags will be stored to local disk under
+`/var/lig/swidtag/<tagCreator>` rather than locally generated.
+
 ## Author
 
 Written by Jan Pazdziora, 2018--2019.

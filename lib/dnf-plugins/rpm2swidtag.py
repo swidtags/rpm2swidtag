@@ -10,6 +10,7 @@ from subprocess import run, PIPE
 import platform
 from os import path, makedirs
 import re
+from rpm2swidtag import repodata
 
 class rpm2swidtagCommand(commands.Command):
 	aliases = [ "rpm2swidtag" ]
@@ -17,7 +18,8 @@ class rpm2swidtagCommand(commands.Command):
 
 	name = 'rpm2swidtag'
 	dirname = "%s-generated" % name
-	dir = "var/lib/swidtag/%s-generated" % name
+	dir = "var/lib/swidtag"
+	dir_generated = path.join(dir, "%s-generated" % name)
 	swidtags_d = "etc/swid/swidtags.d"
 	swidtags_d_symlink = path.join(swidtags_d, dirname)
 
@@ -29,7 +31,7 @@ class rpm2swidtagCommand(commands.Command):
 		root = self.base.conf.installroot
 		if not root:
 			root = "/"
-		self.dir = path.join(root, self.dir)
+		self.dir_generated = path.join(root, self.dir_generated)
 		self.swidtags_d = path.join(root, self.swidtags_d)
 		self.swidtags_d_symlink = path.join(root, self.swidtags_d_symlink)
 
@@ -53,15 +55,15 @@ class rpm2swidtagCommand(commands.Command):
 				self._purge_dir()
 				hostname = platform.uname()[1]
 				print("Running %s --all ..." % self.RPM2SWIDTAG)
-				run([self.RPM2SWIDTAG, "--tag-creator", hostname, "--output-dir", path.join(self.dir, "."), "--all"])
-			elif not path.isdir(self.dir):
-				makedirs(self.dir)
+				run([self.RPM2SWIDTAG, "--tag-creator", hostname, "--output-dir", path.join(self.dir_generated, "."), "--all"])
+			elif not path.isdir(self.dir_generated):
+				makedirs(self.dir_generated)
 			if not path.islink(self.swidtags_d_symlink):
 				if not path.exists(self.swidtags_d):
 					makedirs(self.swidtags_d)
-				self._symlink(self.dir, self.swidtags_d_symlink)
+				self._symlink(self.dir_generated, self.swidtags_d_symlink)
 		elif self.opts.rpm2swidtagcmd in ( "disable", "disable-purge" ):
-			if self.opts.rpm2swidtagcmd == "disable-purge" and path.isdir(self.dir):
+			if self.opts.rpm2swidtagcmd == "disable-purge" and path.isdir(self.dir_generated):
 				self._purge_dir()
 			if path.islink(self.swidtags_d_symlink):
 				self._unlink(self.swidtags_d_symlink)
@@ -73,7 +75,7 @@ class rpm2swidtagCommand(commands.Command):
 		run([__class__.UNLINK, "-v", file])
 
 	def _purge_dir(self):
-		run([self.UNLINK, "-fr", self.dir])
+		run([self.UNLINK, "-fr", self.dir_generated])
 
 	@staticmethod
 	def _symlink(dest, src):
@@ -83,8 +85,11 @@ class rpm2swidtag(Plugin):
 
 	name = rpm2swidtagCommand.name
 	dir = rpm2swidtagCommand.dir
+	dir_generated = rpm2swidtagCommand.dir_generated
 	swidtags_d = rpm2swidtagCommand.swidtags_d
 	swidtags_d_symlink = rpm2swidtagCommand.swidtags_d_symlink
+
+	METADATA_TYPE = "swidtags"
 
 	RPM2SWIDTAG = rpm2swidtagCommand.RPM2SWIDTAG
 	SWIDQ = "/usr/bin/swidq"
@@ -97,10 +102,18 @@ class rpm2swidtag(Plugin):
 		if not root:
 			root = "/"
 		self.dir = path.join(root, self.dir)
+		self.dir_generated = path.join(root, self.dir_generated)
 		self.swidtags_d = path.join(root, self.swidtags_d)
 		self.swidtags_d_symlink = path.join(root, self.swidtags_d_symlink)
 		if cli:
 			cli.register_command(rpm2swidtagCommand)
+
+	def config(self):
+		super(rpm2swidtag, self).config()
+		for repo in self.base.repos.iter_enabled():
+			if hasattr(repo, "add_metadata_type_to_download"):
+				logger.debug("Will ask for SWID tags download for " + str(repo.baseurl))
+				repo.add_metadata_type_to_download(self.METADATA_TYPE)
 
 	def resolved(self):
 		self.install_set = self.base.transaction.install_set
@@ -111,10 +124,34 @@ class rpm2swidtag(Plugin):
 			return
 
 		hostname = platform.uname()[1]
+		downloaded_swidtags = {}
+		dirs = {}
 		for i in self.install_set:
+			r = i.repo
+			if r not in downloaded_swidtags:
+				downloaded_swidtags[r] = None
+				if hasattr(r, "get_metadata_path"):
+					file = r.get_metadata_path(self.METADATA_TYPE)
+					if file and file != "":
+						downloaded_swidtags[r] = repodata.Swidtags(None, file)
+			if downloaded_swidtags[r]:
+				tags = downloaded_swidtags[r].value_for(i.location)
+				if tags is not None:
+					for d in tags:
+						full_d = path.join(self.dir, d)
+						if full_d not in dirs and not path.isdir(full_d):
+							makedirs(full_d)
+						dirs[full_d] = d
+						for t in tags[d]:
+							logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (i, d, t))
+							tags[d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
+					continue
 			logger.debug('Will rpm2swidtag for %s' % i)
-			if run([self.RPM2SWIDTAG, "--tag-creator", hostname, "--output-dir", path.join(self.dir, "."), str(i)]).returncode == 0:
+			if run([self.RPM2SWIDTAG, "--tag-creator", hostname, "--output-dir", path.join(self.dir_generated, "."), str(i)]).returncode == 0:
 				run([self.SWIDQ, "--rpm", str(i)])
+
+		for full_d in dirs:
+			rpm2swidtagCommand._symlink(full_d, path.join(self.swidtags_d, dirs[full_d]))
 
 		for i in self.remove_set:
 			logger.debug('Will remove rpm2swidtag-generated .swidtag for %s' % i)
@@ -135,6 +172,3 @@ class rpm2swidtag(Plugin):
 						continue
 					rpm2swidtagCommand._unlink(m.group(2))
 
-	@staticmethod
-	def _unlink(file):
-		run(["/usr/bin/rm", "-v", file])
