@@ -68,7 +68,7 @@ class SignedTag(Tag):
 			stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=False)
 		if result.returncode != 0:
 			raise Error("Error signing using [%s]: %s" % (pem_opt, result.stderr))
-		self.xml = etree.parse(io.BytesIO(result.stdout))
+		self.xml = etree.parse(io.BytesIO(result.stdout), etree.XMLParser(remove_blank_text = True))
 
 	def write_output(self, file):
 		self.xml.write(file, xml_declaration=True, encoding="utf-8", pretty_print=True)
