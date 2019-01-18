@@ -27,7 +27,7 @@ script:
 - docker run --name rpm2swidtag -d rpm2swidtag sleep 600
 - docker exec rpm2swidtag make test
 - docker exec rpm2swidtag /usr/bin/rpm2swidtag bash
-- docker exec rpm2swidtag dnf rpm2swidtag enable-regen
+- docker exec rpm2swidtag dnf rpm2swidtag regen
 - docker exec rpm2swidtag swidq -n bash | grep .
 - if docker exec rpm2swidtag swidq -n zsh | grep . ; then exit 1 ; fi
 - docker exec rpm2swidtag dnf install -y zsh

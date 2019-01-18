@@ -435,34 +435,28 @@ done
 
 # Test dnf plugin
 createrepo_c tmp/x86_64
-mkdir -p tmp/dnflib
-cp -rp lib/dnf-plugins tmp/dnflib
 rm -rf tmp/dnfroot
-mkdir -p tmp/dnfroot/bin
-cp -p bin/rpm2swidtag bin/swidq tmp/dnfroot/bin/
-sed -i 's#CONFIG_FILE =.*#CONFIG_FILE = "tests/rpm2swidtag.conf"#' tmp/dnfroot/bin/rpm2swidtag
-sed -i 's#CONFIG_FILE =.*#CONFIG_FILE = "tests/dnf-swidq.conf"#' tmp/dnfroot/bin/swidq
-sed -i -e 's#RPM2SWIDTAG =.*#RPM2SWIDTAG = "tmp/dnfroot/bin/rpm2swidtag"#' -e 's#SWIDQ =.*#SWIDQ = "tmp/dnfroot/bin/swidq"#' tmp/dnflib/dnf-plugins/rpm2swidtag.py
 FAKEROOT=
 FAKECHROOT=
 if [ "$UID" != 0 ] ; then
 	FAKEROOT=fakeroot
 	FAKECHROOT=fakechroot
 fi
-PYTHONPATH=lib:tmp/dnflib $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag enable
+$FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf list installed
+$FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag regen
 test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 test -d tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
-SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg1-1.2.0
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg1-1.2.0
 echo 'f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 tmp/dnfroot/usr/share/testdir/testfile' | sha256sum -c
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64.swidtag
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 
-PYTHONPATH=lib:tmp/dnflib $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag disable-purge
+$FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag purge
 ! test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 ! test -d tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated
-PYTHONPATH=lib:tmp/dnflib _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag enable-regen
+$FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag regen
 test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
 
@@ -475,9 +469,9 @@ diff tests/repodata-swidtags.xml tmp/x86_64/swidtags.xml
 # is not supported on Fedora 28-.
 if rpm -q dnf | grep '^dnf-4' ; then
 
-PYTHONPATH=lib:tmp/dnflib $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf clean expire-cache
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf clean expire-cache
 
-SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 upgrade -y
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 upgrade -y
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'
 ! test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
 ! test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64.swidtag
@@ -489,8 +483,12 @@ for i in tmp/dnfroot/var/lib/swidtag/example.test/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt - < $i
 done
 
-SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg2
-SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf remove -y pkg1
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg2
+ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'
+ls -l tmp/dnfroot/var/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^3$'
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf remove -y pkg1
+ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'
+ls -l tmp/dnfroot/var/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^1$'
 
 ! test -f tmp/dnfroot/var/lib/swidtag/example.test/test.example.pkg1-1.3.0-1.fc28.x86_64.swidtag
 ! test -f tmp/dnfroot/var/lib/swidtag/example.test/test.example.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
@@ -499,5 +497,11 @@ test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 
 fi
+
+# Test that README has up-to-date usage section
+diff -u <( bin/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
+
+diff -u <(PYTHONPATH=lib dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag --help | sed -n '/SWID/,/^optional/!b;/^optional/b;p') <(sed -n '/^Generate/,/```/{/```/T;p}' README.md )
+
 
 echo OK.
