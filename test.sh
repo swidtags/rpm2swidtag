@@ -437,15 +437,13 @@ done
 # Test dnf plugin
 createrepo_c tmp/x86_64
 mkdir -p tmp/dnflib
-cp -rp /usr/lib/python3.*/site-packages/dnf lib/dnf tmp/dnflib
 cp -rp lib/dnf-plugins tmp/dnflib
 rm -rf tmp/dnfroot
 mkdir -p tmp/dnfroot/bin
 cp -p bin/rpm2swidtag bin/swidq tmp/dnfroot/bin/
 sed -i 's#CONFIG_FILE =.*#CONFIG_FILE = "tests/rpm2swidtag.conf"#' tmp/dnfroot/bin/rpm2swidtag
 sed -i 's#CONFIG_FILE =.*#CONFIG_FILE = "tests/dnf-swidq.conf"#' tmp/dnfroot/bin/swidq
-sed -i 's#RPM2SWIDTAG =.*#RPM2SWIDTAG = "tmp/dnfroot/bin/rpm2swidtag"#' tmp/dnflib/dnf/cli/commands/rpm2swidtag.py
-sed -i 's#SWIDQ =.*#SWIDQ = "tmp/dnfroot/bin/swidq"#' tmp/dnflib/dnf-plugins/rpm2swidtag.py
+sed -i -e 's#RPM2SWIDTAG =.*#RPM2SWIDTAG = "tmp/dnfroot/bin/rpm2swidtag"#' -e 's#SWIDQ =.*#SWIDQ = "tmp/dnfroot/bin/swidq"#' tmp/dnflib/dnf-plugins/rpm2swidtag.py
 FAKEROOT=
 FAKECHROOT=
 if [ "$UID" != 0 ] ; then
