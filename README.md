@@ -103,7 +103,7 @@ selection options:
   -p, --paths           process listed directories and SWID tag files
   -a, --all             match tagId/name with glob pattern, default '*'
   -n, --name            query name instead of tagId
-  --rpm                 query rpm Resource of tagId
+  --rpm                 query rpm Resource instead of tagId
 
 output options:
   -i, --info            output some SWID tag fields

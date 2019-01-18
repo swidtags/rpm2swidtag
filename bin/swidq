@@ -20,7 +20,7 @@ def setup_opts():
 	select_group.add_argument('-p', '--paths', action='store_true', help="process listed directories and SWID tag files")
 	select_group.add_argument('-a', '--all', dest='all', action='store_true', help="match tagId/name with glob pattern, default '*'")
 	select_group.add_argument('-n', '--name', action='store_true', help="query name instead of tagId")
-	select_group.add_argument('--rpm', action='store_true', help="query rpm Resource of tagId")
+	select_group.add_argument('--rpm', action='store_true', help="query rpm Resource instead of tagId")
 
 	output_group = parser.add_argument_group("output options")
 	output_group.add_argument('-i', '--info', action='store_true', help="output some SWID tag fields")
