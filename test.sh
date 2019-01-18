@@ -29,6 +29,7 @@ if ! [ -f tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm ] || ! [ -f tmp/pk
 fi
 if ! [ -f tmp/x86_64/pkgdep-1.0.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkgdep-1.0.0-1.fc28.src.rpm ] ; then
 	rpmbuild -ba -D 'dist .fc28' -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" -D "_rpmfilename %{_build_name_fmt}" tests/pkgdep/pkgdep.spec
+	rpmsign --addsign --key-id=19D5C7DD -D '_gpg_path tmp/gnupg' ./tmp/x86_64/pkgdep-1.0.0-1.fc28.x86_64.rpm
 fi
 
 function normalize() {
@@ -454,10 +455,16 @@ fi
 PYTHONPATH=tmp/dnflib $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag enable
 test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 test -d tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
-SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg1
+SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg1-1.2.0
 echo 'f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 tmp/dnfroot/usr/share/testdir/testfile' | sha256sum -c
+ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64.swidtag
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+SWIDQ_STYLESHEET_DIR=. _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm PYTHONPATH=lib:tmp/dnflib $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 upgrade -y
+ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^4$'
+! test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64.swidtag
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
-test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64.swidtag
 
 echo OK.
