@@ -305,24 +305,23 @@ bin/swidq -p tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.out 2
 diff <( echo 'bin/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know' ) tmp/swidq.err
 diff <( echo '- test.a.Example-OS-Distro-3.14.x86_64 tests/swiddata2/distro-minor-supplemental.swidtag' ) tmp/swidq.out
 
-export SWIDQ_STYLESHEET_DIR=.
-bin/swidq --dump -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
+SWIDQ_STYLESHEET_DIR=. bin/swidq --dump -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.dump tmp/swidq.out
 
-bin/swidq --dump -p tests/swiddata1/a.test/minimal.swidtag > tmp/swidq.out 2> tmp/swidq.err
+bin/swidq --dump -c tests/swidq.conf -p tests/swiddata1/a.test/minimal.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/a.test/minimal.dump tmp/swidq.out
 
-bin/swidq --info -p tests/swiddata1/a.test/minimal.swidtag > tmp/swidq.out 2> tmp/swidq.err
+SWIDQ_STYLESHEET_DIR=$(pwd) bin/swidq --info -p tests/swiddata1/a.test/minimal.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/a.test/minimal.info tmp/swidq.out
 
-bin/swidq -i -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
+bin/swidq -i -c tests/swidq.conf -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.info tmp/swidq.out
 
-bin/swidq -il -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
+SWIDQ_STYLESHEET_DIR=. bin/swidq -il -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff <( cat tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.{info,files} ) tmp/swidq.out
 
@@ -330,15 +329,15 @@ bin/swidq --silent -c tests/swidq.conf -l -n pkg1 > tmp/swidq.out 2> tmp/swidq.e
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.files tmp/swidq.out
 
-bin/swidq -i -p tests/swiddata1/a.test/distro.swidtag > tmp/swidq.out 2> tmp/swidq.err
+SWIDQ_STYLESHEET_DIR=.  bin/swidq -i -p tests/swiddata1/a.test/distro.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/a.test/distro.info tmp/swidq.out
 
-bin/swidq -i -p tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.out 2> tmp/swidq.err
+SWIDQ_STYLESHEET_DIR=. bin/swidq -i -p tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'bin/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know' ) tmp/swidq.err
 diff tests/swiddata2/distro-minor-supplemental.info tmp/swidq.out
 
-bin/swidq -p tests/swiddata1/sup --info > tmp/swidq.out 2> tmp/swidq.err
+bin/swidq -p tests/swiddata1/sup --info -c $(pwd)/tests/swidq.conf > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/sup/sup.info tmp/swidq.out
 
@@ -346,7 +345,7 @@ bin/swidq -p tests/swiddata1/sup --output-stylesheet=tests/swidq-xml-supplementa
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/sup/sup.xml tmp/swidq.out
 
-bin/swidq -p tests/swiddata1/sup --dump > tmp/swidq.out 2> tmp/swidq.err
+SWIDQ_STYLESHEET_DIR=tests/.. bin/swidq -p tests/swiddata1/sup --dump > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/sup/sup.dump tmp/swidq.out
 
@@ -363,7 +362,7 @@ diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.tes
 	echo 'test.b.pkg3-1.0.0-1.x86_64 tests/swiddata3/b.test/pkg3.swidtag' ;
 	echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ) tmp/swidq.out
 
-bin/swidq --xml -p tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.xmlns.swidtag > tmp/swidq.out 2> tmp/swidq.err
+SWIDQ_STYLESHEET_DIR=. bin/swidq --xml -p tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.xmlns.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/swidq.out
 
@@ -418,19 +417,19 @@ diff -u <( bin/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md 
 
 # rpm2swidtag to swidq
 find . -name '*.rpm' | while read f ; do
-	diff -u <( rpm -qlp $f | grep -v '^(contains no files)' ) <( bin/rpm2swidtag --config=tests/rpm2swidtag.conf --primary-only -p $f | bin/swidq -p - -l )
+	diff -u <( rpm -qlp $f | grep -v '^(contains no files)' ) <( bin/rpm2swidtag --config=tests/rpm2swidtag.conf --primary-only -p $f | bin/swidq -p - -c tests/swidq.conf -l )
 done
 
 if rpm -q bash ; then
-	diff -u <( rpm -ql bash ) <( bin/rpm2swidtag --config=tests/rpm2swidtag.conf bash | bin/swidq -p - -l )
+	diff -u <( rpm -ql bash ) <( bin/rpm2swidtag --config=tests/rpm2swidtag.conf bash | bin/swidq -c tests/swidq.conf -p - -l )
 fi
 
 if rpm -q filesystem ; then
-	diff -u <( rpm -ql filesystem ) <( bin/rpm2swidtag --config=tests/rpm2swidtag.conf filesystem | bin/swidq -p - -l )
+	diff -u <( rpm -ql filesystem ) <( bin/rpm2swidtag --config=tests/rpm2swidtag.conf filesystem | bin/swidq -p - -l -c tests/swidq.conf )
 fi
 
 for f in tests/swid_generator/*.swidtag ; do
-	diff -u ${f/.swidtag/.files} <( bin/swidq -p $f -l )
+	diff -u ${f/.swidtag/.files} <( SWIDQ_STYLESHEET_DIR=. bin/swidq -p $f -l )
 done
 
 

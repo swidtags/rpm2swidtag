@@ -38,8 +38,8 @@ def setup_opts():
 	positional_group.add_argument('match', type=str, nargs='*', help='tagId, name, or rpm name', metavar='...')
 	return parser.parse_args()
 
-def setup_transforms(opts):
-	stylesheet_dir = getenv('SWIDQ_STYLESHEET_DIR', STYLESHEET_DIR)
+def setup_transforms(opts, config):
+	stylesheet_dir = getenv('SWIDQ_STYLESHEET_DIR', config.get('swidq', 'stylesheet-dir'))
 	transforms = []
 	if opts.xml:
 		transforms.append(XSLT(stylesheet_dir + '/swidq-xml.xslt'))
@@ -55,7 +55,7 @@ def setup_transforms(opts):
 
 def load_config(opts):
 	config = ConfigParser(delimiters = '=', comment_prefixes = '#')
-	config['swidq'] = { 'dir': SWIDTAGS_DIRS }
+	config['swidq'] = { 'dir': SWIDTAGS_DIRS, 'stylesheet-dir': STYLESHEET_DIR }
 	config.read(opts.config)
 	if opts.debug:
 		stderr.write("%s: config file [%s]\n" % (argv[0], opts.config))
@@ -190,8 +190,8 @@ def process_tag_collection(tags, transforms, opts):
 
 def main():
 	opts = setup_opts()
-	transforms = setup_transforms(opts)
 	config = load_config(opts)
+	transforms = setup_transforms(opts, config)
 
 	dirs = None
 	if opts.paths:
