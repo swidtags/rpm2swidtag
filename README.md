@@ -98,8 +98,8 @@ file with type `swidtags`.
 Produced SWID tags can be listed using the `swidq` utility:
 
 ```
-usage: swidq [-h] [-p] [-a] [-n] [--rpm] [-i] [-l] [--dump] [--xml]
-             [--output-stylesheet FILE] [--debug] [--silent] [-c FILE]
+usage: swidq [-h] [-p PATH [PATH ...]] [-a] [-n] [--rpm] [-i] [-l] [--dump]
+             [--xml] [--output-stylesheet FILE] [--debug] [--silent] [-c FILE]
              [... [... ...]]
 
 Querying SWID tags.
@@ -108,7 +108,8 @@ optional arguments:
   -h, --help            show this help message and exit
 
 selection options:
-  -p, --paths           process listed directories and SWID tag files
+  -p PATH [PATH ...], --paths PATH [PATH ...]
+                        process listed directories and SWID tag files
   -a, --all             match tagId/name with glob pattern, default '*'
   -n, --name            query name instead of tagId
   --rpm                 query rpm Resource instead of tagId
@@ -128,7 +129,7 @@ other options:
                         location of the configuration file
 
 remaining arguments:
-  ...                   tagId, name, or path
+  ...                   tagId, name, or rpm name
 ```
 
 By default, config file `/etc/swid/swidq.conf` configures `swidq` to

@@ -17,7 +17,7 @@ STYLESHEET_DIR = "/usr/share/swidq/stylesheets"
 def setup_opts():
 	parser = argparse.ArgumentParser(description='Querying SWID tags.')
 	select_group = parser.add_argument_group("selection options")
-	select_group.add_argument('-p', '--paths', action='store_true', help="process listed directories and SWID tag files")
+	select_group.add_argument('-p', '--paths', type=str, nargs='+', metavar='PATH', help="process listed directories and SWID tag files")
 	select_group.add_argument('-a', '--all', dest='all', action='store_true', help="match tagId/name with glob pattern, default '*'")
 	select_group.add_argument('-n', '--name', action='store_true', help="query name instead of tagId")
 	select_group.add_argument('--rpm', action='store_true', help="query rpm Resource instead of tagId")
@@ -35,7 +35,7 @@ def setup_opts():
 	other_group.add_argument('-c', '--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
 
 	positional_group = parser.add_argument_group("remaining arguments")
-	positional_group.add_argument('match', type=str, nargs='*', help='tagId, name, or path', metavar='...')
+	positional_group.add_argument('match', type=str, nargs='*', help='tagId, name, or rpm name', metavar='...')
 	return parser.parse_args()
 
 def setup_transforms(opts):
@@ -140,7 +140,7 @@ def process_tag_collection(tags, transforms, opts):
 		seen.add(path)
 
 		matched = False
-		if opts.paths:
+		if opts.paths and not opts.match:
 			matched = True
 		else:
 			value = []
@@ -195,7 +195,7 @@ def main():
 
 	dirs = None
 	if opts.paths:
-		dirs = opts.match
+		dirs = opts.paths
 
 	if dirs is None:
 		d = config.get('swidq', 'dir')

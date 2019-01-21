@@ -330,11 +330,11 @@ bin/swidq --silent -c tests/swidq.conf -l -n pkg1 > tmp/swidq.out 2> tmp/swidq.e
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.files tmp/swidq.out
 
-bin/swidq -p -i tests/swiddata1/a.test/distro.swidtag > tmp/swidq.out 2> tmp/swidq.err
+bin/swidq -i -p tests/swiddata1/a.test/distro.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/swiddata1/a.test/distro.info tmp/swidq.out
 
-bin/swidq -p -i tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.out 2> tmp/swidq.err
+bin/swidq -i -p tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo 'bin/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know' ) tmp/swidq.err
 diff tests/swiddata2/distro-minor-supplemental.info tmp/swidq.out
 
