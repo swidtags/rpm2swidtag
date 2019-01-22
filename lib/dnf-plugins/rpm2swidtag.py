@@ -104,28 +104,30 @@ class rpm2swidtag(Plugin):
 		self.remove_set = self.base.transaction.remove_set
 
 	def transaction(self):
+		remove_packages = []
 		for i in self.remove_set:
 			logger.debug('Will remove SWID tag for %s' % i)
-			swidtag = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "--rpm", str(i)], stdout=PIPE, encoding="utf-8")
-			if swidtag.returncode != 0:
-				continue
+			remove_packages.append(str(i))
+		if len(remove_packages) > 0:
+			swidtag = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "--rpm"] + remove_packages, stdout=PIPE, encoding="utf-8")
+			component_supplemental = []
 			for l in swidtag.stdout.splitlines():
 				m = re.search(r'^(\S+) (\S+)$', l)
 				if not m:
 					continue
 				self.remove_file(m.group(2))
-				component_of = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "-a", m.group(1) + "-component-of-*"], stdout=PIPE, encoding="utf-8")
-				if component_of.returncode != 0:
-					continue
+				component_supplemental.append(m.group(1) + "-component-of-*")
+			if len(component_supplemental) > 0:
+				component_of = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "-a"] + component_supplemental, stdout=PIPE, encoding="utf-8")
 				for ll in component_of.stdout.splitlines():
 					m = re.search(r'^- (\S+) (\S+)$', ll)
 					if not m:
 						continue
 					self.remove_file(m.group(2))
 
-		hostname = platform.uname()[1]
 		downloaded_swidtags = {}
 		dirs = {}
+		install_packages = []
 		for i in self.install_set:
 			try:
 				r = i.repo
@@ -149,9 +151,10 @@ class rpm2swidtag(Plugin):
 						continue
 			except KeyError:
 				None
-			logger.debug('Will rpm2swidtag for %s' % i)
-			if self.run_rpm2swidtag_for([str(i)]) == 0:
-				if run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAG_DIR, self.generated_dirname, "*"), "--rpm", str(i)]).returncode != 0:
+			install_packages.append(str(i))
+		if len(install_packages) > 0:
+			if self.run_rpm2swidtag_for(install_packages) == 0:
+				if run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAG_DIR, self.generated_dirname, "*"), "--rpm"] + install_packages).returncode != 0:
 					logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
 
 		for full_d in dirs:
@@ -188,7 +191,7 @@ class rpm2swidtag(Plugin):
 			return
 		hostname = platform.uname()[1]
 		rpm2swidtag_command = self.conf.get("main", "rpm2swidtag_command")
-		print("Running %s for %s ..." % (rpm2swidtag_command, pkgs))
+		logger.debug("Running %s for %s ..." % (rpm2swidtag_command, pkgs))
 		env = { "_RPM2SWIDTAG_RPMDBPATH": path.join(self.base.conf.installroot, "var/lib/rpm") }
 		if "PYTHONPATH" in environ:
 			env["PYTHONPATH"] = environ["PYTHONPATH"]
