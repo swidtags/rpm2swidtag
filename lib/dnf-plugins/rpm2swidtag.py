@@ -106,7 +106,7 @@ class rpm2swidtag(Plugin):
 	def transaction(self):
 		for i in self.remove_set:
 			logger.debug('Will remove SWID tag for %s' % i)
-			swidtag = run(self.conf.get("main", "swidq_command").split() + ["-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "--rpm", str(i)], stdout=PIPE, encoding="utf-8")
+			swidtag = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "--rpm", str(i)], stdout=PIPE, encoding="utf-8")
 			if swidtag.returncode != 0:
 				continue
 			for l in swidtag.stdout.splitlines():
@@ -114,7 +114,7 @@ class rpm2swidtag(Plugin):
 				if not m:
 					continue
 				self.remove_file(m.group(2))
-				component_of = run(self.conf.get("main", "swidq_command").split() + ["-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "-a", m.group(1) + "-component-of-*"], stdout=PIPE, encoding="utf-8")
+				component_of = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "-a", m.group(1) + "-component-of-*"], stdout=PIPE, encoding="utf-8")
 				if component_of.returncode != 0:
 					continue
 				for ll in component_of.stdout.splitlines():
