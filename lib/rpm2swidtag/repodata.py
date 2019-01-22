@@ -66,9 +66,6 @@ class Swidtags:
 		self.file = file
 		if self.file:
 			self.xml = etree.parse(self.file)
-			self.location_index = {}
-			for p in self.xml.xpath("/swidtags:metadata/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
-				self.location_index[p.get("href")] = p
 		else:
 			self.xml = etree.Element("{%s}metadata" % SWIDTAGLIST_XMLNS, nsmap={ None: SWIDTAGLIST_XMLNS })
 
@@ -116,14 +113,20 @@ class Swidtags:
 			t.text = timestamp
 		repomd.save()
 
-	def value_for(self, location):
-		if location in self.location_index:
-			ret = {}
-			for e in self.location_index[location]:
-				for t in e.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):
-					if t not in ret:
-						ret[t] = {}
-					ret[t][e.get("tagId")] = etree.parse(BytesIO(etree.tostring(e)), etree.XMLParser(remove_blank_text = True))
-			return ret
-		return None
+	def tags_for_packages(self, pkgs):
+		locations = {}
+		for p in pkgs:
+			locations[p.location] = None
+		tags = {}
+		for e in self.xml.xpath("/swidtags:metadata/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
+			h = e.get("href")
+			if h not in locations:
+				continue
+			tags[h] = {}
+			for p in e:
+				for r in p.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):
+					if r not in tags[h]:
+						tags[h][r] = {}
+					tags[h][r][p.get("tagId")] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
+		return tags
 

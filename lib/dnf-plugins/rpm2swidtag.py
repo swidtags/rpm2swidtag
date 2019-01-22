@@ -126,8 +126,8 @@ class rpm2swidtag(Plugin):
 					self.remove_file(m.group(2))
 
 		downloaded_swidtags = {}
+		packages_in_repos = { None: [] }
 		dirs = {}
-		install_packages = []
 		for i in self.install_set:
 			try:
 				r = i.repo
@@ -138,27 +138,40 @@ class rpm2swidtag(Plugin):
 						if file and file != "":
 							downloaded_swidtags[r] = repodata.Swidtags(None, file)
 				if downloaded_swidtags[r]:
-					tags = downloaded_swidtags[r].value_for(i.location)
-					if tags is not None:
-						for d in tags:
-							full_d = path.join(self.dir, d)
-							if full_d not in dirs:
-								self.create_generated_dir(d)
-							dirs[full_d] = d
-							for t in tags[d]:
-								logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (i, d, t))
-								tags[d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
-						continue
+					if r not in packages_in_repos:
+						packages_in_repos[r] = []
+					packages_in_repos[r].append(i)
+					continue
 			except KeyError:
 				None
-			install_packages.append(str(i))
-		if len(install_packages) > 0:
-			if self.run_rpm2swidtag_for(install_packages) == 0:
-				if run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAG_DIR, self.generated_dirname, "*"), "--rpm"] + install_packages).returncode != 0:
-					logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
+			packages_in_repos[None].append(i)
+
+		for r in packages_in_repos:
+			if not r:
+				continue
+			tags = downloaded_swidtags[r].tags_for_packages(packages_in_repos[r])
+			for p in tags:
+				found = False
+				for d in tags[p]:
+					full_d = path.join(self.dir, d)
+					if full_d not in dirs:
+						self.create_generated_dir(d)
+					dirs[full_d] = d
+					for t in tags[p][d]:
+						logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (p, d, t))
+						tags[p][d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
+						found = True
+				if not found:
+					packages_in_repos[None].append(p)
 
 		for full_d in dirs:
 			self.create_swidtags_d_symlink(dirs[full_d])
+
+		if len(packages_in_repos[None]) > 0:
+			p_names = [ str(p) for p in packages_in_repos[None]]
+			if self.run_rpm2swidtag_for(p_names) == 0:
+				if run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAG_DIR, self.generated_dirname, "*"), "--rpm"] + p_names).returncode != 0:
+					logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
 
 	def remove_file(self, file):
 		run([UNLINK, "-f", file])
