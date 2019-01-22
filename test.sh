@@ -483,9 +483,9 @@ for i in tmp/dnfroot/var/lib/swidtag/example.test/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt - < $i
 done
 
-$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg2
-ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'
-ls -l tmp/dnfroot/var/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^3$'
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf install -y tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
+ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
+ls -l tmp/dnfroot/var/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^2$'
 
 $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 reinstall -y pkg2
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'

@@ -127,25 +127,28 @@ class rpm2swidtag(Plugin):
 		downloaded_swidtags = {}
 		dirs = {}
 		for i in self.install_set:
-			r = i.repo
-			if r not in downloaded_swidtags:
-				downloaded_swidtags[r] = None
-				if hasattr(r, "get_metadata_path"):
-					file = r.get_metadata_path(self.METADATA_TYPE)
-					if file and file != "":
-						downloaded_swidtags[r] = repodata.Swidtags(None, file)
-			if downloaded_swidtags[r]:
-				tags = downloaded_swidtags[r].value_for(i.location)
-				if tags is not None:
-					for d in tags:
-						full_d = path.join(self.dir, d)
-						if full_d not in dirs:
-							self.create_generated_dir(d)
-						dirs[full_d] = d
-						for t in tags[d]:
-							logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (i, d, t))
-							tags[d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
-					continue
+			try:
+				r = i.repo
+				if r not in downloaded_swidtags:
+					downloaded_swidtags[r] = None
+					if hasattr(r, "get_metadata_path"):
+						file = r.get_metadata_path(self.METADATA_TYPE)
+						if file and file != "":
+							downloaded_swidtags[r] = repodata.Swidtags(None, file)
+				if downloaded_swidtags[r]:
+					tags = downloaded_swidtags[r].value_for(i.location)
+					if tags is not None:
+						for d in tags:
+							full_d = path.join(self.dir, d)
+							if full_d not in dirs:
+								self.create_generated_dir(d)
+							dirs[full_d] = d
+							for t in tags[d]:
+								logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (i, d, t))
+								tags[d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
+						continue
+			except KeyError:
+				None
 			logger.debug('Will rpm2swidtag for %s' % i)
 			if self.run_rpm2swidtag_for([str(i)]) == 0:
 				if run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAG_DIR, self.generated_dirname, "*"), "--rpm", str(i)]).returncode != 0:
