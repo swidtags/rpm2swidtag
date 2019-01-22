@@ -148,7 +148,7 @@ class rpm2swidtag(Plugin):
 					continue
 			logger.debug('Will rpm2swidtag for %s' % i)
 			if run([self.RPM2SWIDTAG, "--tag-creator", hostname, "--output-dir", path.join(self.dir_generated, "."), str(i)]).returncode == 0:
-				run([self.SWIDQ, "--rpm", str(i)])
+				run([self.SWIDQ, "--silent", "--rpm", str(i)])
 
 		for full_d in dirs:
 			rpm2swidtagCommand._symlink(full_d, path.join(self.swidtags_d, dirs[full_d]))
