@@ -486,6 +486,11 @@ done
 $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg2
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'
 ls -l tmp/dnfroot/var/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^3$'
+
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 reinstall -y pkg2
+ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'
+ls -l tmp/dnfroot/var/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^3$'
+
 $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf remove -y pkg1
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'
 ls -l tmp/dnfroot/var/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^1$'

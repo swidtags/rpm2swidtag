@@ -104,6 +104,25 @@ class rpm2swidtag(Plugin):
 		self.remove_set = self.base.transaction.remove_set
 
 	def transaction(self):
+		for i in self.remove_set:
+			logger.debug('Will remove SWID tag for %s' % i)
+			swidtag = run(self.conf.get("main", "swidq_command").split() + ["-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "--rpm", str(i)], stdout=PIPE, encoding="utf-8")
+			if swidtag.returncode != 0:
+				continue
+			for l in swidtag.stdout.splitlines():
+				m = re.search(r'^(\S+) (\S+)$', l)
+				if not m:
+					continue
+				self.remove_file(m.group(2))
+				component_of = run(self.conf.get("main", "swidq_command").split() + ["-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "-a", m.group(1) + "-component-of-*"], stdout=PIPE, encoding="utf-8")
+				if component_of.returncode != 0:
+					continue
+				for ll in component_of.stdout.splitlines():
+					m = re.search(r'^- (\S+) (\S+)$', ll)
+					if not m:
+						continue
+					self.remove_file(m.group(2))
+
 		hostname = platform.uname()[1]
 		downloaded_swidtags = {}
 		dirs = {}
@@ -134,25 +153,6 @@ class rpm2swidtag(Plugin):
 
 		for full_d in dirs:
 			self.create_swidtags_d_symlink(dirs[full_d])
-
-		for i in self.remove_set:
-			logger.debug('Will remove SWID tag for %s' % i)
-			swidtag = run(self.conf.get("main", "swidq_command").split() + ["-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "--rpm", str(i)], stdout=PIPE, encoding="utf-8")
-			if swidtag.returncode != 0:
-				continue
-			for l in swidtag.stdout.splitlines():
-				m = re.search(r'^(\S+) (\S+)$', l)
-				if not m:
-					continue
-				self.remove_file(m.group(2))
-				component_of = run(self.conf.get("main", "swidq_command").split() + ["-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "-a", m.group(1) + "-component-of-*"], stdout=PIPE, encoding="utf-8")
-				if component_of.returncode != 0:
-					continue
-				for ll in component_of.stdout.splitlines():
-					m = re.search(r'^- (\S+) (\S+)$', ll)
-					if not m:
-						continue
-					self.remove_file(m.group(2))
 
 	def remove_file(self, file):
 		run([UNLINK, "-f", file])
