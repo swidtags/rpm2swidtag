@@ -460,6 +460,13 @@ test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x8
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64.swidtag
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 
+PYTHONPATH=lib:tmp/dnflib $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag disable-purge
+! test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
+! test -d tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated
+PYTHONPATH=lib:tmp/dnflib _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/dnfroot/var/lib/rpm $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag enable-regen
+test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
+ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
+
 bin/rpm2swidtag --repo=tmp/x86_64 --config=tests/rpm2swidtag.conf --authoritative --tag-creator "example.test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt
 zcat tmp/x86_64/repodata/*-swidtags.xml.gz > tmp/x86_64/swidtags.xml
 diff tests/repodata-swidtags.xml tmp/x86_64/swidtags.xml
