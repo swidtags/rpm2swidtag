@@ -69,7 +69,7 @@ def load_template(config, opts):
 	try:
 		template_dir = path.join(path.dirname(config.get('rpm2swidtag', 'config-file')),
 			config.get('rpm2swidtag', 'template-dir'))
-		xml_template = getenv('RPM2SWIDTAG_TEMPLATE', template_dir + "/template.swidtag")
+		xml_template = getenv('RPM2SWIDTAG_TEMPLATE', template_dir + "/swidtag-template.xml")
 		if opts.print_tagid:
 			xslt_file = getenv('RPM2SWIDTAG_XSLT', template_dir + "/rpm2swidtag-tagid.xslt")
 		else:

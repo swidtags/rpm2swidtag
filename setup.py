@@ -17,7 +17,7 @@ setup(
 	py_modules = ['dnf-plugins.rpm2swidtag'],
 	scripts = ['bin/rpm2swidtag', 'bin/swidq'],
 	data_files = [
-		('/etc/rpm2swidtag', ['rpm2swidtag.conf', 'template.swidtag', 'swidtag.xslt', 'rpm2swidtag.xslt', 'rpm2swidtag-tagid.xslt']),
+		('/etc/rpm2swidtag', ['rpm2swidtag.conf', 'swidtag-template.xml', 'swidtag.xslt', 'rpm2swidtag.xslt', 'rpm2swidtag-tagid.xslt']),
 		('/etc/rpm2swidtag/rpm2swidtag.conf.d', ['rpm2swidtag.conf.d/fedora-rawhide.conf', 'rpm2swidtag.conf.d/fedora-29.conf', 'rpm2swidtag.conf.d/fedora-28.conf']),
 		('/etc/swid', ['swidq.conf']),
 		('/etc/swid/swidtags.d', []),

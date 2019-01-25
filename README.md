@@ -52,7 +52,7 @@ config options:
 ### Customizing the output
 
 The SWID tag XML output is produced from template
-(`/etc/rpm2swidtag/template.swidtag`) via XSLT stylesheet
+(`/etc/rpm2swidtag/swidtag-template.xml`) via XSLT stylesheet
 (`/etc/rpm2swidtag/rpm2swidtag.xslt`) while injecting values from
 the rpm package or rpm file headers.
 To customize the output, either edit the default input template and/or
