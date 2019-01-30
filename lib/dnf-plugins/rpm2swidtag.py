@@ -19,7 +19,8 @@ SWIDQ_COMMAND = "/usr/bin/swidq"
 UNLINK = "/usr/bin/rm"
 SYMLINK = "/usr/bin/ln"
 
-SWIDTAG_DIR = "var/lib/swidtag"
+SWIDTAG_DIR_GEN = "var/lib/swidtag"
+SWIDTAG_DIR_DOWNLOAD = "usr/lib/swidtag"
 SWIDTAGS_D = "etc/swid/swidtags.d"
 
 class rpm2swidtagCommand(commands.Command):
@@ -72,10 +73,9 @@ class rpm2swidtag(Plugin):
 		self.conf = None
 		self.install_set = None
 		self.remove_set = None
-		root = base.conf.installroot
-		self.dir = path.join(root, SWIDTAG_DIR)
-		self.dir_generated = path.join(self.dir, self.generated_dirname)
-		self.swidtags_d = path.join(root, SWIDTAGS_D)
+		self.dir_generated = path.join(base.conf.installroot, SWIDTAG_DIR_GEN, self.generated_dirname)
+		self.dir_downloaded = path.join(base.conf.installroot, SWIDTAG_DIR_DOWNLOAD)
+		self.swidtags_d = path.join(base.conf.installroot, SWIDTAGS_D)
 		if cli:
 			cli.register_command(rpm2swidtagCommand)
 
@@ -153,9 +153,9 @@ class rpm2swidtag(Plugin):
 			for p in tags:
 				found = False
 				for d in tags[p]:
-					full_d = path.join(self.dir, d)
+					full_d = path.join(self.dir_downloaded, d)
 					if full_d not in dirs:
-						self.create_generated_dir(d)
+						self.create_download_dir(d)
 					dirs[full_d] = d
 					for t in tags[p][d]:
 						logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (p, d, t))
@@ -170,7 +170,7 @@ class rpm2swidtag(Plugin):
 		if len(packages_in_repos[None]) > 0:
 			p_names = [ str(p) for p in packages_in_repos[None]]
 			if self.run_rpm2swidtag_for(p_names) == 0:
-				if run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAG_DIR, self.generated_dirname, "*"), "--rpm"] + p_names).returncode != 0:
+				if run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", self.dir_generated, "--rpm"] + p_names).returncode != 0:
 					logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
 
 	def remove_file(self, file):
@@ -182,22 +182,26 @@ class rpm2swidtag(Plugin):
 	def purge_generated_symlink(self):
 		run([UNLINK, "-f", path.join(self.swidtags_d, self.generated_dirname)])
 
-	def create_generated_dir(self, dir=None):
-		if dir:
-			dir = path.join(self.dir, dir)
-		else:
-			dir = self.dir_generated
+	def create_generated_dir(self):
+		if not path.isdir(self.dir_generated):
+			makedirs(self.dir_generated)
+
+	def create_download_dir(self, dir):
+		dir = path.join(self.dir_downloaded, dir)
 		if not path.isdir(dir):
 			makedirs(dir)
 
 	def create_swidtags_d_symlink(self, basename=None):
-		if not basename:
+		if basename:
+			target = path.join(SWIDTAG_DIR_DOWNLOAD, basename)
+		else:
 			basename = self.generated_dirname
+			target = path.join(SWIDTAG_DIR_GEN, basename)
 		if not path.isdir(self.swidtags_d):
 			makedirs(self.swidtags_d)
 		src = path.join(self.swidtags_d, basename)
 		if not path.islink(src):
-			run([SYMLINK, "-sv", path.join("../../..", SWIDTAG_DIR, basename), src])
+			run([SYMLINK, "-sv", path.join("../../..", target), src])
 
 	def run_rpm2swidtag_for(self, pkgs):
 		if not pkgs or len(pkgs) < 1:
