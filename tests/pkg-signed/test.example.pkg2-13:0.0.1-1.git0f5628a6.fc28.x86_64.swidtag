@@ -3,7 +3,7 @@
   <Entity name="" regid="example.test" role="tagCreator"/>
   <Meta product="pkg2" colloquialVersion="0.0.1" revision="1.git0f5628a6.fc28" arch="x86_64" summary="Example rpm package with epoch"/>
   <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
-    <Resource type="rpm" rpm="pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64"/>
+    <Resource type="rpm" rpm="pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64" sha256header="a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f"/>
   </Payload>
   <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
     <SignedInfo>
@@ -15,20 +15,20 @@
           <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
         </Transforms>
         <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-        <DigestValue>lS5LrqR9LDG/raaiq9MbOQ0TrZXeixCGZfheFt5yglg=</DigestValue>
+        <DigestValue>kH3a456XQAimRMEUC/l3mR1saqyUQsFJBViLcNkuEMU=</DigestValue>
       </Reference>
     </SignedInfo>
-    <SignatureValue>FiGAuF8cx7cC7yTWKUcNysGTyPvBMT96P9Ter9BoEXRliORIrF5FjtrH3UGeODlq
-nwsXvOtTqTYrTB1U5FXdyvoGrB0fBGQBFkk1pjWccmRn0diCLYez+rZxXqcPKokc
-z+s4rkvS6CPEpztix4aC+69AjXvZqNzNg9gLnGVhYRvOe5RIvwSA+iD8uBOSp80r
-KP7ljZjQZQuCEmky5VMpWUyvC5WoTdtLOlP6r5A6/qaU94KlDOHrpOcCqE7kS2BM
-Tbqy8uhyGm8+PdGHnsYN8Bwx8847t4bbFKhKBXyc9gqeZyIz5n3mJvj1GVpA5cRJ
-4gDUfeb6rIW6zn/oHNAV3LYb6yD4hGQMTnQFJ2NEXp1kPYmnusu8n5ug3w5qzgcT
-BvU/f52R0DQ5b7OUSFjDA2zuPmji1beScLgU33rsNIBc5e9ycS53GSFJ1td9Mqhk
-0WSMihmAC5zNis289RbaDN4fTMId4XWeKum1g9SPu1FnQwA+ByL7quIYTBANZVdn
-VzjHP+h/2CcpqvTMzaEhNiKO5PjXQ5EP+2galOr3DZiOWpgYPnh7T3We1Fb76ln2
-thiIG5l9bTDy+zPsBqZvwIDp7fC3VrL7JwHwdY6KtsJ7l0uFQgjQvSmC/s8DDRNC
-mE+rTBUqKVnXTb5yger/ArWuJvj89/HQmKqW9YVMY10=</SignatureValue>
+    <SignatureValue>M9QK0Cfqb2Dg9PMBtzIj8yBHIoEpwVp5xxB/MT5uiC0R533n0t79Tq0VUMDNi/uT
+PBGI1cEZJTGqBtix9ZeTMWBy5oTzraoHq5bt2TDwjcqiejiHlr8UDoJFTlv0H0Ac
+2dSxEG+ImBGERLEePon+2xys1ANo64zJNq7LV/MpLlzeknDuwn1xeqE7lQ9FAdIt
+cT/Ongzj7/Ztc/yt+uJ+bdarzxJXu3PHfHZia5y242dAGeLF6Uv4u48bRs2WS4b2
+kifRqwFL+MD9d4UXqaruQkK5Spu9Y12NHXKUwzuv7sM6ef+MtU4y8y+AHbpzrZIl
+OlUg6wTJvaGN0Mf8ceq9e7wrvOBLFjsOzfcbYclUBQQt8exJWRJoBOJwHJyUpqtf
+b+fin59sjef19uH8F0AI+ao6OEjFGczhlLf1mZezYWn8n8Hr5DJNOf+58mo/pVEh
+1JtAYzBuIQziUFQ9B77C+0GmwMb/eeKcO+2YWsXRlDu0As1kvLJXoMfXOjN/3Dvs
+DgSqpF8Szr1ZwVoYntgao3WaAYcBC8DAYqenIr1YEopv1lymLSAGca3U/2xeVT0k
+bW+uwqW9TvtIZsWrpw/SiMLRUWDHHFk+xPMvySyQftpSIrW7sJvvys3LJnHA3yFB
+kbm/nOhr5dXTgZ5lSKeQvUo/i+6xCnDigbdqR8/eNX8=</SignatureValue>
     <KeyInfo>
       <X509Data>
         <X509Certificate>MIIFCzCCAvOgAwIBAgIUKccDx8ZvI/Xhsk8a3l0Z31S31LQwDQYJKoZIhvcNAQEL

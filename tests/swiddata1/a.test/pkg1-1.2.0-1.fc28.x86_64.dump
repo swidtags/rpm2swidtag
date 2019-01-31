@@ -69,3 +69,4 @@ SoftwareIdentity
     - Resource
       @type: [rpm]
       @rpm: [pkg1-1.2.0-1.fc28.x86_64]
+      @sha256header: [b1d92109579a5aa3ed3ceda2a8bd57888e2ad45c4d77ac2d6bfcab9eb3e1fff7]

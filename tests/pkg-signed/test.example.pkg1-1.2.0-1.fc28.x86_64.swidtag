@@ -14,7 +14,7 @@
       <File size="11" name="testutf8-křížala" sha256:hash="ca501866faea5acff395b2ed6c59c16b4a0a40ad642ec35e12dbaa7bd891920b" key="true"/>
       <File size="2" name="testutf8-sqrt-√36" sha256:hash="06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7" key="true"/>
     </Directory>
-    <Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.x86_64"/>
+    <Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.x86_64" sha256header="b1d92109579a5aa3ed3ceda2a8bd57888e2ad45c4d77ac2d6bfcab9eb3e1fff7"/>
   </Payload>
   <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
     <SignedInfo>
@@ -26,20 +26,20 @@
           <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
         </Transforms>
         <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-        <DigestValue>YnKCkNWHLD8avmNcioNe4Si1LkZgNV+77rXWcQ0EPzQ=</DigestValue>
+        <DigestValue>etqovod+NVoE1nY8Y5L90J/nuevqBB18Py0PrmiDnAI=</DigestValue>
       </Reference>
     </SignedInfo>
-    <SignatureValue>27r1HAcCFCUD94VKaUpRU/cVlucZIH5ctJbdjN/VFxj5yDNDJy292RdnrZPI+RDP
-AO8D7CsbjMjZeM178JT6m5SW+GFRBPVbzntbcnw6zdN1wNrNqc848AO9wpg/ucfl
-F3WL9mw+TmavSw9hxHnSuhF5ojm2cCJlRt8RK6uuaJtLMjJ6q9GXM6mFRt7fj4cd
-BALhyqpxGAo1vr5IS+INNbfKKy6wDJY+LAHeUILgiyvX29IC4jCxdVcCZakCjef6
-eSAEXT3Ne5LA1qEUu8UqDCHZQNXnOYOE8e7N0p6/CnqMWuIcHk+Fp0/HBsRgaImT
-rR99R9kbu8HrX7IH8rszBFLkvsbj741hv1hWZLwEiHVNWhAVU0XAfjvLg0H9asn4
-dQNwPN8mTuSgPpdcEON8p2I+unMV7hyMJoxUjWzMk/hHuvLX8uwToVKPs86wsngI
-Z7gBJu9YXdoo91v/TUz0SoLVZTQ3izwQZoQRfXyayfkYzph9f7E7Aho6NXYhXRM1
-coGpuE+0E//I9s25NeZSr71/YrPqVtk0j9tD51VBHJQcfgy5fDbM/5aQNPib/x/q
-UHqDamhu7HYY7Ky577Q70pocOpYllunjwoQ4+n7C1QRBkU1DnWNd7WlNDMu7kUmG
-zb25ga4YdJ8velgWME7lcHLpOgv9lFr8qumA1IrxXnE=</SignatureValue>
+    <SignatureValue>VUJUVTh9WixyuMlD5mjcfHSfDSSrVhU646YcSf7KLwyhUGOHwN5eCZJI8TbOoLDa
+czrnq/tHYtXIT1XqYxqnjiEurl301dlYP9flzR0zbeLggMemEUWMXJ8org0oCMCv
+SHtrXxpDqkTSaBqQG+vbZ9Xnox/2KMUg+AFMMtcIuLZilOa6t5a3ExtEcQ7mTrmi
+MEnFI4cgtPuGr/gvZ37Y9Z2mKTRRyfLLhpL4Q8oVXZsxNndhvbFlBZ1grOOQtvEf
+gDNpX722ryNy2DRltguKFCqHtq03RXEqNuCufMlQhyl/uiFaTBklldkyZpGgvZRu
+uZGGRzOOoybVuwilfDsLihZYFFA85juSEvnVRc02ajLnOwvaj+7qwLMYNFeXIyBG
+8s0gmY4VR5BV0TuGD0ls0KGNkwVLBl9KIBWb5zv4mhTZ2zu0+bGdlEpaheQsuRlS
+1+RX0mZv20He0j0TfpxdR6lHHnVHwLQPJRKrLRyKwuEnKg9oQLA76vhZ+NbXhffX
+wj+8HCR98V7eMOekuk64LiDkG8fGxpGG/hVjb5PPjTeSGubKo5d1vmzoYDxaC8jA
+zC5HmsmXFMyCPZwHeRiT7X6f5twLuoxpmyG8Z+cNaHcGCKTE0XoFCYpfHYz1L5fF
+Os8x/nxxfT4YnGE5z4lpL1vKQnc2CEmEMz8xdWlfCbo=</SignatureValue>
     <KeyInfo>
       <X509Data>
         <X509Certificate>MIIFCzCCAvOgAwIBAgIUKccDx8ZvI/Xhsk8a3l0Z31S31LQwDQYJKoZIhvcNAQEL

@@ -9,6 +9,6 @@
       <File size="36" name="FAQ" sha256:hash="678b87e217a415f05e43460e2c7b668245b412e2b4f18a75aa7399d9774ed0b4"/>
       <File size="39" name="README" sha256:hash="d63fdc6c986106f57230f217d36b2395d83ecf491d2b7187af714dc8db9629e9"/>
     </Directory>
-    <Resource type="rpm" rpm="hello-2.0-1.x86_64" signature-key-id="1964c5fc"/>
+    <Resource type="rpm" rpm="hello-2.0-1.x86_64" sha256header="ef920781af3bf072ae9888eec3de1c589143101dff9cc0b561468d395fb766d9" signature-key-id="1964c5fc"/>
   </Evidence>
 </SoftwareIdentity>

@@ -14,5 +14,5 @@
     <swid:File size="11" name="testutf8-křížala" sha256:hash="ca501866faea5acff395b2ed6c59c16b4a0a40ad642ec35e12dbaa7bd891920b" key="true"/>
     <swid:File size="2" name="testutf8-sqrt-√36" sha256:hash="06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7" key="true"/>
   </swid:Directory>
-  <swid:Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.x86_64"/>
+  <swid:Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.x86_64" sha256header="b1d92109579a5aa3ed3ceda2a8bd57888e2ad45c4d77ac2d6bfcab9eb3e1fff7"/>
 </swid:Payload></swid:SoftwareIdentity>

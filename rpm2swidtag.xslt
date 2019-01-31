@@ -21,6 +21,7 @@
 <xsl:param name="arch" select="f:package_tag('arch')"/>
 
 <xsl:param name="sign-keys" select="f:package_tag('sign-keys')"/>
+<xsl:param name="sha256header" select="f:package_tag('sha256header')"/>
 
 <xsl:param name="authoritative" select="'false'"/>
 <xsl:param name="deviceid" select="'localhost.localdomain'"/>
@@ -65,6 +66,12 @@
 <xsl:template match="swid:Payload/swid:Resource[@type = 'rpm']/@signature-key-id">
   <xsl:if test="$sign-keys">
     <xsl:attribute name="signature-key-id"><xsl:value-of select="$sign-keys"/></xsl:attribute>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template match="swid:Payload/swid:Resource[@type = 'rpm']/@sha256header">
+  <xsl:if test="$sha256header">
+    <xsl:attribute name="sha256header"><xsl:value-of select="$sha256header"/></xsl:attribute>
   </xsl:if>
 </xsl:template>
 

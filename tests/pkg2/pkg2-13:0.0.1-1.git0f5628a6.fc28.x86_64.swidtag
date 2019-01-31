@@ -3,6 +3,6 @@
   <Entity name="" regid="invalid.unavailable" role="tagCreator"/>
   <Meta product="pkg2" colloquialVersion="0.0.1" revision="1.git0f5628a6.fc28" arch="x86_64" summary="Example rpm package with epoch"/>
   <Evidence date="2018-01-01T12:13:14Z" deviceId="machine.example.test" n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
-    <Resource type="rpm" rpm="pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64"/>
+    <Resource type="rpm" rpm="pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64" sha256header="a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f"/>
   </Evidence>
 </SoftwareIdentity>
