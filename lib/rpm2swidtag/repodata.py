@@ -53,10 +53,31 @@ class Primary:
 		self.href = primary
 		self.path = path.join(self.repo.path, self.href)
 		self.xml = etree.parse(self.path)
+		self.list = None
+		self.index = -1
+
+	def __iter__(self):
+		return self
+
+	def __next__(self):
+		if self.index == -1:
+			self.list = self.xml.xpath("/common:metadata/common:package[@type = 'rpm']", namespaces = { 'common': COMMON_XMLNS })
+			self.index = 0
+		self.index += 1
+		if self.index > len(self.list):
+			raise StopIteration
+		return Package(self.list[self.index - 1])
+
+class Package:
+	def __init__(self, element):
+		self.element = element
+		self.href_fn = None
 
 	@property
-	def packages(self):
-		return self.xml.xpath("/common:metadata/common:package[@type = 'rpm']/common:location/@href", namespaces = { 'common': COMMON_XMLNS })
+	def href(self):
+		if not self.href_fn:
+			self.href_fn = etree.XPath("common:location/@href", namespaces = { 'common': COMMON_XMLNS })
+		return self.href_fn(self.element)[0]
 
 class Swidtags:
 	def __init__(self, repo, file=None):
@@ -71,7 +92,7 @@ class Swidtags:
 
 	def add(self, package, swidtags):
 		pxml = etree.Element("{%s}package" % SWIDTAGLIST_XMLNS)
-		pxml.set("href", package)
+		pxml.set("href", package.href)
 		for s in swidtags:
 			pxml.append(s.xml.getroot())
 		self.xml.append(pxml)

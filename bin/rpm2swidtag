@@ -166,11 +166,10 @@ def process_rpm_with_template(header, template, opts, config, return_xml_list=Fa
 
 def process_repo(repo, template, opts, config):
 	repomd = repodata.Repodata(repo).repomd
-	packages = repomd.primary.packages
 
 	swidtags = repodata.Swidtags(repomd.repo)
-	for p in packages:
-		f = path.join(repo, p)
+	for p in repomd.primary:
+		f = path.join(repo, p.href)
 		h = rpm.read_from_file(f)
 		swidtags.add(p, process_rpm_with_template(h, template, opts, config, return_xml_list=True))
 	swidtags.save()
