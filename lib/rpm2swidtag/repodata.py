@@ -72,12 +72,19 @@ class Package:
 	def __init__(self, element):
 		self.element = element
 		self.href_fn = None
+		self.pkgid_fn = None
 
 	@property
 	def href(self):
 		if not self.href_fn:
 			self.href_fn = etree.XPath("common:location/@href", namespaces = { 'common': COMMON_XMLNS })
 		return self.href_fn(self.element)[0]
+
+	@property
+	def pkgid(self):
+		if not self.pkgid_fn:
+			self.pkgid_fn = etree.XPath("common:checksum[@pkgid = 'YES']/text()", namespaces = { 'common': COMMON_XMLNS })
+		return str(self.pkgid_fn(self.element)[0])
 
 class Swidtags:
 	def __init__(self, repo, file=None):
@@ -92,7 +99,7 @@ class Swidtags:
 
 	def add(self, package, swidtags):
 		pxml = etree.Element("{%s}package" % SWIDTAGLIST_XMLNS)
-		pxml.set("href", package.href)
+		pxml.set("pkgid", package.pkgid)
 		for s in swidtags:
 			pxml.append(s.xml.getroot())
 		self.xml.append(pxml)
@@ -135,19 +142,20 @@ class Swidtags:
 		repomd.save()
 
 	def tags_for_packages(self, pkgs):
-		locations = {}
+		pkgids = {}
 		for p in pkgs:
-			locations[p.location] = None
+			pkgids[p.chksum[1].hex()] = p
 		tags = {}
 		for e in self.xml.xpath("/swidtags:metadata/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
-			h = e.get("href")
-			if h not in locations:
+			pkgid = e.get("pkgid")
+			if pkgid not in pkgids:
 				continue
-			tags[h] = {}
+			tp = pkgids[pkgid]
+			tags[tp] = {}
 			for p in e:
 				for r in p.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):
-					if r not in tags[h]:
-						tags[h][r] = {}
-					tags[h][r][p.get("tagId")] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
+					if r not in tags[tp]:
+						tags[tp][r] = {}
+					tags[tp][r][p.get("tagId")] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
 		return tags
 
