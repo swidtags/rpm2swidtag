@@ -141,7 +141,7 @@ class Swidtags:
 			t.text = timestamp
 		repomd.save()
 
-	def tags_for_packages(self, pkgs):
+	def tags_for_repo_packages(self, pkgs):
 		pkgids = {}
 		for p in pkgs:
 			pkgids[p.chksum[1].hex()] = p
@@ -151,6 +151,29 @@ class Swidtags:
 			if pkgid not in pkgids:
 				continue
 			tp = pkgids[pkgid]
+			tags[tp] = {}
+			for p in e:
+				for r in p.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):
+					if r not in tags[tp]:
+						tags[tp][r] = {}
+					tags[tp][r][p.get("tagId")] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
+		return tags
+
+	def tags_for_rpm_packages(self, pkgs):
+		pkg256headers = {}
+		for p in pkgs:
+			pkg256headers[( p["name"].decode("utf-8"), p["SHA256HEADER"].decode("utf-8") )] = p
+		tags = {}
+		for e in self.xml.xpath("/swidtags:metadata/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
+			found = None
+			for rs in e.xpath("swid:SoftwareIdentity/swid:Payload/swid:Resource[@type = 'rpm'] | swid:SoftwareIdentity/swid:Evidence/swid:Resource[@type = 'rpm']", namespaces = { 'swid': SWID_XMLNS }):
+				h = rs.get("sha256header")
+				if h:
+					found = (rs.getparent().getparent().get("name"), h)
+					break
+			if not found or found not in pkg256headers:
+				continue
+			tp = pkg256headers[found]
 			tags[tp] = {}
 			for p in e:
 				for r in p.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):

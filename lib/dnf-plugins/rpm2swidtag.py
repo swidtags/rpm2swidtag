@@ -4,7 +4,7 @@ from dnf.cli import commands
 import argparse
 import platform
 
-from dnf import Plugin
+from dnf import Plugin, rpm
 from dnfpluginscore import logger
 from subprocess import run, PIPE
 import platform
@@ -40,8 +40,8 @@ class rpm2swidtagCommand(commands.Command):
 			return
 
 	def configure(self):
-		self.cli.demands.available_repos = False
-		self.cli.demands.sack_activation = False
+		self.cli.demands.available_repos = True
+		self.cli.demands.sack_activation = True
 		self.cli.demands.resolving = False
 		self.cli.demands.root_user = True
 
@@ -54,7 +54,47 @@ class rpm2swidtagCommand(commands.Command):
 	def run(self):
 		if self.opts.rpm2swidtagcmd == "regen":
 			self.plugin.purge_generated_dir()
-			self.plugin.run_rpm2swidtag_for(["--all"])
+			ts = rpm.transaction.initReadOnlyTransaction(root=self.base.conf.installroot)
+			pkgs = []
+			for p in ts.dbMatch():
+				# Filter out imported GPG keys
+				if p["arch"]:
+					pkgs.append(p)
+
+			dirs = {}
+			for r in self.base.repos.iter_enabled():
+				if hasattr(r, "get_metadata_path"):
+					file = r.get_metadata_path(self.plugin.METADATA_TYPE)
+					if file and file != "":
+						s = repodata.Swidtags(None, file)
+						tags = s.tags_for_rpm_packages(pkgs)
+
+						remaining_pkgs = []
+						for p in tags:
+							found = False
+							for d in tags[p]:
+								full_d = path.join(self.plugin.dir_downloaded, d)
+								if full_d not in dirs:
+									self.plugin.create_download_dir(d)
+								dirs[full_d] = d
+								for t in tags[p][d]:
+									logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (p, d, t))
+									tags[p][d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
+									found = True
+							if not found:
+								remaining_pkgs.append(p)
+
+						pkgs = remaining_pkgs
+
+			for full_d in dirs:
+				self.plugin.create_swidtags_d_symlink(dirs[full_d])
+
+			if len(pkgs) > 0:
+				p_names = [ "%s-%s-%s.%s" % (p["name"].decode("utf-8"), p["version"].decode("utf-8"), p["release"].decode("utf-8"), p["arch"].decode("utf-8")) for p in pkgs ]
+				if self.plugin.run_rpm2swidtag_for(p_names) == 0:
+					if run(self.plugin.conf.get("main", "swidq_command").split() + ["--silent", "-p", self.plugin.dir_generated, "--rpm"] + p_names).returncode != 0:
+						logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
+
 		elif self.opts.rpm2swidtagcmd == "purge":
 			self.plugin.purge_generated_dir()
 			self.plugin.purge_generated_symlink()
@@ -149,7 +189,7 @@ class rpm2swidtag(Plugin):
 		for r in packages_in_repos:
 			if not r:
 				continue
-			tags = downloaded_swidtags[r].tags_for_packages(packages_in_repos[r])
+			tags = downloaded_swidtags[r].tags_for_repo_packages(packages_in_repos[r])
 			for p in tags:
 				found = False
 				for d in tags[p]:

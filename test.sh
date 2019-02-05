@@ -437,8 +437,8 @@ fi
 $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf list installed
 rpm --dbpath $(pwd)/tmp/dnfroot/var/lib/rpm --import $(pwd)/tmp/key-19D5C7DD.gpg
 $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag regen
-test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
-test -d tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
+! test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
+! test -d tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/repo install -y pkg1-1.2.0
 echo 'f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 tmp/dnfroot/usr/share/testdir/testfile' | sha256sum -c
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
@@ -494,6 +494,15 @@ ls -l tmp/dnfroot/usr/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | gre
 test -f tmp/dnfroot/usr/lib/swidtag/example.test/test.example.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+
+echo "need-regen" > tmp/dnfroot/usr/lib/swidtag/example.test/test.example.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
+grep -r need-regen tmp/dnfroot/usr/lib/swidtag/example.test
+
+$FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/repo rpm2swidtag regen
+test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
+ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^0$'
+ls -l tmp/dnfroot/usr/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^3$'
+! grep -r need-regen tmp/dnfroot/usr/lib/swidtag/example.test
 
 fi
 
