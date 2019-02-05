@@ -14,7 +14,6 @@
   <Entity name="x.test" regid="Example X" role="softwareCreator anotherRole"/>
   <Meta product="" colloquialVersion="" revision="" arch="" summary=""/>
   <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
-    <Resource type="rpm"/>
-    <Resource type="rpm-signature"/>
+    <Resource type="rpm" signature-key-id=""/>
   </Payload>
 </SoftwareIdentity>

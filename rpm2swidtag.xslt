@@ -49,18 +49,22 @@
 <xsl:template match="swid:Payload/swid:Resource[@type = 'rpm']">
   <xsl:if test="$arch and not($arch = 'src.rpm')">
     <xsl:copy>
-      <xsl:apply-templates select="@*"/>
-      <xsl:attribute name="rpm"><xsl:call-template name="nevra"/></xsl:attribute>
+      <xsl:apply-templates select="@type"/>
+      <xsl:if test="not(@rpm)">
+        <xsl:attribute name="rpm"><xsl:call-template name="nevra"/></xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="@*[name(.) != 'type']"/>
     </xsl:copy>
   </xsl:if>
 </xsl:template>
 
-<xsl:template match="swid:Payload/swid:Resource[@type = 'rpm-signature']">
+<xsl:template match="swid:Payload/swid:Resource[@type = 'rpm']/@rpm">
+  <xsl:attribute name="rpm"><xsl:call-template name="nevra"/></xsl:attribute>
+</xsl:template>
+
+<xsl:template match="swid:Payload/swid:Resource[@type = 'rpm']/@signature-key-id">
   <xsl:if test="$sign-keys">
-    <xsl:copy>
-      <xsl:apply-templates select="@*"/>
-      <xsl:attribute name="key-id"><xsl:value-of select="$sign-keys"/></xsl:attribute>
-    </xsl:copy>
+    <xsl:attribute name="signature-key-id"><xsl:value-of select="$sign-keys"/></xsl:attribute>
   </xsl:if>
 </xsl:template>
 

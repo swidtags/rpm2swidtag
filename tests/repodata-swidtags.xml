@@ -123,8 +123,7 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
           <File size="11" name="testutf8-křížala" sha256:hash="ca501866faea5acff395b2ed6c59c16b4a0a40ad642ec35e12dbaa7bd891920b" key="true"/>
           <File size="2" name="testutf8-sqrt-√36" sha256:hash="06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7" key="true"/>
         </Directory>
-        <Resource type="rpm" rpm="pkg1-1.3.0-1.fc28.x86_64"/>
-        <Resource type="rpm-signature" key-id="19d5c7dd"/>
+        <Resource type="rpm" rpm="pkg1-1.3.0-1.fc28.x86_64" signature-key-id="19d5c7dd"/>
       </Payload>
       <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
         <SignedInfo>
@@ -136,20 +135,20 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
               <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
             </Transforms>
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-            <DigestValue>oWLfMInwcudsmD35veFfIX5KLYxRwkZK/n3CTtXtIkk=</DigestValue>
+            <DigestValue>+XXSuBTXo0ozJk8TPQYl8nOE+Uou3l5Am8t1+1QXm0Q=</DigestValue>
           </Reference>
         </SignedInfo>
-        <SignatureValue>528CI7jUwqGp2uIaOqlPIjtuV1+ZPX0qeHi014AWKkrkiBN4J4fPfyr4RkwWz9kF
-A/reOFSnBNNlzWnr0gFTmvv7wTP66iBLTDMBg+715W39jhZY4SkhUu0VUcLZrEQp
-ScgYHKB30OFcesYxVioeuUUUlf+AmS+DFKfzXznEiIYKyxDf3MHxyBJSMlcW8/Vn
-T9fetCRWK3LBTkEM5RWQ+D0Mv6GtwD78V3Dwmj2Srsu2oXyBCh5VzDywBb+dr+16
-7MTHnh5XlhaoLaQDcVp4xSXNF8NDhBZjfB64IZEJLjbzG0m3rsp8eFyCuH+K56AJ
-IB7d0oH3b7RP0tD34VA9oQmK+JnRlE3G4398rjOl7Jx10hdRmGLBNmiArEE6B2P5
-x/UcQZn9dn5r1wCrc8fMqY5RG7f9l4YZ2kNCn9WPRPbk1NwvxsozW21adUVgP0Z8
-SFivRuxfUH058klwv7fTYrApOpCIltGMpWTfy17i3Y6V6hE1OZE9inaLwCcGUj4C
-wUJm75fF7mZ0gcru3yDzzAQrKoDHGm97bxQLvVddPZWiC8m5m7QdsPU6Ms51vPHV
-QSAbQ86pnI/OFdC5c/Pegkbhe1vTB/AqRy9MioyIaBNo7viORWzMavbfnq6iCv92
-bxUpIAi6K2yCFbj25KPEr+3rQrd203XPxMtTjJo6igE=</SignatureValue>
+        <SignatureValue>MjkptV36k+iAQERE4s1qX+xdFue8NH1qnlI3LUv8ykXLQCLIEY05VtM20aN+ezc5
+295osI2hRsLxiYiws98JLXcQeGahK2bJiEBUg7tmwgPS1HhtZTfpq3iObSp33aau
+95MxKzUQrLIOgRdnZqHAKiaa9kOCS/raM7KTkBr6U5mMWQv1xjwVWvBmoMI06di5
+TY1oIj3e5FYAZQJ0i6DTRf0iBywwIz7tkCyr7TrI3ebef7odjRrOT/lAM66WwVGW
+tnhFb5x0DHjjdIvVZURb2Rvskmu2fHWKJYte3s8LSywAoECwoPOsP3qwwN6M/Aug
+42aoUybB61RPKI35dFNeNLlGlkfJiJbI/XxRUL+AeKlnJDNGBJ5dqA2bYiBUNqkr
+uWMZhUNH5fDhjB6R/pL3fJjM53UBQ0HT7bJeKj11BNXUWZF1kvdhASI9So3TBWoL
+BWpcjskpw1ETWdFFDwwYW2q5fNXAzWh6zFIQ7Hcyh+VXEPEZAvKKwcrOArpFYHlA
+/5MqBPRZXvhOChGL7BAijcbxE9ATSnOQsSG5V+f+JVLe3MItMPTzxJpdZYYMv/9M
+vQ7CotnXO7eQMhJ1xWPuMRpxA+a9PyeA3jHEQ/7v0dNuA5aaEkbQUqU1Hup0Ig+W
+hQNliYU7eGzr0zQYVLR3vUprbnisL9VDogLgRuHbyHc=</SignatureValue>
         <KeyInfo>
           <X509Data>
             <X509Certificate>MIIFCzCCAvOgAwIBAgIUKccDx8ZvI/Xhsk8a3l0Z31S31LQwDQYJKoZIhvcNAQEL
@@ -406,8 +405,7 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
       <Meta product="pkgdep" colloquialVersion="1.0.0" revision="1.fc28" arch="x86_64" summary="Example dependency package"/>
       <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
         <File size="8" name="testfile" location="/usr/share/testdirdep" sha256:hash="343ea34c19f0f08e01f7bec22d6d9d81566e9851687410c651d5dcd7d1d4e34d" key="true"/>
-        <Resource type="rpm" rpm="pkgdep-1.0.0-1.fc28.x86_64"/>
-        <Resource type="rpm-signature" key-id="19d5c7dd"/>
+        <Resource type="rpm" rpm="pkgdep-1.0.0-1.fc28.x86_64" signature-key-id="19d5c7dd"/>
       </Payload>
       <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
         <SignedInfo>
@@ -419,20 +417,20 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
               <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
             </Transforms>
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-            <DigestValue>ogM1eT6OTVCHAmXv5DlmsaPM63uXWc5hOHE1F/VwPbk=</DigestValue>
+            <DigestValue>R3ZkDR6FUW7kboaZWnYrlns1Ev3yyWtXYrLrBVv8Q5o=</DigestValue>
           </Reference>
         </SignedInfo>
-        <SignatureValue>XyBPUnILECCgDGyG9WCP/uR3UABOEIHoynVg2l25Xb+F+W9brUx8kyV1gD6DM9Sl
-/gt0/o4qgbXq8JqgveixPOfgYYR05R8NTmzkaqboDJsb07nha2au7sthdIfDlYOI
-5tLO/pXLg0sY5WvuNKp0Aia2XCNAM99ocX9fyuvuQvsIk0mlReouiBgsuMOAQjaa
-f+t0UZt9j4baYk+AF79bNpvRvTlFuEotzLAOUa9PoDXjdwmtr/xjAH/7lM/ozrUT
-0JwodfKAu4YZvJ940VhCzNk/GGHhO/nGJIMZkTnj8nVo3nYV9wXBbZe00VOMzBeR
-LbJ0ONk5bgzumz1jAMW8uDtW4MBLLM7uxuTpWLYA2UO7BLvaL7OZ6m8NypgNPO1T
-MjHqWkcZ89uCmuc6Dv8htRrFyig3ADqK0VIKSOAX1ny17lrfF/NUYHPBM1VXGquu
-+Audg8cKHd5XjuTJzMBNMIeOVkHycnGqJYyo4HLBuVSrAerbJpl9e71fWaiktSum
-Ln9sS8CfuJtZCizXAku4ovkFgtcCyJkyGdtZk/MTqA42BbskisOu9uqg7CHhGtc+
-8rnyH7ZlFbfZJD2WTE2KVzQce+3LPtsrsQFIHoG+GsrjTzGkwdiY1J4wIZQHd4Vy
-lhEAmTZLBaibv0JpHo1JR11UQLG0jjMZQGZlN9AmaQg=</SignatureValue>
+        <SignatureValue>MyJXKCaUQHj7Ij6+r/9NUnxavGicecfxuMMDM/kB1FTEn/Dz0DpJJVxW6Qew3qgU
+Z9n/iGSie57LQWtp9Lh8JghGYW2TzOKoA9gWVFBLHKYALoqryP52PaiOeq/eNr88
+BkGC/+Ey3vWJ3t7uDVVMVXlNHlhUs+CG0HEHIbO+ZyQcYgnsZK9agVKHq1a29Wih
+GucmyQkfW6RIJ6qALtUTZlscMb9mCqkGaKI+bHBp8Hg4lzO6AyT/PUXmQ5+h9wZ1
+cht3+7VGmt2yrlp6ee0iZ/klLLYlQcHdXREyn0gZZKsCFT2AXF/ujvxoz47GVD0S
+GVOk32u4R7qLZxD5RivyFDvuRrr3MshQZBJwYJkU/yQ+0FREABrzRRk+eUectimH
+dwa2mdr3LtRhOKmZ0XADxK6ClFvpBH97Ow5/DowmOuDoIUxK+u/RWGO6Cjvc4Z6P
+wj76a1ZvdGCPiieTm91Fj7yf4JsI40TPf/CZ7MmT598QabowIzlT0CsOGP1nsfjb
+ZMyHKOdyKX2k88IbSirB2uf/9563LbGCD1UUE4iiAZ2CJqVh1BSQrB/860xGwBZS
+pCb+8mGojfz0b/47hVV0WEXMJhQzsLLC9YfqCM2DRT2/A/Rd/Nciyqnt4XGtIWMb
+l+y+BrWf02Q99ZmdMZ31OgpecS8Ad0NwItCqKJtwAeM=</SignatureValue>
         <KeyInfo>
           <X509Data>
             <X509Certificate>MIIFCzCCAvOgAwIBAgIUKccDx8ZvI/Xhsk8a3l0Z31S31LQwDQYJKoZIhvcNAQEL
