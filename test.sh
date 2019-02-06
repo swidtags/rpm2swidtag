@@ -27,9 +27,9 @@ fi
 if ! [ -f tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm ] || ! [ -f tmp/pkg2-0.0.1-1.git0f5628a6.fc28.src.rpm ] ; then
 	rpmbuild -ba -D 'dist .fc28' -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" -D "_rpmfilename %{_build_name_fmt}" tests/pkg2/pkg2.spec
 fi
-if ! [ -f tmp/x86_64/pkgdep-1.0.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkgdep-1.0.0-1.fc28.src.rpm ] ; then
+if ! [ -f tmp/noarch/pkgdep-1.0.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkgdep-1.0.0-1.fc28.src.rpm ] ; then
 	rpmbuild -ba -D 'dist .fc28' -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" -D "_rpmfilename %{_build_name_fmt}" tests/pkgdep/pkgdep.spec
-	rpmsign --addsign --key-id=19D5C7DD -D '_gpg_path tmp/gnupg' ./tmp/x86_64/pkgdep-1.0.0-1.fc28.x86_64.rpm
+	rpmsign --addsign --key-id=19D5C7DD -D '_gpg_path tmp/gnupg' ./tmp/noarch/pkgdep-1.0.0-1.fc28.noarch.rpm
 fi
 
 function normalize() {
@@ -440,7 +440,9 @@ done
 
 
 # Test dnf plugin
-createrepo_c tmp/x86_64
+mkdir -p tmp/repo
+cp -p tmp/x86_64/* tmp/noarch/* tmp/repo
+createrepo_c tmp/repo
 rm -rf tmp/dnfroot
 FAKEROOT=
 FAKECHROOT=
@@ -453,12 +455,12 @@ rpm --dbpath $(pwd)/tmp/dnfroot/var/lib/rpm --import $(pwd)/tmp/key-19D5C7DD.gpg
 $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag regen
 test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 test -d tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
-$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 install -y pkg1-1.2.0
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/repo install -y pkg1-1.2.0
 echo 'f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 tmp/dnfroot/usr/share/testdir/testfile' | sha256sum -c
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
 test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
-test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64.swidtag
-test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 
 $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag purge
 ! test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
@@ -467,9 +469,9 @@ $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --con
 test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
 
-bin/rpm2swidtag --repo=tmp/x86_64 --config=tests/rpm2swidtag.conf --authoritative --tag-creator "example.test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt
-zcat tmp/x86_64/repodata/*-swidtags.xml.gz > tmp/x86_64/swidtags.xml
-diff tests/repodata-swidtags.xml tmp/x86_64/swidtags.xml
+bin/rpm2swidtag --repo=tmp/repo --config=tests/rpm2swidtag.conf --authoritative --tag-creator "example.test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt
+zcat tmp/repo/repodata/*-swidtags.xml.gz > tmp/repo/swidtags.xml
+diff tests/repodata-swidtags.xml tmp/repo/swidtags.xml
 
 # The add_metadata_type_to_download and get_metadata_path
 # are only available on dnf 4.0.9+. Pulling in swidtags from repository
@@ -478,7 +480,7 @@ if rpm -q dnf | grep '^dnf-4' ; then
 
 $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf clean expire-cache
 
-$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 upgrade -y
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/repo upgrade -y
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'
 ! test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
 ! test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64.swidtag
@@ -491,11 +493,11 @@ for i in tmp/dnfroot/usr/lib/swidtag/example.test/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt - < $i
 done
 
-$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf install -y tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf install -y tmp/repo/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
 ls -l tmp/dnfroot/usr/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^2$'
 
-$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/x86_64 reinstall -y pkg2
+$FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/repo reinstall -y pkg2
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^2$'
 ls -l tmp/dnfroot/usr/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^3$'
 
@@ -506,8 +508,8 @@ ls -l tmp/dnfroot/usr/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | gre
 ! test -f tmp/dnfroot/usr/lib/swidtag/example.test/test.example.pkg1-1.3.0-1.fc28.x86_64.swidtag
 ! test -f tmp/dnfroot/usr/lib/swidtag/example.test/test.example.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 test -f tmp/dnfroot/usr/lib/swidtag/example.test/test.example.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
-test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64.swidtag
-test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
+test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 
 fi
 

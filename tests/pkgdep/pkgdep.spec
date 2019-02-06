@@ -5,6 +5,7 @@ Release: 1%{?dist}
 License: ASL 2.0
 Group: System Environment/Daemons
 URL: https://www.example.com/
+BuildArch: noarch
 
 BuildRequires: bash
 
