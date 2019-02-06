@@ -441,7 +441,7 @@ done
 
 # Test dnf plugin
 mkdir -p tmp/repo
-cp -p tmp/x86_64/* tmp/noarch/* tmp/repo
+cp -p tmp/x86_64/* tmp/noarch/* ./tests/hello-rpm/*.rpm tmp/repo
 createrepo_c tmp/repo
 rm -rf tmp/dnfroot
 FAKEROOT=

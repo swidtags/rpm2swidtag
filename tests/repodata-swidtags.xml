@@ -1,5 +1,205 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <metadata xmlns="http://adelton.fedorapeople.org/rpm2swidtag/metadata-fixme">
+  <package href="hello-1.0-1.i386.rpm">
+    <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="hello" tagId="test.example.hello-1.0-1.i386" version="1.0-1.i386" versionScheme="rpm">
+      <Entity name="Example Org." regid="example.test" role="tagCreator"/>
+      <Entity name="Other Org." regid="other.test" role="softwareCreator"/>
+      <Meta product="hello" colloquialVersion="1.0" revision="1" arch="i386" summary="hello -- hello, world rpm"/>
+      <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
+        <File xmlns:md5="http://www.w3.org/2001/04/xmldsig-more#md5" size="2880" name="hello" location="/usr/local/bin" md5:hash="85415ebf2d836d21c1fffd50fed2f202" key="true"/>
+        <Directory xmlns:md5="http://www.w3.org/2001/04/xmldsig-more#md5" name="hello-1.0" location="/usr/share/doc">
+          <File size="36" name="FAQ" md5:hash="33cccc1f055d73acaceed7d8204e99c7"/>
+        </Directory>
+        <Resource type="rpm" rpm="hello-1.0-1.i386"/>
+      </Payload>
+      <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+          <CanonicalizationMethod Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+          <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+          <Reference>
+            <Transforms>
+              <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+              <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+            </Transforms>
+            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <DigestValue>HidRcGPdSU9WGZbw7nMmuRgx9UIeLB/eP9oBachxGFk=</DigestValue>
+          </Reference>
+        </SignedInfo>
+        <SignatureValue>FYPzN385KVO1rkbJy0JlfByJlO1Nz8AB2EpjcBaEjsY9GMb4anckczouDkifnWt3
+yWx38BVaTFYhgeJPu4/Tk8YO1ly1wS6i5xXMZyzVBvZyk4eUEiUbvPBhhYGua54Q
+VloC+TSMGaamj32d3YZwEZxoOjbehIDXrzvf2fA5dDcXemYB6Vje5y8xcIBw5x/r
+jxu4nNkURYKiTjmo8FkNxlRQTMpJ99HR8ae8NQUMSdWXRt980X+iPnJZwXoaSZMD
+HQmDSywxz0NA/Vxm62Ostxq0c70kVRDISiaUPBBBBHPsUZ5cP/kxfXYdylQGVIqW
+bXNoziBn1bOhIW53V8bbNyE+pYBGnNvf/l+QIUki6pDuvW0dB8pTRotX+d7zkwDN
+IqcRyoZQ6OWY8tIBXaD2S95GTqOJPS/eYDXsKzySa8tYmTchKt0f4bvlASma7HRa
+8m08l2dXMlxmSGx4zdNDgiFoKg+RvpaCn/lfFULk2w4XJYQrk0riNHJfZziIamDR
+TD+Z1gmVQoByEAddkijurv1/Kh1MP6II6DHpNM6ucYKPXfb52ISwiGbeOBjpHncr
+xH10iqSK/tud9WBRX3zQ0fd8Obw7NPIboz70URtV0hBRssy9BPyHfw97k70HOza8
+DtzrpsVEXtIn01vWelzmR5QgvWmlSUk3v066WY8ZHdI=</SignatureValue>
+        <KeyInfo>
+          <X509Data>
+            <X509Certificate>MIIFCzCCAvOgAwIBAgIUKccDx8ZvI/Xhsk8a3l0Z31S31LQwDQYJKoZIhvcNAQEL
+BQAwFTETMBEGA1UEAwwKVGVzdGluZyBDQTAeFw0xOTAxMTUxODI3MjNaFw0yOTAx
+MTIxODI3MjNaMBUxEzARBgNVBAMMClRlc3RpbmcgQ0EwggIiMA0GCSqGSIb3DQEB
+AQUAA4ICDwAwggIKAoICAQC+09zHF69I6H8Y8uzH9wwZogHHSVXPgODgmIyf7KWW
+c38oRxa4HFzMCfHlJlmpgKURR0pFZ472PeCyMfcMgNmCX+uD2k7etOM2wvevV+g0
+kSdQ7CDH39PdsUUAassdU1eNuY8cM+B4N/rpnhnvfTKjF8a4a0Xl3+3CGG4CafhW
+xkwY6Gh0zct/iqn0Oj+rdumYjx+hGeCQop6lINAhLa0KRco6gCi7dfzFlNAIduBa
+WpbtJXP/dRRnXuPMKa0eFU86Q85JKdRjAk+IAZH3fhLwjqURX+VGzCrEr0KaFzrV
+eMr8bXe2NQpNegMB8XeEh25T4L28yN+65vXwkbVq40n+v0udGrqQMfT/CyCVqRMI
+D66+gavBepNZUWoHIs4GVmFqyMBedPkrJIK4p95gy3PGFpRn/ymPgCy1a273vQfY
+zxUMMxxctUUIqDzx6MLqhiVJUIPLrzGMI/1SMTIg73f3QsBZEM2Yqr+7VQu/7l18
+oTi4z1Xps6smFy6MABU1TrhWu0/zEenfjIEKUour90V9kJm2xPoYWqL7QybFbPMI
+XtPQ/GBYgnn7fWOocdt5vpPT09MuTBu9n0BjBmj4E3aFHGDQbcns+JNBnvCuJfrk
+Mmm9YMrv8qUM2UtUj+Xgg6cG9kkT2hIZwH8JPSxyOFQUeXR5yeDBb8Fc7O1HwODZ
+GQIDAQABo1MwUTAdBgNVHQ4EFgQUWSpW34iJLuD6NwSQ1Z6MZEdSgsEwHwYDVR0j
+BBgwFoAUWSpW34iJLuD6NwSQ1Z6MZEdSgsEwDwYDVR0TAQH/BAUwAwEB/zANBgkq
+hkiG9w0BAQsFAAOCAgEAaikVcfhynTyKSdNwsB4mq3iuvAyyRdTgA4m+vMkYGZvv
+22nC3yizh4V7X0yW4UK5Z2cloitW5PMd+wj075pKuMs7wOBO2DGbmbe+Mog199AG
+O6jH2OC+4d8mYmPUchFXL6laZPOHx1ZQyJLWcOfUGQbHO2cqeyRkjaFU7kfuFz+m
+L8tSiZsrRbGtaoI9QirZUo7kjQrnqTw76gfRYl15Tpx8mmfsiVyTB6Dhv9dG1Ky3
+xmboP4YhFT08eK14qcdOM3QbdPMfeCUjSuQUGYXsZoNFFtTDyNfRpwpFwTmJZa3/
+AuyK10VhqB79dCvAfgNzJMH3/UQTwTB+zb1wXwpemr34C1IrZTnqjy/dfvSJGoSu
+rS7W1+tKRzdFVu9YgFs97WA/FpakZ/Yz/dnYkql4adm6G2OnOLusBXj2P6uDuY71
+oqb4ZPBg6duAucacpNkV1bzKU4/f++VOhJdYvHWsM/wtZa7bdFJUbJNFflPzS5ni
+Zd3a9Nianf0aHOD5QA4iSGRohihzKdSDpuqp6qTpwlUBa0Wfw9zaze/tTFMRNmvK
+GpbB55bwkw4qAN+g5O+P0kgUB1opeh8rw2liA+fZNleng5iGynqtoLILA6QpBOhJ
+6gRxaN3z9r/kZiyVEubf1XagRhcGW4GRqKudLEgmeUoOgqah38kqeZptWoolqhI=</X509Certificate>
+            <X509Certificate>MIIFTjCCAzagAwIBAgIUHxpQuqe2A6XpYLlF4rFM+jz8nNcwDQYJKoZIhvcNAQEL
+BQAwFTETMBEGA1UEAwwKVGVzdGluZyBDQTAeFw0xOTAxMTUxODI3MjRaFw0yOTAx
+MTIxODI3MjRaMDMxMTAvBgNVBAMMKFRlc3RpbmcgY2VydGlmaWNhdGUgZm9yIFNX
+SUQgdGFnIHNpZ25pbmcwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDw
+UxyqjIxhl68IGJ/WSPMieXb/uw9xqhCoOTNuqfRN8RHoVJaS44YymvhS5PhlSk5x
+HH6poHNPXrHyMjrJDG3vGi2kn0sTgqC4NLHR7Bby1oeHixdTunpgX+GIqnUtVmSI
+mMflnvQKeMf4ihLrlX0wEAYufNKAjGT/retnyV4nqVgj125WX1bkY/SkROW21YeB
+u3KkPI8VjNWtd3sT4Iv1ic3Xb1diU3pZ+SCAvC+evVRkBhB8rxA96d2qypEYaKn+
+zE5wN1r88msRkl0KjWFvBk8zpwNVVBXfKan0IPqNRZ2oK8l/0+QJpZJFpzXR0sR5
+boMJBAj4/CPEQ6bnx15sAJ331lcBhCaO4c1fhT3VNECQZwpebN+UP+uvzFeSA6Ak
+JS8lPfOMWdknFDe7+e2gjTG2aR0KHw11HvZU+5dUUMZiKCyWcFq9OHGk5yfcAPfs
+Wj8vMKQyTWnnkkaKYW0pXbloaNWKkvKDUVhDf3ahhVMXspqxp5zwssGnnq0dlfwC
+hKegSHBrqfvEJZ8riTzV4jKGPVGrN2kr/XtacjXbVbQ3VAp/29mkGdhTr8gmQung
+CP0wtOejLyw6xW1WbzRrn/lY28ZQxmrhd3T2/sho2Qp/BODV029DQQv32k/Cvo02
+8g4xNru7OeTeuELQs3fiLD3BQlbZdpcDHXZ7WMlE3QIDAQABo3gwdjAdBgNVHQ4E
+FgQU1tIRaLln/hYpnsiwCED1IY0Ok/MwHwYDVR0jBBgwFoAUWSpW34iJLuD6NwSQ
+1Z6MZEdSgsEwDAYDVR0TAQH/BAIwADAOBgNVHQ8BAf8EBAMCB4AwFgYDVR0lAQH/
+BAwwCgYIKwYBBQUHAwMwDQYJKoZIhvcNAQELBQADggIBAH/9a3KPR1d44e5sX1mC
+wP5HL45kqzVye7v2UDBFg1N63Icl7ylwSBwSiorpq4XnJ/F7qADgTzxjTOeXDBOG
+AtxntoA0wi/6GtG2vnYKIvJQwfBQr6F3iV/FvbTJPhxR+RnB2GW3LXm9/fW7O6lh
+JPaVJ745ys0TMmAPF7+vlfEorKZWHT6j5FJH+Nxu/EJXsaNfIg92CRvH+E8XnhzU
+XEGlo6dmt/xmMV+14lrdfxe4sOA58lnNpt01oNXTju1BL4sKWVyPUud9AeckYTrr
+HptC7LsNw/MIV9GrPBEzy4eanhtoaAmOdHxwUti6n33oFi/yUqVYP1V1fjScpusW
+9eE/ZaXfYrgigXYOhpdjDhB3XjwkqAugCPXhzBlY9GiPv6/ZTxDGCzJghMZ64agW
+2IuvhpWKfqoFhml+N4vlRpNNOwPRRywTjCds8hg1V4vMmkpJsw1NaF9vH8EMBDHT
+Q9cGZ3mwatd8F1h9RrHHdgWnKGOr7U6Xel9UvI8YGd3J3sO/oMbnmcFO/XEiI0PW
+8MnOAeiUV54+IiSG/KRATF6eAiv3lGHSQyid8MfdE/U+UuRwM0lNHbESOXTtfF+r
+U7ldULt4WQlGM9oGvkKfzX3tku5TJJwo1RaD9Hnzcn7yZ8DemdUBRWmyfLgfj+nl
+GTl3enhnP/KxiO4l1J239liF</X509Certificate>
+          </X509Data>
+        </KeyInfo>
+      </Signature>
+    </SoftwareIdentity>
+  </package>
+  <package href="hello-2.0-1.x86_64-signed.rpm">
+    <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="hello" tagId="test.example.hello-2.0-1.x86_64" version="2.0-1.x86_64" versionScheme="rpm">
+      <Entity name="Example Org." regid="example.test" role="tagCreator"/>
+      <Entity name="Other Org." regid="other.test" role="softwareCreator"/>
+      <Meta product="hello" colloquialVersion="2.0" revision="1" arch="x86_64" summary="hello -- hello, world rpm"/>
+      <Payload n8060:pathSeparator="/" n8060:envVarPrefix="$" n8060:envVarSuffix="">
+        <File size="7120" name="hello" location="/usr/bin" sha256:hash="c89fa87aeb1143969c0b6be9334b21d932f77f74e8f60120b5de316406369cf0" key="true"/>
+        <Directory name="hello-2.0" location="/usr/share/doc">
+          <File size="48" name="COPYING" sha256:hash="fac3b28492ecdc16da172a6f1a432ceed356ca4d9248157b2a962b395e37b3b0"/>
+          <File size="36" name="FAQ" sha256:hash="678b87e217a415f05e43460e2c7b668245b412e2b4f18a75aa7399d9774ed0b4"/>
+          <File size="39" name="README" sha256:hash="d63fdc6c986106f57230f217d36b2395d83ecf491d2b7187af714dc8db9629e9"/>
+        </Directory>
+        <Resource type="rpm" rpm="hello-2.0-1.x86_64" signature-key-id="1964c5fc"/>
+      </Payload>
+      <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+          <CanonicalizationMethod Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+          <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+          <Reference>
+            <Transforms>
+              <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+              <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+            </Transforms>
+            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <DigestValue>W6C7Ko6ClBdNY8f3oeWQTd+0WgS6exQ01CvHH7RdwmE=</DigestValue>
+          </Reference>
+        </SignedInfo>
+        <SignatureValue>Xfu6GNpkIIsscOicw2oZgep8mOXpSH7XzXJsV+gPzXFZRWQLA63X3lm3+GWjHjjg
+LhTGy1szi8WgJSWek1sxhGDBHKx4N6dXhIQu4MTalqBdb5GJg5e1TixDSc1DP8xd
+gQwPjEk0mqnagHIGdynRIJEWa/8aoBjSxz/Sb6/OxTqOhy/bgeMn9rSq6fP7N85N
+0T6XplmqNBkxTjRvC2EHTKm3JH6FQ8DUpA+IkigEUdXQwmjPXqkeMZftwusXLRue
+4/gaKmsEbrLb7ra8Q2kIzV3V7mUtha8NU0D8Y2n0J9ZvpikLHU7PcEaeUcsIZKlJ
+gNyaWWvIqtwDku6+YdVRV86LrBk5cym1S7dvJkEK3jT6rORE+cWPOdlACmu7R+Ku
+qXTDLAVQgsP2EJ3yndcOoWE4taWZy5c0G55e6xytagPmQwsgL6HFry8SZkFq3VGb
+Vr/fd6uxlvroJ9BNJeQaPC8ZB/nMlerjlBC1M8SfBvrtlXNQjKKJNWXTpQUEJN7J
+8LbM/NnJ7aNpvNK3Xs2R3qMY7fku7GJDhEbb4D3kq84DixYreYxaqtObhXWHsRti
+rpmvWCFkEeopob3Xjo7mY+cUtjcbHu3k1J93d1CGXarYt62jRGDfxpTKdKpXkHyY
+TuQz0F20LCFa5J5seLA0J8sVgUdhRftvY1MzUSvroBc=</SignatureValue>
+        <KeyInfo>
+          <X509Data>
+            <X509Certificate>MIIFCzCCAvOgAwIBAgIUKccDx8ZvI/Xhsk8a3l0Z31S31LQwDQYJKoZIhvcNAQEL
+BQAwFTETMBEGA1UEAwwKVGVzdGluZyBDQTAeFw0xOTAxMTUxODI3MjNaFw0yOTAx
+MTIxODI3MjNaMBUxEzARBgNVBAMMClRlc3RpbmcgQ0EwggIiMA0GCSqGSIb3DQEB
+AQUAA4ICDwAwggIKAoICAQC+09zHF69I6H8Y8uzH9wwZogHHSVXPgODgmIyf7KWW
+c38oRxa4HFzMCfHlJlmpgKURR0pFZ472PeCyMfcMgNmCX+uD2k7etOM2wvevV+g0
+kSdQ7CDH39PdsUUAassdU1eNuY8cM+B4N/rpnhnvfTKjF8a4a0Xl3+3CGG4CafhW
+xkwY6Gh0zct/iqn0Oj+rdumYjx+hGeCQop6lINAhLa0KRco6gCi7dfzFlNAIduBa
+WpbtJXP/dRRnXuPMKa0eFU86Q85JKdRjAk+IAZH3fhLwjqURX+VGzCrEr0KaFzrV
+eMr8bXe2NQpNegMB8XeEh25T4L28yN+65vXwkbVq40n+v0udGrqQMfT/CyCVqRMI
+D66+gavBepNZUWoHIs4GVmFqyMBedPkrJIK4p95gy3PGFpRn/ymPgCy1a273vQfY
+zxUMMxxctUUIqDzx6MLqhiVJUIPLrzGMI/1SMTIg73f3QsBZEM2Yqr+7VQu/7l18
+oTi4z1Xps6smFy6MABU1TrhWu0/zEenfjIEKUour90V9kJm2xPoYWqL7QybFbPMI
+XtPQ/GBYgnn7fWOocdt5vpPT09MuTBu9n0BjBmj4E3aFHGDQbcns+JNBnvCuJfrk
+Mmm9YMrv8qUM2UtUj+Xgg6cG9kkT2hIZwH8JPSxyOFQUeXR5yeDBb8Fc7O1HwODZ
+GQIDAQABo1MwUTAdBgNVHQ4EFgQUWSpW34iJLuD6NwSQ1Z6MZEdSgsEwHwYDVR0j
+BBgwFoAUWSpW34iJLuD6NwSQ1Z6MZEdSgsEwDwYDVR0TAQH/BAUwAwEB/zANBgkq
+hkiG9w0BAQsFAAOCAgEAaikVcfhynTyKSdNwsB4mq3iuvAyyRdTgA4m+vMkYGZvv
+22nC3yizh4V7X0yW4UK5Z2cloitW5PMd+wj075pKuMs7wOBO2DGbmbe+Mog199AG
+O6jH2OC+4d8mYmPUchFXL6laZPOHx1ZQyJLWcOfUGQbHO2cqeyRkjaFU7kfuFz+m
+L8tSiZsrRbGtaoI9QirZUo7kjQrnqTw76gfRYl15Tpx8mmfsiVyTB6Dhv9dG1Ky3
+xmboP4YhFT08eK14qcdOM3QbdPMfeCUjSuQUGYXsZoNFFtTDyNfRpwpFwTmJZa3/
+AuyK10VhqB79dCvAfgNzJMH3/UQTwTB+zb1wXwpemr34C1IrZTnqjy/dfvSJGoSu
+rS7W1+tKRzdFVu9YgFs97WA/FpakZ/Yz/dnYkql4adm6G2OnOLusBXj2P6uDuY71
+oqb4ZPBg6duAucacpNkV1bzKU4/f++VOhJdYvHWsM/wtZa7bdFJUbJNFflPzS5ni
+Zd3a9Nianf0aHOD5QA4iSGRohihzKdSDpuqp6qTpwlUBa0Wfw9zaze/tTFMRNmvK
+GpbB55bwkw4qAN+g5O+P0kgUB1opeh8rw2liA+fZNleng5iGynqtoLILA6QpBOhJ
+6gRxaN3z9r/kZiyVEubf1XagRhcGW4GRqKudLEgmeUoOgqah38kqeZptWoolqhI=</X509Certificate>
+            <X509Certificate>MIIFTjCCAzagAwIBAgIUHxpQuqe2A6XpYLlF4rFM+jz8nNcwDQYJKoZIhvcNAQEL
+BQAwFTETMBEGA1UEAwwKVGVzdGluZyBDQTAeFw0xOTAxMTUxODI3MjRaFw0yOTAx
+MTIxODI3MjRaMDMxMTAvBgNVBAMMKFRlc3RpbmcgY2VydGlmaWNhdGUgZm9yIFNX
+SUQgdGFnIHNpZ25pbmcwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDw
+UxyqjIxhl68IGJ/WSPMieXb/uw9xqhCoOTNuqfRN8RHoVJaS44YymvhS5PhlSk5x
+HH6poHNPXrHyMjrJDG3vGi2kn0sTgqC4NLHR7Bby1oeHixdTunpgX+GIqnUtVmSI
+mMflnvQKeMf4ihLrlX0wEAYufNKAjGT/retnyV4nqVgj125WX1bkY/SkROW21YeB
+u3KkPI8VjNWtd3sT4Iv1ic3Xb1diU3pZ+SCAvC+evVRkBhB8rxA96d2qypEYaKn+
+zE5wN1r88msRkl0KjWFvBk8zpwNVVBXfKan0IPqNRZ2oK8l/0+QJpZJFpzXR0sR5
+boMJBAj4/CPEQ6bnx15sAJ331lcBhCaO4c1fhT3VNECQZwpebN+UP+uvzFeSA6Ak
+JS8lPfOMWdknFDe7+e2gjTG2aR0KHw11HvZU+5dUUMZiKCyWcFq9OHGk5yfcAPfs
+Wj8vMKQyTWnnkkaKYW0pXbloaNWKkvKDUVhDf3ahhVMXspqxp5zwssGnnq0dlfwC
+hKegSHBrqfvEJZ8riTzV4jKGPVGrN2kr/XtacjXbVbQ3VAp/29mkGdhTr8gmQung
+CP0wtOejLyw6xW1WbzRrn/lY28ZQxmrhd3T2/sho2Qp/BODV029DQQv32k/Cvo02
+8g4xNru7OeTeuELQs3fiLD3BQlbZdpcDHXZ7WMlE3QIDAQABo3gwdjAdBgNVHQ4E
+FgQU1tIRaLln/hYpnsiwCED1IY0Ok/MwHwYDVR0jBBgwFoAUWSpW34iJLuD6NwSQ
+1Z6MZEdSgsEwDAYDVR0TAQH/BAIwADAOBgNVHQ8BAf8EBAMCB4AwFgYDVR0lAQH/
+BAwwCgYIKwYBBQUHAwMwDQYJKoZIhvcNAQELBQADggIBAH/9a3KPR1d44e5sX1mC
+wP5HL45kqzVye7v2UDBFg1N63Icl7ylwSBwSiorpq4XnJ/F7qADgTzxjTOeXDBOG
+AtxntoA0wi/6GtG2vnYKIvJQwfBQr6F3iV/FvbTJPhxR+RnB2GW3LXm9/fW7O6lh
+JPaVJ745ys0TMmAPF7+vlfEorKZWHT6j5FJH+Nxu/EJXsaNfIg92CRvH+E8XnhzU
+XEGlo6dmt/xmMV+14lrdfxe4sOA58lnNpt01oNXTju1BL4sKWVyPUud9AeckYTrr
+HptC7LsNw/MIV9GrPBEzy4eanhtoaAmOdHxwUti6n33oFi/yUqVYP1V1fjScpusW
+9eE/ZaXfYrgigXYOhpdjDhB3XjwkqAugCPXhzBlY9GiPv6/ZTxDGCzJghMZ64agW
+2IuvhpWKfqoFhml+N4vlRpNNOwPRRywTjCds8hg1V4vMmkpJsw1NaF9vH8EMBDHT
+Q9cGZ3mwatd8F1h9RrHHdgWnKGOr7U6Xel9UvI8YGd3J3sO/oMbnmcFO/XEiI0PW
+8MnOAeiUV54+IiSG/KRATF6eAiv3lGHSQyid8MfdE/U+UuRwM0lNHbESOXTtfF+r
+U7ldULt4WQlGM9oGvkKfzX3tku5TJJwo1RaD9Hnzcn7yZ8DemdUBRWmyfLgfj+nl
+GTl3enhnP/KxiO4l1J239liF</X509Certificate>
+          </X509Data>
+        </KeyInfo>
+      </Signature>
+    </SoftwareIdentity>
+  </package>
   <package href="pkg1-1.2.0-1.fc28.x86_64.rpm">
     <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="pkg1" tagId="test.example.pkg1-1.2.0-1.fc28.x86_64" version="1.2.0-1.fc28.x86_64" versionScheme="rpm">
       <Entity name="Example Org." regid="example.test" role="tagCreator"/>
