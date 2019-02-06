@@ -97,6 +97,12 @@ rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tmp/x86_64/pkg1-1.3.0-1.fc28
 rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
 rpm --dbpath $(pwd)/tmp/rpmdb -qa
 
+rm -rf tmp/gnupg
+cp -rp tests/gnupg tmp/gnupg
+gpg2 --homedir=tmp/gnupg --list-secret-keys
+gpg2 --homedir=tmp/gnupg --export --armor 19D5C7DD > tmp/key-19D5C7DD.gpg
+rpm --dbpath $(pwd)/tmp/rpmdb --import tmp/key-19D5C7DD.gpg
+
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf pkg1-1.3.0 | normalize > tmp/pkg-generated.swidtag
 cat tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/pkg1-1.3.0.swidtag.with-supplemental
 diff tmp/pkg1-1.3.0.swidtag.with-supplemental tmp/pkg-generated.swidtag
@@ -443,6 +449,7 @@ if [ "$UID" != 0 ] ; then
 	FAKECHROOT=fakechroot
 fi
 $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf list installed
+rpm --dbpath $(pwd)/tmp/dnfroot/var/lib/rpm --import $(pwd)/tmp/key-19D5C7DD.gpg
 $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf rpm2swidtag regen
 test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 test -d tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated

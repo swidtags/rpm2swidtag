@@ -205,6 +205,9 @@ def main():
 
 		found = False
 		for h in l:
+			if not h["arch"] and not rpm.is_source_package(h):
+				continue
+
 			found = True
 			try:
 				process_rpm_with_template(h, template, opts, config)

@@ -28,6 +28,7 @@ script:
 - docker exec rpm2swidtag make test
 - docker exec rpm2swidtag /usr/bin/rpm2swidtag bash
 - docker exec rpm2swidtag dnf rpm2swidtag regen
+- diff <( docker exec rpm2swidtag rpm -qa | grep -v gpg-pubkey | wc -l ) <( docker exec rpm2swidtag ls /var/lib/swidtag/rpm2swidtag-generated | grep -v component-of | wc -l )
 - docker exec rpm2swidtag swidq -n bash | grep .
 - if docker exec rpm2swidtag swidq -n zsh | grep . ; then exit 1 ; fi
 - docker exec rpm2swidtag dnf install -y zsh
