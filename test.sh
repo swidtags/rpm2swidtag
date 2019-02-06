@@ -16,22 +16,6 @@ fi
 
 mkdir -p tmp
 
-if ! [ -f tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkg1-1.2.0-1.fc28.src.rpm ] ; then
-	rpmbuild -ba -D 'dist .fc28' -D "_sourcedir $(pwd)/tests/pkg1" -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" -D "_rpmfilename %{_build_name_fmt}" tests/pkg1/pkg1-1.2.0.spec
-fi
-if ! [ -f tmp/x86_64/pkg1-1.3.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkg1-1.3.0-1.fc28.src.rpm ] ; then
-	rpmbuild -ba -D 'dist .fc28' -D "_sourcedir $(pwd)/tests/pkg1" -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" -D "_rpmfilename %{_build_name_fmt}" tests/pkg1/pkg1-1.3.0.spec
-	cp -rp tests/gnupg tmp/gnupg
-	rpmsign --addsign --key-id=19D5C7DD -D '_gpg_path tmp/gnupg' ./tmp/x86_64/pkg1-1.3.0-1.fc28.x86_64.rpm
-fi
-if ! [ -f tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm ] || ! [ -f tmp/pkg2-0.0.1-1.git0f5628a6.fc28.src.rpm ] ; then
-	rpmbuild -ba -D 'dist .fc28' -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" -D "_rpmfilename %{_build_name_fmt}" tests/pkg2/pkg2.spec
-fi
-if ! [ -f tmp/noarch/pkgdep-1.0.0-1.fc28.x86_64.rpm ] || ! [ -f tmp/pkgdep-1.0.0-1.fc28.src.rpm ] ; then
-	rpmbuild -ba -D 'dist .fc28' -D "_srcrpmdir $(pwd)/tmp" -D "_rpmdir $(pwd)/tmp" -D "_rpmfilename %{_build_name_fmt}" tests/pkgdep/pkgdep.spec
-	rpmsign --addsign --key-id=19D5C7DD -D '_gpg_path tmp/gnupg' ./tmp/noarch/pkgdep-1.0.0-1.fc28.noarch.rpm
-fi
-
 function normalize() {
 	sed 's/<Evidence date="[^"]*Z" deviceId="[^"]*"/<Evidence date="2018-01-01T12:13:14Z" deviceId="machine.example.test"/'
 }
@@ -43,31 +27,31 @@ export PYTHONPATH=lib
 
 # Testing rpm2swidtag
 # For testing, let's default the data location to the current directory
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tmp/pkg-generated.swidtag
 
-bin/rpm2swidtag --config=$(pwd)/tests/rpm2swidtag.conf --authoritative -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm > tmp/pkg-generated.swidtag
+bin/rpm2swidtag --config=$(pwd)/tests/rpm2swidtag.conf --authoritative -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm > tmp/pkg-generated.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/pkg-generated.swidtag
 
-bin/rpm2swidtag --config=./tests/rpm2swidtag.conf --evidence-deviceid specific.machine.example.test -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | sed 's/<Evidence date="[^"]*Z"/<Evidence date="2018-01-01T12:13:14Z"/' > tmp/pkg-generated.swidtag
+bin/rpm2swidtag --config=./tests/rpm2swidtag.conf --evidence-deviceid specific.machine.example.test -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | sed 's/<Evidence date="[^"]*Z"/<Evidence date="2018-01-01T12:13:14Z"/' > tmp/pkg-generated.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.deviceid.swidtag tmp/pkg-generated.swidtag
 
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=example.test tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=example.test tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid tmp/pkg-generated-regid.swidtag
 
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=example.test tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=example.test tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid tmp/pkg-generated-regid.swidtag
 
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator="example.test Example Corp." tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator="example.test Example Corp." tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid-name tmp/pkg-generated-regid.swidtag
 
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=./tests/swiddata1/sup/p1.swidtag tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --tag-creator=./tests/swiddata1/sup/p1.swidtag tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid-name-ref tmp/pkg-generated-regid.swidtag
 
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --software-creator=./tests/swiddata1/sup/p1.swidtag tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p --software-creator=./tests/swiddata1/sup/p1.swidtag tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-regid-name-ref tmp/pkg-generated-regid.swidtag
 
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/pkg1-1.2.0-1.fc28.src.rpm | normalize > tmp/pkg-generated-src.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/rpms/src/pkg1-1.2.0-1.fc28.src.rpm | normalize > tmp/pkg-generated-src.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.src.swidtag tmp/pkg-generated-src.swidtag
 
 bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/hello-rpm/hello-1.0-1.i386.rpm | normalize > tmp/pkg-generated-src.swidtag
@@ -76,25 +60,25 @@ diff tests/hello-rpm/hello-1.0-1.i386.swidtag tmp/pkg-generated-src.swidtag
 bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/hello-rpm/hello-2.0-1.x86_64-signed.rpm | normalize > tmp/pkg-generated-src.swidtag
 diff tests/hello-rpm/hello-2.0-1.x86_64-signed.swidtag tmp/pkg-generated-src.swidtag
 
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm --software-creator ./tests/swiddata1/a.test/distro.swidtag | normalize > tmp/pkg-generated.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm --software-creator ./tests/swiddata1/a.test/distro.swidtag | normalize > tmp/pkg-generated.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-creator-from tmp/pkg-generated.swidtag
 
-RPM2SWIDTAG_TEMPLATE=tests/swidtag-template-minimal.xml bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-minimal.swidtag
+RPM2SWIDTAG_TEMPLATE=tests/swidtag-template-minimal.xml bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-minimal.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.minimal tmp/pkg-from-minimal.swidtag
 
-RPM2SWIDTAG_TEMPLATE=tests/swidtag-template-extra.xml bin/rpm2swidtag --tag-creator="z.test Example Z" --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-extra.swidtag
+RPM2SWIDTAG_TEMPLATE=tests/swidtag-template-extra.xml bin/rpm2swidtag --tag-creator="z.test Example Z" --config=tests/rpm2swidtag.conf -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-extra.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.extra tmp/pkg-from-extra.swidtag
 
-RPM2SWIDTAG_XSLT=tests/xslt/swidtag.xslt bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-custom-tagid.swidtag
+RPM2SWIDTAG_XSLT=tests/xslt/swidtag.xslt bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-custom-tagid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.custom-tagid tmp/pkg-custom-tagid.swidtag
 
-bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm | normalize > tmp/pkg-generated-epoch.swidtag
+bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/rpms/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm | normalize > tmp/pkg-generated-epoch.swidtag
 diff tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag tmp/pkg-generated-epoch.swidtag
 
 rm -rf tmp/rpmdb
-rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm
-rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tmp/x86_64/pkg1-1.3.0-1.fc28.x86_64.rpm
-rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tmp/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
+rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm
+rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tests/rpms/x86_64/pkg1-1.3.0-1.fc28.x86_64.rpm
+rpm --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tests/rpms/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
 rpm --dbpath $(pwd)/tmp/rpmdb -qa
 
 rm -rf tmp/gnupg
@@ -176,18 +160,18 @@ test "$ERR" -eq 3
 test "$OUT" == 'bin/rpm2swidtag: Error reading rpm file [/dev/null]: error reading package header'
 
 set +e
-OUT=$( RPM2SWIDTAG_XSLT=nonexistent bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm 2>&1 )
+OUT=$( RPM2SWIDTAG_XSLT=nonexistent bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm 2>&1 )
 ERR=$?
 set -e
 test "$ERR" -eq 5
 test "$OUT" == 'bin/rpm2swidtag: Error reading processing XSLT file [nonexistent]: Error reading file '\''nonexistent'\'': failed to load external entity "nonexistent"'
 
 set +e
-OUT=$( RPM2SWIDTAG_XSLT=tests/xslt/swidtag-fail.xslt bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm 2>&1 )
+OUT=$( RPM2SWIDTAG_XSLT=tests/xslt/swidtag-fail.xslt bin/rpm2swidtag --config=tests/rpm2swidtag.conf -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm 2>&1 )
 ERR=$?
 set -e
 test "$ERR" -eq 6
-test "$OUT" == 'bin/rpm2swidtag: Error generating SWID tag for file [tmp/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm]: Unknown header tag [broken] requested by XSLT stylesheet: unknown header tag'
+test "$OUT" == 'bin/rpm2swidtag: Error generating SWID tag for file [tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm]: Unknown header tag [broken] requested by XSLT stylesheet: unknown header tag'
 
 set +e
 OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf x 2>&1 )
@@ -441,7 +425,7 @@ done
 
 # Test dnf plugin
 mkdir -p tmp/repo
-cp -p tmp/x86_64/* tmp/noarch/* ./tests/hello-rpm/*.rpm tmp/repo
+cp -p tests/rpms/x86_64/* tests/rpms/noarch/* ./tests/hello-rpm/*.rpm tmp/repo
 createrepo_c tmp/repo
 rm -rf tmp/dnfroot
 FAKEROOT=
