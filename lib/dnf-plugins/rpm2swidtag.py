@@ -70,7 +70,10 @@ class rpm2swidtagCommand(commands.Command):
 						tags = s.tags_for_rpm_packages(pkgs)
 
 						remaining_pkgs = []
-						for p in tags:
+						for p in pkgs:
+							if p not in tags:
+								remaining_pkgs.append(p)
+								continue
 							found = False
 							for d in tags[p]:
 								full_d = path.join(self.plugin.dir_downloaded, d)

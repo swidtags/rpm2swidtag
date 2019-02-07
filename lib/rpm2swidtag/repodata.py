@@ -162,7 +162,8 @@ class Swidtags:
 	def tags_for_rpm_packages(self, pkgs):
 		pkg256headers = {}
 		for p in pkgs:
-			pkg256headers[( p["name"].decode("utf-8"), p["SHA256HEADER"].decode("utf-8") )] = p
+			if p["SHA256HEADER"]:
+				pkg256headers[( p["name"].decode("utf-8"), p["SHA256HEADER"].decode("utf-8") )] = p
 		tags = {}
 		for e in self.xml.xpath("/swidtags:metadata/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
 			found = None
