@@ -3,4 +3,4 @@ python3 setup.py install --single-version-externally-managed -O1 --root=$RPM_BUI
 sed -i 's#^/etc#%config(noreplace) /etc#' INSTALLED_FILES
 
 %check
-if test "$( rpm --eval '%{_arch}' )" == "x86_64" ; then ./test.sh ; fi
+./test.sh
