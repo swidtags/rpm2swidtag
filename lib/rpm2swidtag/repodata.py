@@ -90,7 +90,6 @@ class Swidtags:
 	def __init__(self, repo, file=None):
 		self.repo = repo
 		self.href = None
-		self.location_index = None
 		self.file = file
 		if self.file:
 			self.xml = etree.parse(self.file)
