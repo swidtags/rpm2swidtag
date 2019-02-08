@@ -29,8 +29,6 @@ def _pass_in_hdr(ih):
 	def tag_from_header(c, tag):
 		if tag == 'arch' and rpm.is_source_package(ih):
 			return b'src.rpm'
-		elif tag == 'sign-keys':
-			return rpm.get_signature_key_id(ih)
 		try:
 			return ih[tag]
 		except ValueError as e:
