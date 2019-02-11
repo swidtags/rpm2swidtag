@@ -419,9 +419,14 @@ done
 
 
 # Test dnf plugin
-mkdir -p tmp/repo
-cp -p tests/rpms/x86_64/* tests/rpms/noarch/* ./tests/hello-rpm/*.rpm tmp/repo
-createrepo_c tmp/repo
+mkdir -p tmp/repo tmp/repo-base
+cp -p tests/rpms/x86_64/* tests/rpms/noarch/* ./tests/hello-rpm/*.rpm tmp/repo-base
+if [ "$(($RANDOM % 2))" == "0" ] ; then
+	createrepo_c -u file:///$(pwd)/tmp/repo-base tmp/repo-base -o tmp/repo
+else
+	( cd tmp/repo-base && for i in *.rpm ; do ln ../repo-base/$i ../repo/$i ; done )
+	createrepo_c tmp/repo
+fi
 rm -rf tmp/dnfroot
 FAKEROOT=
 FAKECHROOT=
@@ -472,7 +477,7 @@ for i in tmp/dnfroot/usr/lib/swidtag/example.test/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt - < $i
 done
 
-$FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf install -y tmp/repo/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
+$FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf install -y tmp/repo-base/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'
 ls -l tmp/dnfroot/usr/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | grep '^2$'
 

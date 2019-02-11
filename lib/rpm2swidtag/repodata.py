@@ -71,14 +71,28 @@ class Primary:
 class Package:
 	def __init__(self, element):
 		self.element = element
-		self.href_fn = None
+		self.location_fn = None
 		self.pkgid_fn = None
 
 	@property
 	def href(self):
-		if not self.href_fn:
+		if not self.location_fn:
+			self.location_fn = etree.XPath("common:location", namespaces = { 'common': COMMON_XMLNS })
 			self.href_fn = etree.XPath("common:location/@href", namespaces = { 'common': COMMON_XMLNS })
-		return self.href_fn(self.element)[0]
+		location = self.location_fn(self.element)[0]
+		href = location.get("href")
+		base = location.base
+		if base:
+			if base.startswith("file:///"):
+				base = base[7:]
+			elif base.startswith("file:/") and not base.startswith("file://"):
+				base = base[5:]
+			else:
+				# raise Error("xml:base %s does not look local for %s" % (base, href)) from None
+				base = None
+		if base:
+			return base + "/" + href
+		return href
 
 	@property
 	def pkgid(self):
