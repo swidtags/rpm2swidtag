@@ -422,7 +422,7 @@ done
 mkdir -p tmp/repo tmp/repo-base
 cp -p tests/rpms/x86_64/* tests/rpms/noarch/* ./tests/hello-rpm/*.rpm tmp/repo-base
 if [ "$(($RANDOM % 2))" == "0" ] ; then
-	createrepo_c -u file:///$(pwd)/tmp/repo-base tmp/repo-base -o tmp/repo
+	createrepo_c -u file://$(pwd)/tmp/repo-base tmp/repo-base -o tmp/repo
 else
 	( cd tmp/repo-base && for i in *.rpm ; do ln ../repo-base/$i ../repo/$i ; done )
 	createrepo_c tmp/repo
