@@ -66,10 +66,11 @@ class Primary:
 		self.index += 1
 		if self.index > len(self.list):
 			raise StopIteration
-		return Package(self.list[self.index - 1])
+		return Package(self, self.list[self.index - 1])
 
 class Package:
-	def __init__(self, element):
+	def __init__(self, primary, element):
+		self.primary = primary
 		self.element = element
 		self.location_fn = None
 		self.pkgid_fn = None
@@ -82,17 +83,15 @@ class Package:
 		location = self.location_fn(self.element)[0]
 		href = location.get("href")
 		base = location.base
-		if base:
-			if base.startswith("file:///"):
-				base = base[7:]
-			elif base.startswith("file:/") and not base.startswith("file://"):
-				base = base[5:]
-			else:
-				# raise Error("xml:base %s does not look local for %s" % (base, href)) from None
-				base = None
-		if base:
-			return base + "/" + href
-		return href
+		if base == self.primary.path:
+			return href
+		if base.startswith("file:///"):
+			base = base[7:]
+		elif base.startswith("file:/") and not base.startswith("file://"):
+			base = base[5:]
+		else:
+			raise Error("xml:base %s does not look local for %s" % (base, href)) from None
+		return base + "/" + href
 
 	@property
 	def pkgid(self):
