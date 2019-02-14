@@ -14,7 +14,7 @@ setup(
 	license = 'Apache License 2.0',
 	package_dir = {'': 'lib'},
 	packages = ['rpm2swidtag', 'swidq'],
-	py_modules = ['dnf-plugins.rpm2swidtag'],
+	py_modules = ['dnf-plugins.swidtags'],
 	scripts = ['bin/rpm2swidtag', 'bin/swidq'],
 	data_files = [
 		('/etc/rpm2swidtag', ['rpm2swidtag.conf', 'swidtag-template.xml', 'swidtag.xslt', 'rpm2swidtag.xslt', 'rpm2swidtag-tagid.xslt']),
@@ -22,7 +22,7 @@ setup(
 		('/etc/swid', ['swidq.conf']),
 		('/etc/swid/swidtags.d', []),
 		('/usr/share/swidq/stylesheets', ['swidq-info.xslt', 'swidq-dump.xslt', 'swidq-files.xslt', 'swidq-xml.xslt']),
-		('/etc/dnf/plugins', ['dnf/plugins/rpm2swidtag.conf']),
+		('/etc/dnf/plugins', ['dnf/plugins/swidtags.conf']),
 	],
 	install_requires = ['rpm', 'lxml'],
 )
