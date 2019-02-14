@@ -8,7 +8,7 @@ from rpm2swidtag import Error, SWID_XMLNS
 
 REPO_XMLNS = "http://linux.duke.edu/metadata/repo"
 COMMON_XMLNS = "http://linux.duke.edu/metadata/common"
-SWIDTAGLIST_XMLNS = "http://adelton.fedorapeople.org/rpm2swidtag/metadata-fixme"
+SWIDTAGLIST_XMLNS = "http://rpm.org/metadata/swidtags.xsd"
 
 class Repodata:
 	def __init__(self, repo):
@@ -107,7 +107,8 @@ class Swidtags:
 		if self.file:
 			self.xml = etree.parse(self.file)
 		else:
-			self.xml = etree.Element("{%s}metadata" % SWIDTAGLIST_XMLNS, nsmap={ None: SWIDTAGLIST_XMLNS })
+			self.xml = etree.Element("{%s}swidtags" % SWIDTAGLIST_XMLNS, nsmap={ None: SWIDTAGLIST_XMLNS })
+			self.xml.set("packages", "0")
 
 	def add(self, package, swidtags):
 		pxml = etree.Element("{%s}package" % SWIDTAGLIST_XMLNS)
@@ -115,6 +116,7 @@ class Swidtags:
 		for s in swidtags:
 			pxml.append(s.xml.getroot())
 		self.xml.append(pxml)
+		self.xml.set("packages", str(len(self.xml.getchildren())))
 
 	def save(self):
 		data = BytesIO()
@@ -158,7 +160,7 @@ class Swidtags:
 		for p in pkgs:
 			pkgids[p.chksum[1].hex()] = p
 		tags = {}
-		for e in self.xml.xpath("/swidtags:metadata/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
+		for e in self.xml.xpath("/swidtags:swidtags/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
 			pkgid = e.get("pkgid")
 			if pkgid not in pkgids:
 				continue
@@ -177,7 +179,7 @@ class Swidtags:
 			if p["SHA256HEADER"]:
 				pkg256headers[( p["name"].decode("utf-8"), p["SHA256HEADER"].decode("utf-8") )] = p
 		tags = {}
-		for e in self.xml.xpath("/swidtags:metadata/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
+		for e in self.xml.xpath("/swidtags:swidtags/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
 			found = None
 			for rs in e.xpath("swid:SoftwareIdentity/swid:Payload/swid:Resource[@type = 'rpm'] | swid:SoftwareIdentity/swid:Evidence/swid:Resource[@type = 'rpm']", namespaces = { 'swid': SWID_XMLNS }):
 				h = rs.get("sha256header")

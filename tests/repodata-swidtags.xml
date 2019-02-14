@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<metadata xmlns="http://adelton.fedorapeople.org/rpm2swidtag/metadata-fixme">
+<swidtags xmlns="http://rpm.org/metadata/swidtags.xsd" packages="6">
   <package pkgid="7c4f932d7e66cfa3fb2ae756f916527e8ddf48ef8e6e428ac80a3a298a2ab7ab">
     <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="hello" tagId="test.example.hello-1.0-1.i386" version="1.0-1.i386" versionScheme="rpm">
       <Entity name="Example Org." regid="example.test" role="tagCreator"/>
@@ -785,4 +785,4 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
       </Signature>
     </SoftwareIdentity>
   </package>
-</metadata>
+</swidtags>

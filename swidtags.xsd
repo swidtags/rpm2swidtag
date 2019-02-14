@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:swid="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
+  targetNamespace="http://rpm.org/metadata/swidtags.xsd"
+  elementFormDefault="qualified">
+  <xs:import namespace="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
+    schemaLocation="http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+      Schema for collection of SWID tags in single XML file, to be used in yum/dnf repositories
+    </xs:documentation>
+  </xs:annotation>
+  <xs:element name="swidtags">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="package" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="swid:SoftwareIdentity" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="pkgid" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="packages" type="xs:nonNegativeInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
