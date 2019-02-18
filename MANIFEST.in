@@ -1,2 +1,2 @@
-include test.sh
+include test.sh LICENSE
 recursive-include tests *

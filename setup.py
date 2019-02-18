@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
 	name = 'rpm2swidtag',
-	version = '0.7.0',
+	version = '0.7.1',
 	description = 'Tools for producing SWID tags from rpm package headers and inspecting the SWID tags',
 	author = 'Jan Pazdziora',
 	author_email = 'jpazdziora@redhat.com',
@@ -38,7 +38,6 @@ setup(
 		('/etc/swid/swidtags.d', []),
 		('/usr/share/swidq/stylesheets', ['swidq-info.xslt', 'swidq-dump.xslt', 'swidq-files.xslt', 'swidq-xml.xslt']),
 		('/etc/dnf/plugins', ['dnf/plugins/swidtags.conf']),
-		('', ['LICENSE']),
 	],
 	install_requires = ['rpm', 'lxml'],
 )
