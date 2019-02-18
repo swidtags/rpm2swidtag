@@ -211,8 +211,10 @@ class swidtags(Plugin):
 		if len(packages_in_repos[None]) > 0:
 			p_names = [ str(p) for p in packages_in_repos[None]]
 			if self.run_rpm2swidtag_for(p_names) == 0:
-				if run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", self.dir_generated, "--rpm"] + p_names).returncode != 0:
+				completed = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", self.dir_generated, "--rpm"] + p_names, stdout=PIPE)
+				if completed.returncode != 0:
 					logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
+				logger.debug(str(completed.stdout, "utf-8"))
 
 	def remove_file(self, file):
 		try:
