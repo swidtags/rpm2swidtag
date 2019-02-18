@@ -8,7 +8,7 @@ from dnf import Plugin, rpm
 from dnfpluginscore import logger
 from subprocess import run, PIPE
 import platform
-from os import path, makedirs, environ
+from os import path, makedirs, environ, unlink, listdir, rmdir, symlink
 import re
 from rpm2swidtag import repodata
 from configparser import ConfigParser
@@ -16,8 +16,6 @@ from configparser import ConfigParser
 NAME = "swidtags"
 RPM2SWIDTAG_COMMAND = "/usr/bin/rpm2swidtag"
 SWIDQ_COMMAND = "/usr/bin/swidq"
-UNLINK = "/usr/bin/rm"
-SYMLINK = "/usr/bin/ln"
 
 SWIDTAG_DIR_GEN = "var/lib/swidtag"
 SWIDTAG_DIR_DOWNLOAD = "usr/lib/swidtag"
@@ -217,13 +215,30 @@ class swidtags(Plugin):
 					logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
 
 	def remove_file(self, file):
-		run([UNLINK, "-f", file])
+		try:
+			unlink(file)
+		except OSError as e:
+			logger.warning("Failed to remove [%s]: %s" % (file, e))
 
 	def purge_generated_dir(self):
-		run([UNLINK, "-fr", self.dir_generated])
+		if not path.isdir(self.dir_generated):
+			return
+		count = 0
+		for f in listdir(self.dir_generated):
+			try:
+				unlink(path.join(self.dir_generated, f))
+				count += 1
+			except OSError as e:
+				logger.warning("Failed to remove [%s]: %s" % (file, e))
+		try:
+			rmdir(self.dir_generated)
+		except OSError:
+			logger.warning("Failed to remove [%s]: %s" % (self.dir_generated, e))
+		if count > 0:
+			logger.debug("Removed %d generated files from %s" % (count, self.dir_generated))
 
 	def purge_generated_symlink(self):
-		run([UNLINK, "-f", path.join(self.swidtags_d, self.generated_dirname)])
+		self.remove_file(path.join(self.swidtags_d, self.generated_dirname))
 
 	def create_generated_dir(self):
 		if not path.isdir(self.dir_generated):
@@ -244,7 +259,7 @@ class swidtags(Plugin):
 			makedirs(self.swidtags_d)
 		src = path.join(self.swidtags_d, basename)
 		if not path.islink(src):
-			run([SYMLINK, "-sv", path.join("../../..", target), src])
+			symlink(path.join("../../..", target), src)
 
 	def run_rpm2swidtag_for(self, pkgs):
 		if not pkgs or len(pkgs) < 1:
