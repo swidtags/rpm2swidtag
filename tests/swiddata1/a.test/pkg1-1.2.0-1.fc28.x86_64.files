@@ -1,6 +1,10 @@
 /etc/testconfig.conf
 /usr/share/testdir
 /usr/share/testdir/emptyfile
+/usr/share/testdir/emptyfile-missingok
+/usr/share/testdir/ghostfile
+/usr/share/testdir/randomcontent
+/usr/share/testdir/randomsize
 /usr/share/testdir/testdir
 /usr/share/testdir/testfile
 /usr/share/testdir/testsymlink

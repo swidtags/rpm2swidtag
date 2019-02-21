@@ -37,6 +37,27 @@ SoftwareIdentity
         @name: [emptyfile]
         @sha256:hash: [e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855]
         @key: [true]
+      - File
+        @size: [0]
+        @name: [emptyfile-missingok]
+        @sha256:hash: [e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855]
+        @n8060:mutable: [true]
+      - File
+        @size: [0]
+        @name: [ghostfile]
+        @n8060:mutable: [true]
+      - File
+        @size: [68]
+        @name: [randomcontent]
+        @sha256:hash: [8890bd9ee227cf54b0952bff303f4bbafcdade3c798d243c26b048ca613ec56d]
+        @n8060:mutable: [true]
+        @key: [true]
+      - File
+        @size: [74]
+        @name: [randomsize]
+        @sha256:hash: [683f5b18fc594967aa5b9b4f137d484a6546134b305e3c99752069d77e3db2f6]
+        @n8060:mutable: [true]
+        @key: [true]
       - Directory
         @name: [testdir]
       - File
@@ -69,4 +90,4 @@ SoftwareIdentity
     - Resource
       @type: [rpm]
       @rpm: [pkg1-1.2.0-1.fc28.x86_64]
-      @sha256header: [b1d92109579a5aa3ed3ceda2a8bd57888e2ad45c4d77ac2d6bfcab9eb3e1fff7]
+      @sha256header: [fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096]

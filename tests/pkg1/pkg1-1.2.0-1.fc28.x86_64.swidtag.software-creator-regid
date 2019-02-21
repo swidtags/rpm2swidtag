@@ -7,6 +7,10 @@
     <File size="9" name="testconfig.conf" location="/etc" sha256:hash="a11e9e5746f775b735b09d18d7edb13eb7774534146ed3e61d23ba11ce4ce396" n8060:mutable="true" key="true"/>
     <Directory name="testdir" location="/usr/share">
       <File size="0" name="emptyfile" sha256:hash="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" key="true"/>
+      <File size="0" name="emptyfile-missingok" sha256:hash="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" n8060:mutable="true"/>
+      <File size="0" name="ghostfile" n8060:mutable="true"/>
+      <File size="68" name="randomcontent" sha256:hash="8890bd9ee227cf54b0952bff303f4bbafcdade3c798d243c26b048ca613ec56d" n8060:mutable="true" key="true"/>
+      <File size="74" name="randomsize" sha256:hash="683f5b18fc594967aa5b9b4f137d484a6546134b305e3c99752069d77e3db2f6" n8060:mutable="true" key="true"/>
       <Directory name="testdir"/>
       <File size="5" name="testfile" sha256:hash="f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2" key="true"/>
       <File size="8" name="testsymlink" key="true"/>
@@ -15,6 +19,6 @@
       <File size="11" name="testutf8-křížala" sha256:hash="ca501866faea5acff395b2ed6c59c16b4a0a40ad642ec35e12dbaa7bd891920b" key="true"/>
       <File size="2" name="testutf8-sqrt-√36" sha256:hash="06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7" key="true"/>
     </Directory>
-    <Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.x86_64" sha256header="b1d92109579a5aa3ed3ceda2a8bd57888e2ad45c4d77ac2d6bfcab9eb3e1fff7"/>
+    <Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.x86_64" sha256header="fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096"/>
   </Evidence>
 </SoftwareIdentity>

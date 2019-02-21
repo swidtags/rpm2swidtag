@@ -200,7 +200,7 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
       </Signature>
     </SoftwareIdentity>
   </package>
-  <package pkgid="1bca641692e4aff717d87ca7340c72d1360c01fecdb49c009f0cc92d40be8631">
+  <package pkgid="dfcfdbb06d284485ac22f81f49f12990338941748d0cf968aa1d756ab9343d9b">
     <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" xml:lang="en-US" name="pkg1" tagId="example/test.pkg1-1.2.0-1.fc28.x86_64" version="1.2.0-1.fc28.x86_64" versionScheme="rpm">
       <Entity name="Example Org." regid="example/test" role="tagCreator"/>
       <Entity name="Other Org." regid="other.test" role="softwareCreator"/>
@@ -209,6 +209,10 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
         <File size="9" name="testconfig.conf" location="/etc" sha256:hash="a11e9e5746f775b735b09d18d7edb13eb7774534146ed3e61d23ba11ce4ce396" n8060:mutable="true" key="true"/>
         <Directory name="testdir" location="/usr/share">
           <File size="0" name="emptyfile" sha256:hash="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" key="true"/>
+          <File size="0" name="emptyfile-missingok" sha256:hash="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" n8060:mutable="true"/>
+          <File size="0" name="ghostfile" n8060:mutable="true"/>
+          <File size="68" name="randomcontent" sha256:hash="8890bd9ee227cf54b0952bff303f4bbafcdade3c798d243c26b048ca613ec56d" n8060:mutable="true" key="true"/>
+          <File size="74" name="randomsize" sha256:hash="683f5b18fc594967aa5b9b4f137d484a6546134b305e3c99752069d77e3db2f6" n8060:mutable="true" key="true"/>
           <Directory name="testdir"/>
           <File size="5" name="testfile" sha256:hash="f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2" key="true"/>
           <File size="8" name="testsymlink" key="true"/>
@@ -217,7 +221,7 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
           <File size="11" name="testutf8-křížala" sha256:hash="ca501866faea5acff395b2ed6c59c16b4a0a40ad642ec35e12dbaa7bd891920b" key="true"/>
           <File size="2" name="testutf8-sqrt-√36" sha256:hash="06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7" key="true"/>
         </Directory>
-        <Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.x86_64" sha256header="b1d92109579a5aa3ed3ceda2a8bd57888e2ad45c4d77ac2d6bfcab9eb3e1fff7"/>
+        <Resource type="rpm" rpm="pkg1-1.2.0-1.fc28.x86_64" sha256header="fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096"/>
       </Payload>
       <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
         <SignedInfo>
@@ -229,20 +233,20 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
               <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
             </Transforms>
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-            <DigestValue>QAuBnPUsk3SgHn8+S0rnwkEtxgomqWhVcAF4Tl4U4mM=</DigestValue>
+            <DigestValue>17m4AVlHRm3hptUvwWh8jtNYW5zXbMIwr+5hqKP8ZO8=</DigestValue>
           </Reference>
         </SignedInfo>
-        <SignatureValue>0uCjo8+ptzDnLOgzUnFFkYjRzgHFkKX8UR5VxYSMTF1rIM05fdFsS9HCOTZbZA2M
-KeCJl2sX47utTLxHpQ8jqk4SRJDuWRyXPWlGKbvYnk5bc3Y++x+STpuTuIt4t4Gs
-OcN8x1MiC6oklUmdWYToCwpx1+2/fiSmSmcz3X42iwLsj4Qy8CVU9LZn1jr/iuE0
-tvKLfWlF4jm2aatbO/Sy9GTo1dOtwQ2V4dAtia/t6fkLDsl4od7wFGIZdN2iSkJz
-O/m0GAaApyrN1XU9iXDV9EKilX5dvnhyjm7YMGE6AdHb+MVCisP2jQW3tWvvuLjD
-bg5JBnojKOZN7Nn/TEo3hXZkzOcuulrpSHcAqm3F57ag4upd+BxgucWiqF0qLbks
-QeUgGcQe/RTRidTp8GjHDQ4gB6xh9PdmozlmVi60tvC6MX1vcxEc8OA6xf7/oljD
-dOIoh/Ni4Yqen3le5yzQ6D9o+OHG36SE8uwr7yeu8yLgioC22zcM6pTtai+WhPJH
-nvyTOE85xkveNn2qo0BPM7H5ARswryKj6xf5Gv0/FxNhrwDcJ/HFOLkREXetHILO
-TdYIC4RWawuGKrjwYo9U1FprNAppzbXhs1jXxsvfG6DGVH09+Yq6LjgfotTcWodo
-GzVLNrBMY1fbT+vITWq1b98uSE31P1XMiFGGHuw1g8w=</SignatureValue>
+        <SignatureValue>pRwpKtZpSrzbaNzD9jbO4dyj9D95FEBc+cE0sTpJ+RliKVOmaDRnlT/l0qGL3myB
+Qo5T+h5NzSq8YRXDIeHOublnJITHMvj9Bz75m3Jzu0NccdeWLzaVTasZUf9tAE+R
+e5Dl5KppIhBCJjtDg/VcCM3f1Dcg1I70Ef4HiqyN3n7ekgAv4IXx5DEtGPRsW/os
+/r/nlSOB3sKZnUg16meDWX9oIYVfEYV10TV/hmA/Sql0fPSZ8diZA72747HJ3Uzu
+iOYcJcxKLI6lOwJKEF0iq4y2puKJK70g7v9j/ZX2qIEggKHX7K4wABIcH771ZO03
+2g+MhCDITSiZxaMzoAyX6pqedaDtRYnOxKAbWILWM5RKKoAaiuz/CrbYoyv0AEQc
+q8+wEwrkVr9wPEok8dqOHTzOhIs6z9GTIM1BFEE0279G12eUWjhYfXMfl6A6jVWG
+iXhm/6MN8daiDlFUQJ1RxRK3/y8ZuCmVTUaLf0rDYtVti2P3EJ09KrfkdtKJkT/w
+WzdYVxAtkEbr/UfHI08Rz8lmwQ6fvw5YZkx+GlZRfpTJ2Q/LDwj74bOLrdpD0ZVg
+964D/h0vfq+XQ/Ei1YG3eW8rtrovQ9cMirAwSBmPZ3iSt5bg6fiZlfaqSx5vb5kl
+4aaXxyQ0D4qwWA/mC8ty0f2FD1ruXE5KIQRwaMZ9Bd4=</SignatureValue>
         <KeyInfo>
           <X509Data>
             <X509Certificate>MIIFCzCCAvOgAwIBAgIUKccDx8ZvI/Xhsk8a3l0Z31S31LQwDQYJKoZIhvcNAQEL

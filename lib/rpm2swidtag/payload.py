@@ -1,6 +1,6 @@
 
 from rpm import fi, RPMFILE_CONFIG, RPMFILE_DOC, RPMFILE_MISSINGOK, RPMFILE_GHOST, \
-	RPMFILE_LICENSE, RPMFILE_README
+	RPMFILE_LICENSE, RPMFILE_README, RPMVERIFY_FILEDIGEST, RPMVERIFY_FILESIZE
 from lxml import etree
 import re
 from stat import S_ISDIR
@@ -55,11 +55,13 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 					e.set("{%s}hash" % NSMAP['sha256'], f[12])
 				if len(f[12]) == 32 and f[12] != "0" * 32:
 					e.set("{%s}hash" % NSMAP['md5'], f[12])
-			if f[4] & RPMFILE_CONFIG:
-				e.set("{%s}mutable" % NSMAP['n8060'], "true")
-			if not S_ISDIR(f[2]) \
-				and not (f[4] & (RPMFILE_DOC | RPMFILE_MISSINGOK | RPMFILE_GHOST | RPMFILE_LICENSE | RPMFILE_README)):
-				e.set("key", "true")
+			if not S_ISDIR(f[2]):
+				if (f[4] & (RPMFILE_CONFIG | RPMFILE_GHOST)) \
+					or (f[9] & RPMVERIFY_FILEDIGEST) == 0 \
+					or (f[9] & RPMVERIFY_FILESIZE) == 0:
+					e.set("{%s}mutable" % NSMAP['n8060'], "true")
+				if not (f[4] & (RPMFILE_DOC | RPMFILE_MISSINGOK | RPMFILE_GHOST | RPMFILE_LICENSE | RPMFILE_README)):
+					e.set("key", "true")
 
 			if append_to is None:
 				append_to = output
