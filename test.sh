@@ -119,18 +119,32 @@ diff -ru tmp/output-dir tmp/compare-dir
 
 
 SIGNDIR=tests/signing
-_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/signed-internal/. -a --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --authoritative
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/signed-internal/. --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --authoritative pkg1
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/signed-internal/. --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --sign-pem=$SIGNDIR/test2.key,$SIGNDIR/test2-ca.crt,$SIGNDIR/test2.crt --authoritative pkg2
 # XML declaration produced by XSLT output is different than the XML write gives us
 sed -i 's#^<?xml version='"'"'1\.0'"'"' encoding='"'"'UTF-8'"'"'?>$#<?xml version="1.0" encoding="utf-8"?>#' tmp/output-dir/signed-internal/*
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb bin/rpm2swidtag --config=tests/rpm2swidtag.conf --tag-creator=example.test --output-dir=tmp/output-dir/sign-input/. -a --preserve-signing-template --authoritative
 mkdir tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-pem
-( cd tmp/output-dir/sign-input && ls ) | while read i ; do
+( cd tmp/output-dir/sign-input && ls test.example.pkg1* ) | while read i ; do
 	xmlsec1 --sign --pkcs12 $SIGNDIR/test.pkcs12 --pwd password8263 --enabled-reference-uris empty tmp/output-dir/sign-input/$i | xmllint --format - > tmp/output-dir/signed-pkcs12/$i
 	xmlsec1 --sign --privkey-pem $SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --enabled-reference-uris empty tmp/output-dir/sign-input/$i | xmllint --format - > tmp/output-dir/signed-pem/$i
 done
-for i in tmp/output-dir/signed-internal/* ; do
+sed -i '/<ds:Signature /,$H;/<\/ds:Signature>/{p;g;s/[^\n]*\n//}' tmp/output-dir/sign-input/test.example.pkg2*
+( cd tmp/output-dir/sign-input && ls test.example.pkg2* ) | while read i ; do
+	xmlsec1 --sign --pkcs12 $SIGNDIR/test.pkcs12 --pwd password8263 --enabled-reference-uris empty --node-xpath '/*/*[local-name() = "Signature"][1]' tmp/output-dir/sign-input/$i \
+		| xmlsec1 --sign --pkcs12 $SIGNDIR/test2.pkcs12 --pwd password16639 --enabled-reference-uris empty --node-xpath '/*/*[local-name() = "Signature"][2]' - \
+		| xmllint --format - > tmp/output-dir/signed-pkcs12/$i
+	xmlsec1 --sign --privkey-pem $SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --enabled-reference-uris empty --node-xpath '/*/*[local-name() = "Signature"][1]' tmp/output-dir/sign-input/$i \
+		| xmlsec1 --sign --privkey-pem $SIGNDIR/test2.key,$SIGNDIR/test2-ca.crt,$SIGNDIR/test2.crt --enabled-reference-uris empty --node-xpath '/*/*[local-name() = "Signature"][2]' - \
+		| xmllint --format - > tmp/output-dir/signed-pem/$i
+done
+for i in tmp/output-dir/signed-internal/*pkg1* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt $i
+done
+for i in tmp/output-dir/signed-internal/*pkg2* ; do
+	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt --node-xpath '/*/*[local-name() = "Signature"][1]' $i
+	xmlsec1 --verify --trusted-pem $SIGNDIR/test2-ca.crt --node-xpath '/*/*[local-name() = "Signature"][2]' $i
 done
 diff -ru tmp/output-dir/signed-internal tests/pkg-signed
 diff -ru tmp/output-dir/signed-pkcs12 tests/pkg-signed

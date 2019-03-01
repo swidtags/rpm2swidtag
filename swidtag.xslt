@@ -280,9 +280,26 @@
 </xsl:template>
 
 <xsl:template match="xmlsig:Signature">
-  <xsl:if test="$preserve-signing-template = 'true'">
-    <xsl:copy-of select="."/>
-  </xsl:if>
+  <xsl:param name="count"/>
+  <xsl:choose>
+    <xsl:when test="$preserve-signing-template = 'true'">
+      <xsl:copy-of select="."/>
+    </xsl:when>
+    <xsl:when test="$count">
+      <xsl:if test="$count > 1">
+        <xsl:copy-of select="."/>
+        <xsl:apply-templates select=".">
+          <xsl:with-param name="count" select="$count - 1"/>
+        </xsl:apply-templates>
+      </xsl:if>
+    </xsl:when>
+    <xsl:when test="number($preserve-signing-template) = $preserve-signing-template">
+      <xsl:copy-of select="."/>
+      <xsl:apply-templates select=".">
+        <xsl:with-param name="count" select="$preserve-signing-template"/>
+      </xsl:apply-templates>
+    </xsl:when>
+  </xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>

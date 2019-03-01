@@ -7,6 +7,7 @@ import subprocess
 
 XMLNS = 'http://adelton.fedorapeople.org/rpm2swidtag'
 SWID_XMLNS = 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd'
+XMLDSIG_XMLNS = 'http://www.w3.org/2000/09/xmldsig#'
 
 class Error(Exception):
 	def __init__(self, strerror):
@@ -59,14 +60,20 @@ class SignedTag(Tag):
 	def __init__(self, tag, pem_opt):
 		in_data = io.BytesIO()
 		tag.write_output(in_data)
-		result = subprocess.run(['xmlsec1', '--sign',
-			'--enabled-reference-uris', 'empty',
-			'--privkey-pem', pem_opt, '-'],
-			input=in_data.getvalue(),
-			stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=False)
-		if result.returncode != 0:
-			raise Error("Error signing using [%s]: %s" % (pem_opt, result.stderr))
-		self.xml = etree.parse(io.BytesIO(result.stdout), etree.XMLParser(remove_blank_text = True))
+		input = in_data.getvalue()
+		for idx, o in enumerate(pem_opt):
+			result = subprocess.run(['xmlsec1', '--sign',
+				'--enabled-reference-uris', 'empty',
+				'--privkey-pem', o,
+				'--node-xpath', '/*/*[local-name() = "Signature" and namespace-uri() = "%s"][last() - %d]'
+					% (XMLDSIG_XMLNS, len(pem_opt) - idx - 1),
+				'-'],
+				input=input,
+				stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=False)
+			if result.returncode != 0:
+				raise Error("Error signing using [%s]: %s" % (o, result.stderr))
+			self.xml = etree.parse(io.BytesIO(result.stdout), etree.XMLParser(remove_blank_text = True))
+			input = result.stdout
 
 	def write_output(self, file):
 		self.xml.write(file, xml_declaration=True, encoding="utf-8", pretty_print=True)
