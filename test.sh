@@ -130,7 +130,7 @@ mkdir tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-pem
 	xmlsec1 --sign --privkey-pem $SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --enabled-reference-uris empty tmp/output-dir/sign-input/$i | xmllint --format - > tmp/output-dir/signed-pem/$i
 done
 for i in tmp/output-dir/signed-internal/* ; do
-	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt - < $i
+	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt $i
 done
 diff -ru tmp/output-dir/signed-internal tests/pkg-signed
 diff -ru tmp/output-dir/signed-pkcs12 tests/pkg-signed
@@ -474,7 +474,7 @@ ls -l tmp/dnfroot/usr/lib/swidtag/example.test/* | tee /dev/stderr | wc -l | gre
 test -f tmp/dnfroot/usr/lib/swidtag/example.test/test.example.pkg1-1.3.0-1.fc28.x86_64.swidtag
 test -f tmp/dnfroot/usr/lib/swidtag/example.test/test.example.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 for i in tmp/dnfroot/usr/lib/swidtag/example.test/* ; do
-	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt - < $i
+	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt $i
 done
 
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf install -y tmp/repo-base/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
