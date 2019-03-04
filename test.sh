@@ -449,6 +449,7 @@ test -f tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.
 $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf swidtags purge
 ! test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 ! test -d tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated
+! $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf swidtags purge 2>&1 | grep Failed || false
 $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf swidtags regen
 test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^3$'

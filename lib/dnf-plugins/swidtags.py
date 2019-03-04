@@ -240,7 +240,10 @@ class swidtags(Plugin):
 			logger.debug("Removed %d generated files from %s" % (count, self.dir_generated))
 
 	def purge_generated_symlink(self):
-		self.remove_file(path.join(self.swidtags_d, self.generated_dirname))
+		symlink_path = path.join(self.swidtags_d, self.generated_dirname)
+		if not path.islink(symlink_path):
+			return
+		self.remove_file(symlink_path)
 
 	def create_generated_dir(self):
 		if not path.isdir(self.dir_generated):
