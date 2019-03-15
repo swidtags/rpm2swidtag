@@ -11,7 +11,6 @@ import platform
 from os import path, makedirs, environ, unlink, listdir, rmdir, symlink
 import re
 from rpm2swidtag import repodata
-from configparser import ConfigParser
 
 NAME = "swidtags"
 RPM2SWIDTAG_COMMAND = "/usr/bin/rpm2swidtag"
@@ -130,10 +129,16 @@ class swidtags(Plugin):
 		}
 		for s in DEFAULTS:
 			if not self.conf.has_section(s):
-				self.conf.add_section(s)
+				try:
+					self.conf.addSection(s)
+				except AttributeError:
+					self.conf.add_section(s)
 			for o in DEFAULTS[s]:
 				if not self.conf.has_option(s, o):
-					self.conf.data[s][o] = DEFAULTS[s][o]
+					try:
+						self.conf.setValue(s, o, DEFAULTS[s][o])
+					except AttributeError:
+						self.conf.set(s, o, DEFAULTS[s][o])
 
 		for repo in self.base.repos.iter_enabled():
 			if hasattr(repo, "add_metadata_type_to_download"):
