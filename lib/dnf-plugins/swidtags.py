@@ -78,7 +78,8 @@ class swidtagsCommand(commands.Command):
 									self.plugin.create_download_dir(d)
 								dirs[full_d] = d
 								for t in tags[p][d]:
-									logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (p, d, t))
+									p_nevra = b"%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
+									logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (p_nevra.decode("utf-8"), d, t))
 									tags[p][d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
 									found = True
 							if not found:
