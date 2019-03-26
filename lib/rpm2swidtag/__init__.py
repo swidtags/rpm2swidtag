@@ -1,6 +1,7 @@
 
 from lxml import etree
 from sys import stderr
+import re
 import sys
 import io
 import subprocess
@@ -36,6 +37,12 @@ def _pass_in_hdr(ih):
 		return ''
 	return tag_from_header
 
+def _escape_char(m):
+	return "".join(map(lambda x : "^%x" % ord(x), list(m.group(0))))
+
+def escape_path(x):
+	return re.sub(r"^\.+", _escape_char, re.sub(r"[^a-zA-Z0-9._:-]+", _escape_char, x), 1)
+
 class Tag:
 	def __init__(self, xml):
 		self.xml = xml
@@ -45,12 +52,12 @@ class Tag:
 
 	def get_tagid(self):
 		r = self.xml.xpath('/swid:SoftwareIdentity/@tagId', namespaces = { 'swid': SWID_XMLNS })
-		return r[0]
+		return escape_path(r[0])
 
 	def get_tagcreator_regid(self):
 		r = self.xml.xpath("/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid",
 			namespaces = { 'swid': SWID_XMLNS })
-		return r[0]
+		return escape_path(r[0])
 
 	def sign_pem(self, pem_opt):
 		return SignedTag(self, pem_opt)

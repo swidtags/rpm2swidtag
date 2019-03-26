@@ -4,7 +4,7 @@ from os import path, stat
 from hashlib import sha256
 from io import BytesIO
 from gzip import GzipFile
-from rpm2swidtag import Error, SWID_XMLNS
+from rpm2swidtag import Error, SWID_XMLNS, escape_path
 
 REPO_XMLNS = "http://linux.duke.edu/metadata/repo"
 COMMON_XMLNS = "http://linux.duke.edu/metadata/common"
@@ -168,9 +168,10 @@ class Swidtags:
 			tags[tp] = {}
 			for p in e:
 				for r in p.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):
-					if r not in tags[tp]:
-						tags[tp][r] = {}
-					tags[tp][r][p.get("tagId")] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
+					r_e = escape_path(r)
+					if r_e not in tags[tp]:
+						tags[tp][r_e] = {}
+					tags[tp][r_e][escape_path(p.get("tagId"))] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
 		return tags
 
 	def tags_for_rpm_packages(self, pkgs):
@@ -192,8 +193,9 @@ class Swidtags:
 			tags[tp] = {}
 			for p in e:
 				for r in p.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):
-					if r not in tags[tp]:
-						tags[tp][r] = {}
-					tags[tp][r][p.get("tagId")] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
+					r_e = escape_path(r)
+					if r_e not in tags[tp]:
+						tags[tp][r_e] = {}
+					tags[tp][r_e][escape_path(p.get("tagId"))] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
 		return tags
 
