@@ -1,1 +1,7 @@
 .git
+build
+dist
+lib/*.egg-info
+lib/*/__pycache__
+MANIFEST
+tmp
