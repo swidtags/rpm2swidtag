@@ -39,7 +39,9 @@ def setup_opts():
 	return parser.parse_args()
 
 def setup_transforms(opts, config):
-	stylesheet_dir = getenv('SWIDQ_STYLESHEET_DIR', config.get('swidq', 'stylesheet-dir'))
+	stylesheet_dir = getenv('SWIDQ_STYLESHEET_DIR')
+	if stylesheet_dir is None or stylesheet_dir == "":
+		stylesheet_dir = config.get('swidq', 'stylesheet-dir')
 	transforms = []
 	if opts.xml:
 		transforms.append(XSLT(stylesheet_dir + '/swidq-xml.xslt'))
