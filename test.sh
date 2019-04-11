@@ -475,11 +475,6 @@ bin/rpm2swidtag --repo=tmp/repo --config=tests/rpm2swidtag.conf --authoritative 
 zcat tmp/repo/repodata/*-swidtags.xml.gz > tmp/repo/swidtags.xml
 diff tests/repodata-swidtags.xml tmp/repo/swidtags.xml
 
-# The add_metadata_type_to_download and get_metadata_path
-# are only available on dnf 4.0.9+. Pulling in swidtags from repository
-# is not supported on Fedora 28-.
-if rpm -q dnf | grep '^dnf-4' ; then
-
 $FAKECHROOT $FAKEROOT dnf --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf clean expire-cache
 
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --installroot $(pwd)/tmp/dnfroot --setopt=reposdir=/dev/null --config=tests/dnf.conf --repofrompath local,tmp/repo upgrade -y
@@ -521,8 +516,6 @@ test -L tmp/dnfroot/etc/swid/swidtags.d/rpm2swidtag-generated
 ls -l tmp/dnfroot/var/lib/swidtag/rpm2swidtag-generated/* | tee /dev/stderr | wc -l | grep '^0$'
 ls -l tmp/dnfroot/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^3$'
 ! grep -r need-regen tmp/dnfroot/usr/lib/swidtag/example^2ftest
-
-fi
 
 # Test that README has up-to-date usage section
 diff -u <( bin/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
