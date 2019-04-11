@@ -44,3 +44,21 @@ def is_source_package(h):
 def get_signature_key_id(h):
 	key = h.format('%|DSAHEADER?{%{DSAHEADER:pgpsig}}:{%|RSAHEADER?{%{RSAHEADER:pgpsig}}:{%|SIGGPG?{%{SIGGPG:pgpsig}}:{%|SIGPGP?{%{SIGPGP:pgpsig}}:{}|}|}|}|')
 	return re.sub(r'^.*Key ID \S{8}(\S{8})$', '\g<1>', key)
+
+def get_nevra(h):
+	if isinstance(h["name"], str):
+		return "%s-%s-%s.%s" % (h["name"], h["version"], h["release"], h["arch"])
+	else:
+		nevra = b"%s-%s-%s.%s" % (h["name"], h["version"], h["release"], h["arch"])
+		return nevra.decode("utf-8")
+
+def get_checksum(h):
+	checksum = h["SHA256HEADER"]
+	if not checksum:
+		checksum = h["SHA1HEADER"]
+	if not checksum:
+		return None
+	if isinstance(checksum, str):
+		return checksum
+	else:
+		return checksum.decode("utf-8")

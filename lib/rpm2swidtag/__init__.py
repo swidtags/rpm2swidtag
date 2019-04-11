@@ -45,15 +45,16 @@ def escape_path(x):
 	return re.sub(r"^\.+", _escape_char, re.sub(r"[^a-zA-Z0-9._:-]+", _escape_char, x), 1)
 
 class Tag:
-	def __init__(self, xml):
+	def __init__(self, xml, checksum):
 		self.xml = xml
+		self.checksum = checksum
 
 	def save_to_directory(self, dir):
 		if not dir.endswith("/."):
                         dir = path.join(dir, escape_path(self.get_tagcreator_regid()))
 		if not path.exists(dir):
                         makedirs(dir)
-		filename = escape_path(self.get_tagid()) + '.swidtag'
+		filename = escape_path(self.get_tagid() + '-rpm-' + self.checksum) + '.swidtag'
 		self.write_output(path.join(dir, filename))
 		return ( dir, filename )
 
@@ -87,6 +88,7 @@ class SignedTag(Tag):
 		if result.returncode != 0:
 			raise Error("Error signing using [%s]: %s" % (pem_opt, result.stderr))
 		self.xml = etree.parse(io.BytesIO(result.stdout), etree.XMLParser(remove_blank_text = True))
+		self.checksum = tag.checksum
 
 	def write_output(self, file):
 		self.xml.write(file, xml_declaration=True, encoding="utf-8", pretty_print=True)
@@ -109,7 +111,8 @@ class Template:
 			str_params = {}
 			for i in params:
 				str_params[i] = etree.XSLT.strparam(params[i])
-			tag = Tag(transform(self.xml_template, **str_params))
+			checksum = rpm.get_checksum(rpm_header)
+			tag = Tag(transform(self.xml_template, **str_params), checksum)
 			generate_payload.cleanup_namespaces(tag.xml.getroot())
 			return tag
 		# except etree.XSLTApplyError as e:

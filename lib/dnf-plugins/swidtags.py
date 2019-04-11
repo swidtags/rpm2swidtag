@@ -11,10 +11,11 @@ import platform
 from os import path, makedirs, environ, unlink, listdir, rmdir, symlink
 import re
 from rpm2swidtag import repodata
+from rpm2swidtag.rpm import get_nevra, get_checksum
+from glob import iglob
 
 NAME = "swidtags"
 RPM2SWIDTAG_COMMAND = "/usr/bin/rpm2swidtag"
-SWIDQ_COMMAND = "/usr/bin/swidq"
 
 SWIDTAG_DIR_GEN = "var/lib/swidtag"
 SWIDTAG_DIR_DOWNLOAD = "usr/lib/swidtag"
@@ -65,45 +66,44 @@ class swidtagsCommand(commands.Command):
 
 			dirs = {}
 			for r in self.base.repos.iter_enabled():
-				if hasattr(r, "get_metadata_path"):
-					file = r.get_metadata_path(self.plugin.METADATA_TYPE)
-					if not file or file == "":
+				if not hasattr(r, "get_metadata_path"):
+					continue
+				file = r.get_metadata_path(self.plugin.METADATA_TYPE)
+				if not file or file == "":
+					continue
+				s = repodata.Swidtags(None, file)
+				tags = s.tags_for_rpm_packages(pkgs)
+
+				remaining_pkgs = []
+				for p in pkgs:
+					if p not in tags:
+						remaining_pkgs.append(p)
 						continue
-					s = repodata.Swidtags(None, file)
-					tags = s.tags_for_rpm_packages(pkgs)
+					found = False
+					for t in tags[p]:
+						logger.debug("Retrieved SWID tag from repodata for %s: %s" % (get_nevra(p), t.get_tagid()))
+						x = t.save_to_directory(self.plugin.dir_downloaded)
+						dirs[x[0]] = True
+						found = True
+					if not found:
+						remaining_pkgs.append(p)
 
-					remaining_pkgs = []
-					for p in pkgs:
-						if p not in tags:
-							remaining_pkgs.append(p)
-							continue
-						found = False
-						if isinstance(p["name"], str):
-							p_nevra = "%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
-						else:
-							p_nevra = b"%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
-							p_nevra = p_nevra.decode("utf-8")
-						for t in tags[p]:
-							logger.debug("Retrieved SWID tag from repodata for %s: %s" % (p_nevra, t.get_tagid()))
-							x = t.save_to_directory(self.plugin.dir_downloaded)
-							dirs[x[0]] = True
-							found = True
-						if not found:
-							remaining_pkgs.append(p)
-
-					pkgs = remaining_pkgs
+				pkgs = remaining_pkgs
 
 			for d in dirs:
 				self.plugin.create_swidtags_d_symlink(path.basename(d))
 
 			if len(pkgs) > 0:
-				if isinstance(p["name"], str):
-					p_names = [ "%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"]) for p in pkgs ]
-				else:
-					p_names = [ "%s-%s-%s.%s" % (p["name"].decode("utf-8"), p["version"].decode("utf-8"), p["release"].decode("utf-8"), p["arch"].decode("utf-8")) for p in pkgs ]
-				if self.plugin.run_rpm2swidtag_for(p_names) == 0:
-					if run(self.plugin.conf.get("main", "swidq_command").split() + ["--silent", "-p", self.plugin.dir_generated, "--rpm"] + p_names).returncode != 0:
-						logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
+				if self.plugin.run_rpm2swidtag_for([ get_nevra(p) for p in pkgs ]) == 0:
+					pkgs_missing = {}
+					for p in pkgs:
+						pkgs_missing[get_checksum(p)] = p
+					for f in iglob(path.join(self.plugin.dir_generated, "*-rpm-*.swidtag")):
+						m = re.search(r'-rpm-([0-9a-f]{40}([0-9a-f]{24})?)\.swidtag$', f)
+						if m and m.group(1) in pkgs_missing:
+							del pkgs_missing[m.group(1)]
+					for c in pkgs_missing:
+						logger.warning("The SWID tag for rpm %s should have been generated but could not be found" % get_nevra(pkgs_missing[c]))
 
 
 class swidtags(Plugin):
@@ -121,6 +121,7 @@ class swidtags(Plugin):
 		self.dir_generated = path.join(base.conf.installroot, SWIDTAG_DIR_GEN, self.generated_dirname)
 		self.dir_downloaded = path.join(base.conf.installroot, SWIDTAG_DIR_DOWNLOAD)
 		self.swidtags_d = path.join(base.conf.installroot, SWIDTAGS_D)
+		self.ts = None
 		if cli:
 			cli.register_command(swidtagsCommand)
 
@@ -129,7 +130,6 @@ class swidtags(Plugin):
 		self.conf = self.read_config(self.base.conf)
 		DEFAULTS = { "main": {
 			"rpm2swidtag_command": RPM2SWIDTAG_COMMAND,
-			"swidq_command": SWIDQ_COMMAND,
 			}
 		}
 		for s in DEFAULTS:
@@ -153,34 +153,36 @@ class swidtags(Plugin):
 	def resolved(self):
 		self.install_set = self.base.transaction.install_set
 		self.remove_set = self.base.transaction.remove_set
+		self.remove_set_checksum = {}
+		for p in self.remove_set:
+			self.remove_set_checksum[p] = self.get_nevra_checksum(str(p), verbose=False)
 
 	def transaction(self):
-		remove_packages = []
-		for i in self.remove_set:
-			logger.debug('Will remove SWID tag for %s' % i)
-			remove_packages.append(str(i))
+		remove_packages = {}
+		for p in self.remove_set:
+			if p not in self.remove_set_checksum:
+				logger.warning("Could not identify checksum for %p, potential SWID tag will not be removed", p)
+				continue
+			remove_packages[self.remove_set_checksum[p]] = True
 		if len(remove_packages) > 0:
-			swidtag = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "--rpm"] + remove_packages, stdout=PIPE, encoding="utf-8")
-			component_supplemental = []
-			for l in swidtag.stdout.splitlines():
-				m = re.search(r'^(\S+) (\S+)$', l)
+			for f in iglob(path.join(self.base.conf.installroot, SWIDTAGS_D, "*", "*-rpm-*.swidtag")):
+				m = re.search(r'-rpm-([0-9a-f]{40}([0-9a-f]{24})?)\.swidtag$', f)
 				if not m:
 					continue
-				self.remove_file(m.group(2))
-				component_supplemental.append(m.group(1) + "-component-of-*")
-			if len(component_supplemental) > 0:
-				component_of = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", path.join(self.base.conf.installroot, SWIDTAGS_D, "*"), "-a"] + component_supplemental, stdout=PIPE, encoding="utf-8")
-				for ll in component_of.stdout.splitlines():
-					m = re.search(r'^- (\S+) (\S+)$', ll)
-					if not m:
-						continue
-					self.remove_file(m.group(2))
+				if m.group(1) in remove_packages:
+					self.remove_file(f)
 
 		downloaded_swidtags = {}
 		packages_in_repos = { None: [] }
 		dirs = {}
+
 		for i in self.install_set:
 			try:
+				checksum = self.get_nevra_checksum(str(i), verbose=False)
+				if not checksum:
+					logger.warning("No installed rpm found for package %s, will not sync SWID tag." % str(i) )
+					continue
+
 				r = i.repo
 				if r not in downloaded_swidtags:
 					downloaded_swidtags[r] = None
@@ -191,11 +193,11 @@ class swidtags(Plugin):
 				if downloaded_swidtags[r]:
 					if r not in packages_in_repos:
 						packages_in_repos[r] = []
-					packages_in_repos[r].append(i)
+					packages_in_repos[r].append((i, checksum))
 					continue
 			except KeyError:
 				None
-			packages_in_repos[None].append(i)
+			packages_in_repos[None].append((i, checksum))
 
 		for r in packages_in_repos:
 			if not r:
@@ -204,7 +206,7 @@ class swidtags(Plugin):
 			for p in tags:
 				found = False
 				for t in tags[p]:
-					logger.debug("Retrieved SWID tag from repodata for %s: %s" % (p, t.get_tagid()))
+					logger.debug("Retrieved SWID tag from repodata for %s: %s" % (p[0], t.get_tagid()))
 					x = t.save_to_directory(self.dir_downloaded)
 					dirs[x[0]] = True
 					found = True
@@ -215,12 +217,17 @@ class swidtags(Plugin):
 			self.create_swidtags_d_symlink(path.basename(d))
 
 		if len(packages_in_repos[None]) > 0:
-			p_names = [ str(p) for p in packages_in_repos[None]]
+			p_names = [ str(p[0]) for p in packages_in_repos[None]]
 			if self.run_rpm2swidtag_for(p_names) == 0:
-				completed = run(self.conf.get("main", "swidq_command").split() + ["--silent", "-p", self.dir_generated, "--rpm"] + p_names, stdout=PIPE)
-				if completed.returncode != 0:
-					logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
-				logger.debug(str(completed.stdout, "utf-8"))
+				pkgs_missing = {}
+				for p in packages_in_repos[None]:
+					pkgs_missing[p[1]] = p[0]
+				for f in iglob(path.join(self.dir_generated, "*-rpm-*.swidtag")):
+					m = re.search(r'-rpm-([0-9a-f]{40}([0-9a-f]{24})?)\.swidtag$', f)
+					if m and m.group(1) in pkgs_missing:
+						del pkgs_missing[m.group(1)]
+				for p in pkgs_missing:
+					logger.warning("The SWID tag for rpm %s should have been generated but could not be found" % str(p[0]))
 
 	def remove_file(self, file):
 		try:
@@ -286,3 +293,19 @@ class swidtags(Plugin):
 		self.create_generated_dir()
 		self.create_swidtags_d_symlink()
 		return ret
+
+	def get_nevra_checksum(self, nevra, verbose=True):
+		if not self.ts:
+			ts = rpm.transaction.initReadOnlyTransaction(root=self.base.conf.installroot)
+		rpms = ( ts.dbMatch(2, str(nevra)) )
+		if len(rpms) > 1:
+			if verbose:
+				logger.warning("Multiple rpms %s found installed for package %s." % ( str(rpms), str(nevra) ))
+			return None
+		for r in rpms:
+			checksum = get_checksum(r)
+			if checksum:
+				return checksum
+			if verbose:
+				logger.warning("No checksum found for rpm %s." % str(nevra))
+		return None

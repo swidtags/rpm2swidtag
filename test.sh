@@ -55,7 +55,7 @@ fi
 # Testing rpm2swidtag
 # For testing, let's default the data location to the current directory
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tmp/pkg-generated.swidtag
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag tmp/pkg-generated.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS2 --authoritative -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm > tmp/pkg-generated.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/pkg-generated.swidtag
@@ -97,7 +97,7 @@ RPM2SWIDTAG_XSLT=$RPM2SWIDTAG_XSLT1 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.custom-tagid tmp/pkg-custom-tagid.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/rpms/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm | normalize > tmp/pkg-generated-epoch.swidtag
-diff tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag tmp/pkg-generated-epoch.swidtag
+diff tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag tmp/pkg-generated-epoch.swidtag
 
 rm -rf tmp/rpmdb
 rpm --ignorearch --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm
@@ -112,18 +112,18 @@ gpg2 --homedir=tmp/gnupg --export --armor 19D5C7DD > tmp/key-19D5C7DD.gpg
 ### rpm --dbpath $(pwd)/tmp/rpmdb --import tmp/key-19D5C7DD.gpg
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS pkg1-1.3.0 | normalize > tmp/pkg-generated.swidtag
-cat tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/pkg1-1.3.0.swidtag.with-supplemental
+cat tests/pkg1/pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/pkg1-1.3.0.swidtag.with-supplemental
 diff tmp/pkg1-1.3.0.swidtag.with-supplemental tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --primary-only pkg1-1.3.0 | normalize > tmp/pkg-generated.swidtag
-diff tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tmp/pkg-generated.swidtag
+diff tests/pkg1/pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS pkg1 | normalize > tmp/pkg-generated.swidtag
-cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/pkg1-1.2.0-and-1.3.0.swidtag
+cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/pkg1-1.2.0-and-1.3.0.swidtag
 diff tmp/pkg1-1.2.0-and-1.3.0.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -a 'pkg*' | normalize > tmp/pkg-generated.swidtag
-cat tmp/pkg1-1.2.0-and-1.3.0.swidtag tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag > tmp/pkg1-and-pkg2.swidtag
+cat tmp/pkg1-1.2.0-and-1.3.0.swidtag tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag > tmp/pkg1-and-pkg2.swidtag
 diff tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -a | normalize > tmp/pkg-generated.swidtag
@@ -133,10 +133,10 @@ rm -rf tmp/output-dir tmp/compare-dir
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag-creator=example.test --output-dir=tmp/output-dir -a
 find tmp/output-dir -type f | while read f ; do normalize_i $f ; done
 mkdir -p tmp/compare-dir/example.test
-for i in pkg1-1.2.0-1.fc28.x86_64 pkg1-1.3.0-1.fc28.x86_64 pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64 ; do
+for i in pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096 pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f ; do
 	sed 's/unavailable.invalid/test.example/;s/invalid.unavailable/example.test/' tests/${i%%-*}/$i.swidtag > tmp/compare-dir/example.test/test.example.$i.swidtag
 done
-sed 's/unavailable.invalid/test.example/;s/invalid.unavailable/example.test/' tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/compare-dir/example.test/test.example.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+sed 's/unavailable.invalid/test.example/;s/invalid.unavailable/example.test/' tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/compare-dir/example.test/test.example.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag
 diff -ru tmp/output-dir tmp/compare-dir
 
 rm -rf tmp/output-dir
@@ -150,20 +150,20 @@ rm -rf tmp/output-dir tmp/compare-dir
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag-creator=regid/with/slashes --output-dir=tmp/output-dir -a
 find tmp/output-dir -type f | while read f ; do normalize_i $f ; done
 mkdir -p tmp/compare-dir/regid^2fwith^2fslashes
-for i in pkg1-1.2.0-1.fc28.x86_64 pkg1-1.3.0-1.fc28.x86_64 pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64 ; do
+for i in pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096 pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f ; do
 	sed 's#unavailable.invalid#regid/with/slashes#;s#invalid.unavailable#regid/with/slashes#' tests/${i%%-*}/$i.swidtag > tmp/compare-dir/regid^2fwith^2fslashes/regid^2fwith^2fslashes.$i.swidtag
 done
-sed 's#unavailable.invalid#regid/with/slashes#;s#invalid.unavailable#regid/with/slashes#' tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/compare-dir/regid^2fwith^2fslashes/regid^2fwith^2fslashes.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+sed 's#unavailable.invalid#regid/with/slashes#;s#invalid.unavailable#regid/with/slashes#' tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/compare-dir/regid^2fwith^2fslashes/regid^2fwith^2fslashes.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag
 diff -ru tmp/output-dir tmp/compare-dir
 
 rm -rf tmp/output-dir tmp/compare-dir
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag-creator=. --output-dir=tmp/output-dir -a
 find tmp/output-dir -type f | while read f ; do normalize_i $f ; done
 mkdir -p tmp/compare-dir/^2e
-for i in pkg1-1.2.0-1.fc28.x86_64 pkg1-1.3.0-1.fc28.x86_64 pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64 ; do
+for i in pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096 pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f ; do
 	sed 's/unavailable.invalid.//;s/invalid.unavailable/./' tests/${i%%-*}/$i.swidtag > tmp/compare-dir/^2e/$i.swidtag
 done
-sed 's/unavailable.invalid.//;s/invalid.unavailable/./' tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/compare-dir/^2e/pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+sed 's/unavailable.invalid.//;s/invalid.unavailable/./' tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/compare-dir/^2e/pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag
 diff -ru tmp/output-dir tmp/compare-dir
 
 
@@ -496,9 +496,9 @@ fi
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo install -y pkg1-1.2.0
 
 echo "f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 $DNF_ROOT/usr/share/testdir/testfile" | sha256sum -c
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
 
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags purge
 ( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
@@ -506,9 +506,9 @@ $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags purge
 ( ! $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags purge 2>&1 | grep Failed )
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags regen
 test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
 
 $BIN/rpm2swidtag --repo=tmp/repo $RPM2SWIDTAG_OPTS --authoritative --tag-creator "example/test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt
 zcat tmp/repo/repodata/*-swidtags.xml.gz > tmp/repo/swidtags.xml
@@ -517,49 +517,49 @@ diff tests/repodata-swidtags.xml tmp/repo/swidtags.xml
 $FAKECHROOT $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS clean expire-cache
 
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo upgrade -y
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
-( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag )
-( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64.swidtag )
-( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag )
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag )
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag )
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag )
 ( ! test -d $DNF_ROOT/var/lib/swidtag/example^2ftest )
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^2$'
-test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64.swidtag
-test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag
+test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag
 ls -l $DNF_ROOT/etc/swid/swidtags.d/example^2ftest/* | tee /dev/stderr | wc -l | grep '^2$'
 for i in $DNF_ROOT/usr/lib/swidtag/example^2ftest/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt $i
 done
 
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OPTS install -y tmp/repo-base/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^2$'
 
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo reinstall -y pkg2
-( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag )
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag )
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^3$'
-test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
+test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag
 
 $FAKECHROOT $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS remove -y pkg1
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^1$'
 
-( ! test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64.swidtag )
-( ! test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag )
-test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
-test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+( ! test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag )
+( ! test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag )
+test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
+test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
 
-echo "need-regen" > $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
+echo "need-regen" > $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag
 grep -r need-regen $DNF_ROOT/usr/lib/swidtag/example^2ftest
 
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo swidtags regen
 if [ "$TEST_INSTALLED" = true ] ; then
 	test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 	test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
-	( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag )
-	( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag )
+	( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag )
+	( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag )
 else
 	( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
 	( ! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+xmllint --xpath 'concat(/*/@tagId, " ", /*/*/*[local-name() = "Resource" and @type = "rpm"]/@sha256header, ";")' /etc/swid/swidtags.d/*/*.swidtag \
+| sed 's/;/\n/g' \
+| while read tagid sha256header ; do
+	if [ -n "$sha256header" ] ; then
+		etagid="${tagid/+/^2b}"
+		etagid="${etagid/\//^2f}"
+		for f in /etc/swid/swidtags.d/*/{$tagid,$etagid}{,-component-of-*}.swidtag ; do
+			if [ -f "$f" ] ; then
+				mv -v "$f" "${f%.swidtag}-rpm-$sha256header.swidtag"
+			fi
+		done
+	fi
+done

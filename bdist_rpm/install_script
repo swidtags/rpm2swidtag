@@ -4,3 +4,15 @@ sed -i 's#^/etc#%config(noreplace) /etc#' INSTALLED_FILES
 
 %check
 ./test.sh
+
+%post
+
+if rpm -q rpm2swidtag dnf-plugin-swidtags 2> /dev/null | grep -E -q '(rpm2swidtag|dnf-plugin-swidtags)-0\.[1-7]\.[0-9]-' ; then
+	echo
+	echo "Please run dnf-plugin-swidtags-update-from-0.7 to update the filename format."
+
+	echo
+	sed -i 's/# rpm2swidtag_command = /rpm2swidtag_command = /' /etc/dnf/plugins/swidtags.conf
+	echo "The rpm2swidtag_command in /etc/dnf/plugins/swidtags.conf enabled"
+	echo "to keep the pre-0.8 behaviour."
+fi

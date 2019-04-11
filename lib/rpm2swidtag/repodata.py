@@ -158,16 +158,16 @@ class Swidtags:
 	def tags_for_repo_packages(self, pkgs):
 		pkgids = {}
 		for p in pkgs:
-			pkgids[p.chksum[1].hex()] = p
+			pkgids[p[0].chksum[1].hex()] = [p, p[1]]
 		tags = {}
 		for e in self.xml.xpath("/swidtags:swidtags/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
 			pkgid = e.get("pkgid")
 			if pkgid not in pkgids:
 				continue
 			tp = pkgids[pkgid]
-			tags[tp] = []
+			tags[tp[0]] = []
 			for p in e:
-				tags[tp].append(Tag(etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))))
+				tags[tp[0]].append(Tag(etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True)), tp[1]))
 		return tags
 
 	def tags_for_rpm_packages(self, pkgs):
@@ -191,6 +191,6 @@ class Swidtags:
 			tp = pkg256headers[found]
 			tags[tp] = []
 			for p in e:
-				tags[tp].append(Tag(etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))))
+				tags[tp].append(Tag(etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True)), found[1]))
 		return tags
 
