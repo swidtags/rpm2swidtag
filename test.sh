@@ -490,8 +490,8 @@ if [ "$TEST_INSTALLED" = true ] ; then
 	test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 	test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 else
-	! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
-	! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
+	( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
+	( ! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
 fi
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo install -y pkg1-1.2.0
 
@@ -501,9 +501,9 @@ test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.no
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags purge
-! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
-! test -d $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated
-! $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags purge 2>&1 | grep Failed || false
+( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
+( ! test -d $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated )
+( ! $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags purge 2>&1 | grep Failed )
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags regen
 test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
@@ -519,10 +519,10 @@ $FAKECHROOT $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS clean expire-cac
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo upgrade -y
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
-! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag
-! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64.swidtag
-! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
-! test -d $DNF_ROOT/var/lib/swidtag/example^2ftest
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64.swidtag )
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64.swidtag )
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag )
+( ! test -d $DNF_ROOT/var/lib/swidtag/example^2ftest )
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^2$'
 test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64.swidtag
 test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
@@ -535,7 +535,7 @@ test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg2-13:0.0.1-1.git0f5
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^2$'
 
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo reinstall -y pkg2
-! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag )
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^3$'
 test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
 
@@ -544,8 +544,8 @@ test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.no
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^1$'
 
-! test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64.swidtag
-! test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+( ! test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64.swidtag )
+( ! test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag )
 test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64.swidtag
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
@@ -555,10 +555,10 @@ grep -r need-regen $DNF_ROOT/usr/lib/swidtag/example^2ftest
 
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo swidtags regen
 test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
-! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag
-! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag )
+( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag )
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^3$'
-! grep -r need-regen $DNF_ROOT/usr/lib/swidtag/example^2ftest
+( ! grep -r need-regen $DNF_ROOT/usr/lib/swidtag/example^2ftest )
 
 # Test that README has up-to-date usage section
 diff -u <( $BIN/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
