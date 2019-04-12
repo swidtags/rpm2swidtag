@@ -554,9 +554,15 @@ echo "need-regen" > $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2
 grep -r need-regen $DNF_ROOT/usr/lib/swidtag/example^2ftest
 
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo swidtags regen
-test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
-( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag )
-( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag )
+if [ "$TEST_INSTALLED" = true ] ; then
+	test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
+	test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
+	( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch.swidtag )
+	( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag )
+else
+	( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
+	( ! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
+fi
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^3$'
 ( ! grep -r need-regen $DNF_ROOT/usr/lib/swidtag/example^2ftest )
 
