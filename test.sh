@@ -486,8 +486,13 @@ fi
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS list installed
 ### rpm --dbpath $(pwd)/tmp/dnfroot/var/lib/rpm --import $(pwd)/tmp/key-19D5C7DD.gpg
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags regen
-! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
-! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
+if [ "$TEST_INSTALLED" = true ] ; then
+	test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
+	test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
+else
+	! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
+	! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
+fi
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo install -y pkg1-1.2.0
 
 echo "f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 $DNF_ROOT/usr/share/testdir/testfile" | sha256sum -c
