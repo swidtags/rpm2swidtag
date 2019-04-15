@@ -178,7 +178,10 @@ class Swidtags:
 		pkg256headers = {}
 		for p in pkgs:
 			if p["SHA256HEADER"]:
-				pkg256headers[( p["name"].decode("utf-8"), p["SHA256HEADER"].decode("utf-8") )] = p
+				if isinstance(p["name"], str):
+					pkg256headers[( p["name"], p["SHA256HEADER"] )] = p
+				else:
+					pkg256headers[( p["name"].decode("utf-8"), p["SHA256HEADER"].decode("utf-8") )] = p
 		tags = {}
 		for e in self.xml.xpath("/swidtags:swidtags/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
 			found = None

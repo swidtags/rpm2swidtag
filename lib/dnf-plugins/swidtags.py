@@ -80,8 +80,12 @@ class swidtagsCommand(commands.Command):
 									self.plugin.create_download_dir(d)
 								dirs[full_d] = d
 								for t in tags[p][d]:
-									p_nevra = b"%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
-									logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (p_nevra.decode("utf-8"), d, t))
+									if isinstance(p["name"], str):
+										p_nevra = "%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
+									else:
+										p_nevra = b"%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
+										p_nevra = p_nevra.decode("utf-8")
+									logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (p_nevra, d, t))
 									tags[p][d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
 									found = True
 							if not found:
@@ -93,7 +97,10 @@ class swidtagsCommand(commands.Command):
 				self.plugin.create_swidtags_d_symlink(dirs[full_d])
 
 			if len(pkgs) > 0:
-				p_names = [ "%s-%s-%s.%s" % (p["name"].decode("utf-8"), p["version"].decode("utf-8"), p["release"].decode("utf-8"), p["arch"].decode("utf-8")) for p in pkgs ]
+				if isinstance(p["name"], str):
+					p_names = [ "%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"]) for p in pkgs ]
+				else:
+					p_names = [ "%s-%s-%s.%s" % (p["name"].decode("utf-8"), p["version"].decode("utf-8"), p["release"].decode("utf-8"), p["arch"].decode("utf-8")) for p in pkgs ]
 				if self.plugin.run_rpm2swidtag_for(p_names) == 0:
 					if run(self.plugin.conf.get("main", "swidq_command").split() + ["--silent", "-p", self.plugin.dir_generated, "--rpm"] + p_names).returncode != 0:
 						logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
