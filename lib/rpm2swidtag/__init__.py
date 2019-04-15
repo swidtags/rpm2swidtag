@@ -5,6 +5,7 @@ import re
 import sys
 import io
 import subprocess
+from os import path, makedirs
 
 XMLNS = 'http://adelton.fedorapeople.org/rpm2swidtag'
 SWID_XMLNS = 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd'
@@ -47,17 +48,29 @@ class Tag:
 	def __init__(self, xml):
 		self.xml = xml
 
+	def save_to_directory(self, dir):
+		if not dir.endswith("/."):
+                        dir = path.join(dir, escape_path(self.get_tagcreator_regid()))
+		if not path.exists(dir):
+                        makedirs(dir)
+		filename = escape_path(self.get_tagid()) + '.swidtag'
+		self.write_output(path.join(dir, filename))
+		return ( dir, filename )
+
 	def write_output(self, file):
-		self.xml.write_output(file)
+		if callable(getattr(self.xml, 'write_output', None)):
+			self.xml.write_output(file)
+		else:
+			self.xml.write(file, xml_declaration=True, encoding="utf-8", pretty_print=True)
 
 	def get_tagid(self):
 		r = self.xml.xpath('/swid:SoftwareIdentity/@tagId', namespaces = { 'swid': SWID_XMLNS })
-		return escape_path(r[0])
+		return r[0]
 
 	def get_tagcreator_regid(self):
 		r = self.xml.xpath("/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid",
 			namespaces = { 'swid': SWID_XMLNS })
-		return escape_path(r[0])
+		return r[0]
 
 	def sign_pem(self, pem_opt):
 		return SignedTag(self, pem_opt)

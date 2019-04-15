@@ -64,37 +64,34 @@ class swidtagsCommand(commands.Command):
 			for r in self.base.repos.iter_enabled():
 				if hasattr(r, "get_metadata_path"):
 					file = r.get_metadata_path(self.plugin.METADATA_TYPE)
-					if file and file != "":
-						s = repodata.Swidtags(None, file)
-						tags = s.tags_for_rpm_packages(pkgs)
+					if not file or file == "":
+						continue
+					s = repodata.Swidtags(None, file)
+					tags = s.tags_for_rpm_packages(pkgs)
 
-						remaining_pkgs = []
-						for p in pkgs:
-							if p not in tags:
-								remaining_pkgs.append(p)
-								continue
-							found = False
-							for d in tags[p]:
-								full_d = path.join(self.plugin.dir_downloaded, d)
-								if full_d not in dirs:
-									self.plugin.create_download_dir(d)
-								dirs[full_d] = d
-								for t in tags[p][d]:
-									if isinstance(p["name"], str):
-										p_nevra = "%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
-									else:
-										p_nevra = b"%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
-										p_nevra = p_nevra.decode("utf-8")
-									logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (p_nevra, d, t))
-									tags[p][d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
-									found = True
-							if not found:
-								remaining_pkgs.append(p)
+					remaining_pkgs = []
+					for p in pkgs:
+						if p not in tags:
+							remaining_pkgs.append(p)
+							continue
+						found = False
+						if isinstance(p["name"], str):
+							p_nevra = "%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
+						else:
+							p_nevra = b"%s-%s-%s.%s" % (p["name"], p["version"], p["release"], p["arch"])
+							p_nevra = p_nevra.decode("utf-8")
+						for t in tags[p]:
+							logger.debug("Retrieved SWID tag from repodata for %s: %s" % (p_nevra, t.get_tagid()))
+							x = t.save_to_directory(self.plugin.dir_downloaded)
+							dirs[x[0]] = True
+							found = True
+						if not found:
+							remaining_pkgs.append(p)
 
-						pkgs = remaining_pkgs
+					pkgs = remaining_pkgs
 
-			for full_d in dirs:
-				self.plugin.create_swidtags_d_symlink(dirs[full_d])
+			for d in dirs:
+				self.plugin.create_swidtags_d_symlink(path.basename(d))
 
 			if len(pkgs) > 0:
 				if isinstance(p["name"], str):
@@ -205,20 +202,16 @@ class swidtags(Plugin):
 			tags = downloaded_swidtags[r].tags_for_repo_packages(packages_in_repos[r])
 			for p in tags:
 				found = False
-				for d in tags[p]:
-					full_d = path.join(self.dir_downloaded, d)
-					if full_d not in dirs:
-						self.create_download_dir(d)
-					dirs[full_d] = d
-					for t in tags[p][d]:
-						logger.debug("Retrieved SWID tag from repodata for %s: %s/%s" % (p, d, t))
-						tags[p][d][t].write(path.join(full_d, t + ".swidtag"), xml_declaration=True, encoding="utf-8", pretty_print=True)
-						found = True
+				for t in tags[p]:
+					logger.debug("Retrieved SWID tag from repodata for %s: %s" % (p, t.get_tagid()))
+					x = t.save_to_directory(self.dir_downloaded)
+					dirs[x[0]] = True
+					found = True
 				if not found:
 					packages_in_repos[None].append(p)
 
-		for full_d in dirs:
-			self.create_swidtags_d_symlink(dirs[full_d])
+		for d in dirs:
+			self.create_swidtags_d_symlink(path.basename(d))
 
 		if len(packages_in_repos[None]) > 0:
 			p_names = [ str(p) for p in packages_in_repos[None]]

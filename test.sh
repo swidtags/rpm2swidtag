@@ -526,6 +526,7 @@ test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.no
 ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | grep '^2$'
 test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64.swidtag
 test -f $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64.swidtag
+ls -l $DNF_ROOT/etc/swid/swidtags.d/example^2ftest/* | tee /dev/stderr | wc -l | grep '^2$'
 for i in $DNF_ROOT/usr/lib/swidtag/example^2ftest/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt $i
 done

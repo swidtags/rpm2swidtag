@@ -4,7 +4,7 @@ from os import path, stat
 from hashlib import sha256
 from io import BytesIO
 from gzip import GzipFile
-from rpm2swidtag import Error, SWID_XMLNS, escape_path
+from rpm2swidtag import Error, SWID_XMLNS, Tag
 
 REPO_XMLNS = "http://linux.duke.edu/metadata/repo"
 COMMON_XMLNS = "http://linux.duke.edu/metadata/common"
@@ -165,13 +165,9 @@ class Swidtags:
 			if pkgid not in pkgids:
 				continue
 			tp = pkgids[pkgid]
-			tags[tp] = {}
+			tags[tp] = []
 			for p in e:
-				for r in p.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):
-					r_e = escape_path(r)
-					if r_e not in tags[tp]:
-						tags[tp][r_e] = {}
-					tags[tp][r_e][escape_path(p.get("tagId"))] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
+				tags[tp].append(Tag(etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))))
 		return tags
 
 	def tags_for_rpm_packages(self, pkgs):
@@ -193,12 +189,8 @@ class Swidtags:
 			if not found or found not in pkg256headers:
 				continue
 			tp = pkg256headers[found]
-			tags[tp] = {}
+			tags[tp] = []
 			for p in e:
-				for r in p.xpath("./swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]/@regid", namespaces = { 'swid': SWID_XMLNS }):
-					r_e = escape_path(r)
-					if r_e not in tags[tp]:
-						tags[tp][r_e] = {}
-					tags[tp][r_e][escape_path(p.get("tagId"))] = etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))
+				tags[tp].append(Tag(etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True))))
 		return tags
 

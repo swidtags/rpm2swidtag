@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from sys import argv, exit, stderr, stdout
-from os import getenv, path, makedirs
+from os import getenv, path
 from platform import node
 from rpm2swidtag import Template, Error, rpm, repodata
 import argparse, re
@@ -81,13 +81,7 @@ def load_template(config, opts):
 
 def write_out_tag(tag, opts, supplemental=False):
 	if opts.output_dir and not opts.print_tagid:
-		if opts.output_dir.endswith("/."):
-			dir = opts.output_dir
-		else:
-			dir = opts.output_dir + '/' + tag.get_tagcreator_regid()
-		if not path.exists(dir):
-			makedirs(dir)
-		tag.write_output(dir + '/' + tag.get_tagid() + '.swidtag')
+		tag.save_to_directory(opts.output_dir)
 	else:
 		if opts.print_tagid and supplemental:
 			stdout.buffer.write(b"+ ")
