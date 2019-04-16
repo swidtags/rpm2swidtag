@@ -185,6 +185,13 @@ diff -ru tmp/output-dir/signed-internal tests/pkg-signed
 diff -ru tmp/output-dir/signed-pkcs12 tests/pkg-signed
 diff -ru tmp/output-dir/signed-pem tests/pkg-signed
 
+rm -rf tmp/output-dir
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag-creator=loong-tag-creator-regid-resulting-filename-will-barely-fit-max-filename-length-on-linux-which-is-255-bytes --output-dir=tmp/output-dir pkg1-1.3.0
+_RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag-creator=looong-tag-creator-regid-the-resulting-filename-will-exceed-max-filename-length-on-linux-which-is-255-bytes --output-dir=tmp/output-dir pkg1-1.3.0
+test -f tmp/output-dir/loong-tag-creator-regid-resulting-filename-will-barely-fit-max-filename-length-on-linux-which-is-255-bytes/loong-tag-creator-regid-resulting-filename-will-barely-fit-max-filename-length-on-linux-which-is-255-bytes.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag
+test -f tmp/output-dir/looong-tag-creator-regid-the-resulting-filename-will-exceed-max-filename-length-on-linux-which-is-255-bytes/looong-tag-creator-regid-the-resulting-filename-will-exceed-max-filename-length-on-linux-which-is-255-bytes.pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag
+test -f tmp/output-dir/looong-tag-creator-regid-the-resulting-filename-will-exceed-max-filename-length-on-linux-which-is-255-bytes/3b0d3875e99ab674ff972f328abe816fb6a064b48f0f5fa5d447dc69ef2f9399-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag
+
 OUT=$( _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --print-tagid pkg1 )
 test "$OUT" == "$( echo -e 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64\nunavailable.invalid.pkg1-1.3.0-1.fc28.x86_64\n+ unavailable.invalid.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64' )"
 

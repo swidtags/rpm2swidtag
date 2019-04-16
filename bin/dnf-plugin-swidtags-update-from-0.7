@@ -8,7 +8,10 @@ xmllint --xpath 'concat(/*/@tagId, " ", /*/*/*[local-name() = "Resource" and @ty
 		etagid="${etagid/\//^2f}"
 		for f in /etc/swid/swidtags.d/*/{$tagid,$etagid}{,-component-of-*}.swidtag ; do
 			if [ -f "$f" ] ; then
-				mv -v "$f" "${f%.swidtag}-rpm-$sha256header.swidtag"
+				if ! mv -v "$f" "${f%.swidtag}-rpm-$sha256header.swidtag" ; then
+					tagid_sha=$( echo $tagid | sha256sum )
+					mv -v "$f" "$( dirname $f )"/"${tagid_sha%% *}-rpm-$sha256header.swidtag"
+				fi
 			fi
 		done
 	fi

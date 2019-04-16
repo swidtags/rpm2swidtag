@@ -6,6 +6,7 @@ import sys
 import io
 import subprocess
 from os import path, makedirs
+from hashlib import sha256
 
 XMLNS = 'http://adelton.fedorapeople.org/rpm2swidtag'
 SWID_XMLNS = 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd'
@@ -55,6 +56,9 @@ class Tag:
 		if not path.exists(dir):
                         makedirs(dir)
 		filename = escape_path(self.get_tagid() + '-rpm-' + self.checksum) + '.swidtag'
+		stderr.write(filename + "\n")
+		if len(filename) > 255:
+			filename = sha256(self.get_tagid().encode()).hexdigest() + '-rpm-' + self.checksum + '.swidtag'
 		self.write_output(path.join(dir, filename))
 		return ( dir, filename )
 
