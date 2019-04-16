@@ -138,9 +138,14 @@ when looking for SWID tag files.
 
 ## Keeping SWID tags in sync with installed rpm packages
 
-DNF plugin `swidtags` can be used to create SWID tags for newly
-installed packages and remove SWID tags for packages removed,
-automatically, after DNF transaction finishes.
+DNF plugin `swidtags` can be used to fetch SWID tags from dnf/yum
+repository metadata, keeping the SWID information synchronized with
+package installations, upgrades, and removals via DNF operations.
+
+When the `rpm2swidtag_command` option is configured (pointing to
+`/usr/bin/rpm2swidtag`) in `/etc/dnf/plugins/swidtags.conf`, SWID
+tags will be locally-generated for packages for which they are not
+available in the dnf/yum repository.
 
 ```
 usage: dnf swidtags {regen,purge}

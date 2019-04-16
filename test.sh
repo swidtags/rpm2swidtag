@@ -25,6 +25,7 @@ if [ "$TEST_INSTALLED" = true ] ; then
 	RPM2SWIDTAG_XSLT1=tests/xslt/swidtag-inst.xslt
 	RPM2SWIDTAG_XSLT2=tests/xslt/swidtag-fail-inst.xslt
 	DNF_OPTS=--nogpgcheck
+	DNF_PLUGIN_CONF=/etc/dnf/plugins/swidtags.conf
 	cp tests/rpm2swidtag.conf.d/*.conf /etc/rpm2swidtag/rpm2swidtag.conf.d/
 	SWIDQ_STYLESHEET_DIR2=/usr/share/swidq/stylesheets
 	SWIDQ_OPTS2="-c tests/swidq-inst.conf"
@@ -38,6 +39,9 @@ else
 	RPM2SWIDTAG_OPTS3="--config ./tests/rpm2swidtag.conf"
 	DNF_ROOT=tmp/dnfroot
 	DNF_OPTS="--installroot $(pwd)/$DNF_ROOT --config=tests/dnf.conf"
+	cp -rp tests/dnf-plugins-conf tmp
+	DNF_PLUGIN_CONF=tmp/dnf-plugins-conf/swidtags.conf
+	cp -f $DNF_PLUGIN_CONF.in $DNF_PLUGIN_CONF
 	RPM2SWIDTAG_XSLT1=tests/xslt/swidtag.xslt
 	RPM2SWIDTAG_XSLT2=tests/xslt/swidtag-fail.xslt
 	SWIDQ_STYLESHEET_DIR1=.
@@ -493,14 +497,18 @@ fi
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS list installed
 ### rpm --dbpath $(pwd)/tmp/dnfroot/var/lib/rpm --import $(pwd)/tmp/key-19D5C7DD.gpg
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags regen
-if [ "$TEST_INSTALLED" = true ] ; then
-	test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
-	test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
-else
-	( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
-	( ! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
-fi
+( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
+( ! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
+
 $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo install -y pkg1-1.2.0
+( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
+( ! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
+
+sed -i 's/^# rpm2swidtag_command/rpm2swidtag_command/' $DNF_PLUGIN_CONF
+
+$FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags regen
+test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
+test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 
 echo "f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 $DNF_ROOT/usr/share/testdir/testfile" | sha256sum -c
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag

@@ -1,0 +1,3 @@
+[main]
+enabled = 1
+# rpm2swidtag_command = bin/rpm2swidtag --config=tests/rpm2swidtag.conf

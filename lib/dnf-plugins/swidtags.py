@@ -15,7 +15,6 @@ from rpm2swidtag.rpm import get_nevra, get_checksum
 from glob import iglob
 
 NAME = "swidtags"
-RPM2SWIDTAG_COMMAND = "/usr/bin/rpm2swidtag"
 
 SWIDTAG_DIR_GEN = "var/lib/swidtag"
 SWIDTAG_DIR_DOWNLOAD = "usr/lib/swidtag"
@@ -94,7 +93,8 @@ class swidtagsCommand(commands.Command):
 				self.plugin.create_swidtags_d_symlink(path.basename(d))
 
 			if len(pkgs) > 0:
-				if self.plugin.run_rpm2swidtag_for([ get_nevra(p) for p in pkgs ]) == 0:
+				run_ret = self.plugin.run_rpm2swidtag_for([ get_nevra(p) for p in pkgs ]) == 0
+				if run_ret == 0:
 					pkgs_missing = {}
 					for p in pkgs:
 						pkgs_missing[get_checksum(p)] = p
@@ -104,6 +104,8 @@ class swidtagsCommand(commands.Command):
 							del pkgs_missing[m.group(1)]
 					for c in pkgs_missing:
 						logger.warning("The SWID tag for rpm %s should have been generated but could not be found" % get_nevra(pkgs_missing[c]))
+				if run_ret == -2:
+					logger.warning("The rpm2swidtag_command not configured for the %s plugin.\nSWID tags not generated locally for %d packages." % (NAME, len(pkgs)))
 
 
 class swidtags(Plugin):
@@ -129,7 +131,6 @@ class swidtags(Plugin):
 		super(swidtags, self).config()
 		self.conf = self.read_config(self.base.conf)
 		DEFAULTS = { "main": {
-			"rpm2swidtag_command": RPM2SWIDTAG_COMMAND,
 			}
 		}
 		for s in DEFAULTS:
@@ -281,9 +282,12 @@ class swidtags(Plugin):
 
 	def run_rpm2swidtag_for(self, pkgs):
 		if not pkgs or len(pkgs) < 1:
-			return
+			return -1
 		hostname = platform.uname()[1]
-		rpm2swidtag_command = self.conf.get("main", "rpm2swidtag_command")
+		try:
+			rpm2swidtag_command = self.conf.get("main", "rpm2swidtag_command")
+		except KeyError:
+			return -2
 		logger.debug("Running %s for %s ..." % (rpm2swidtag_command, pkgs))
 		env = { "_RPM2SWIDTAG_RPMDBPATH": path.join(self.base.conf.installroot, "var/lib/rpm") }
 		if "PYTHONPATH" in environ:
