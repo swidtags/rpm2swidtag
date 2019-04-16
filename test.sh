@@ -496,7 +496,7 @@ if [ -n "$DNF_ROOT" ] ; then
 fi
 $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS list installed
 ### rpm --dbpath $(pwd)/tmp/dnfroot/var/lib/rpm --import $(pwd)/tmp/key-19D5C7DD.gpg
-$FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags regen
+$FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags sync
 ( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
 ( ! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
 
@@ -506,7 +506,7 @@ $FAKECHROOT $FAKEROOT dnf --forcearch=x86_64 --setopt=reposdir=/dev/null $DNF_OP
 
 sed -i 's/^# rpm2swidtag_command/rpm2swidtag_command/' $DNF_PLUGIN_CONF
 
-$FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags regen
+$FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags sync
 test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 
@@ -519,7 +519,7 @@ $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags purge
 ( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
 ( ! test -d $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated )
 ( ! $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags purge 2>&1 | grep Failed )
-$FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags regen
+$FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags sync
 test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
@@ -569,7 +569,7 @@ test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.no
 echo "need-regen" > $DNF_ROOT/usr/lib/swidtag/example^2ftest/example^2ftest.pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag
 grep -r need-regen $DNF_ROOT/usr/lib/swidtag/example^2ftest
 
-$FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo swidtags regen
+$FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS --repofrompath local,tmp/repo swidtags sync
 if [ "$TEST_INSTALLED" = true ] ; then
 	test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 	test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
@@ -585,7 +585,7 @@ ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | gre
 # Test that README has up-to-date usage section
 diff -u <( $BIN/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
 
-diff -u <(PYTHONPATH=lib dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags --help | sed -n '/SWID/,/^optional/!b;/^optional/b;p') <(sed -n '/^Generate/,/```/{/```/T;p}' README.md )
+diff -u <(PYTHONPATH=lib dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags --help | sed -n '/SWID/,/^optional/!b;/^optional/b;p') <(sed -n '/^Maintain SWID tags/,/```/{/```/T;p}' README.md )
 
 
 echo OK.
