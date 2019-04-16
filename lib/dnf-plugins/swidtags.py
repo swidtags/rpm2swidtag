@@ -52,6 +52,9 @@ class swidtagsCommand(commands.Command):
 		if self.opts.swidtagscmd == "purge" or self.opts.swidtagscmd == "regen":
 			self.plugin.purge_generated_dir()
 			self.plugin.purge_generated_symlink()
+		else:
+			print("dnf swidtags [regen | purge]")
+
 		if self.opts.swidtagscmd == "regen":
 			ts = rpm.transaction.initReadOnlyTransaction(root=self.base.conf.installroot)
 			pkgs = []
@@ -102,8 +105,6 @@ class swidtagsCommand(commands.Command):
 					if run(self.plugin.conf.get("main", "swidq_command").split() + ["--silent", "-p", self.plugin.dir_generated, "--rpm"] + p_names).returncode != 0:
 						logger.warn("The SWID tag for rpm %s should have been generated but could not be found" % str(i))
 
-		else:
-			print("dnf swidtags [regen | purge]")
 
 class swidtags(Plugin):
 
