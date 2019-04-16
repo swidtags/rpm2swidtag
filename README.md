@@ -138,7 +138,7 @@ when looking for SWID tag files.
 
 ## Keeping SWID tags in sync with installed rpm packages
 
-DNF plugin `rpm2widtag` can be used to create SWID tags for newly
+DNF plugin `swidtags` can be used to create SWID tags for newly
 installed packages and remove SWID tags for packages removed,
 automatically, after DNF transaction finishes.
 
