@@ -23,7 +23,7 @@ class Repodata:
 			self.__repomd = Repomd(self)
 		return self.__repomd
 
-class Repomd(Repodata):
+class Repomd:
 	def __init__(self, repo):
 		self.repo = repo
 		self.href = "repodata/repomd.xml"
@@ -73,6 +73,7 @@ class Package:
 		self.primary = primary
 		self.element = element
 		self.location_fn = None
+		self.href_fn = None
 		self.pkgid_fn = None
 
 	@property
@@ -127,30 +128,30 @@ class Swidtags:
 		value_gz = data_gz.getvalue()
 		checksum = sha256(value_gz).hexdigest()
 		self.href = "repodata/%s-swidtags.xml.gz" % checksum
-		self.path = path.join(self.repo.path, self.href)
-		with open(self.path, "wb") as f:
+		filename = path.join(self.repo.path, self.href)
+		with open(filename, "wb") as f:
 			f.write(value_gz)
-		timestamp = str(int(stat(self.path).st_mtime))
+		timestamp = str(int(stat(filename).st_mtime))
 
-		self.repomd_xml = etree.Element("{%s}data" % REPO_XMLNS)
-		self.repomd_xml.set("type", "swidtags")
-		c = etree.SubElement(self.repomd_xml, "{%s}checksum" % REPO_XMLNS)
+		repomd_xml = etree.Element("{%s}data" % REPO_XMLNS)
+		repomd_xml.set("type", "swidtags")
+		c = etree.SubElement(repomd_xml, "{%s}checksum" % REPO_XMLNS)
 		c.set("type", "sha256")
 		c.text = checksum
 		value = data.getvalue()
-		oc = etree.SubElement(self.repomd_xml, "{%s}open-checksum" % REPO_XMLNS)
+		oc = etree.SubElement(repomd_xml, "{%s}open-checksum" % REPO_XMLNS)
 		oc.set("type", "sha256")
 		oc.text = sha256(value).hexdigest()
-		etree.SubElement(self.repomd_xml, "{%s}location" % REPO_XMLNS).set("href", self.href)
-		etree.SubElement(self.repomd_xml, "{%s}timestamp" % REPO_XMLNS).text = timestamp
-		etree.SubElement(self.repomd_xml, "{%s}size" % REPO_XMLNS).text = str(len(value_gz))
-		etree.SubElement(self.repomd_xml, "{%s}open-size" % REPO_XMLNS).text = str(len(value))
+		etree.SubElement(repomd_xml, "{%s}location" % REPO_XMLNS).set("href", self.href)
+		etree.SubElement(repomd_xml, "{%s}timestamp" % REPO_XMLNS).text = timestamp
+		etree.SubElement(repomd_xml, "{%s}size" % REPO_XMLNS).text = str(len(value_gz))
+		etree.SubElement(repomd_xml, "{%s}open-size" % REPO_XMLNS).text = str(len(value))
 
 		repomd = self.repo.repomd
 		for s in repomd.xml.xpath("/repo:repomd/repo:data[@type = 'swidtags']", namespaces = { 'repo': REPO_XMLNS }):
 			s.getparent().remove(s)
 		for t in repomd.xml.xpath("/repo:repomd", namespaces = { 'repo': REPO_XMLNS }):
-			t.append(self.repomd_xml)
+			t.append(repomd_xml)
 		for t in repomd.xml.xpath("/repo:repomd/repo:revision", namespaces = { 'repo': REPO_XMLNS }):
 			t.text = timestamp
 		repomd.save()

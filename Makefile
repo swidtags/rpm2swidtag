@@ -15,7 +15,7 @@ test:
 	./test.sh
 
 test-pylint:
-	pylint-3 -E lib/*/*.py setup.py
+	pylint-3 --disable=R --disable=C --indent-string="\t" lib/*/*.py setup.py
 
 clean:
 	rm -rf $(shell cat .gitignore)

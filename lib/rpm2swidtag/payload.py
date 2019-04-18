@@ -8,9 +8,10 @@ from rpm2swidtag import XMLNS, SWID_XMLNS
 
 class SWIDPayloadExtension(etree.XSLTExtension):
 	def __init__(self, rpm_header):
+		super().__init__()
 		self.rpm_header = rpm_header
 
-	def execute(self, context, self_node, input_node, output_parent):
+	def execute(self, _context, _self_node, _input_node, output_parent):
 		NSMAP = {
 			None: SWID_XMLNS,
 			'sha256': 'http://www.w3.org/2001/04/xmlenc#sha256',
@@ -48,7 +49,7 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 			e.set("fullname", f[0])
 			e.set("name", name)
 			if location:
-				location = re.sub(r'^(.+)/$', '\g<1>', location)
+				location = re.sub(r'^(.+)/$', r'\g<1>', location)
 				e.set("location", location)
 			if f[12]:
 				if len(f[12]) == 64 and f[12] != "0" * 64:
@@ -83,5 +84,6 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 	def _cleanup_fullname(l):
 		for i in l:
 			del i.attrib["fullname"]
+			#pylint: disable=protected-access
 			__class__._cleanup_fullname(i)
 

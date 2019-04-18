@@ -202,6 +202,7 @@ class SWIDTag:
 			or e1.text != e2.text \
 			or e1.attrib != e2.attrib:
 			return False
+		#pylint: disable=protected-access
 		if __class__._children_without_swidq(e1) != __class__._children_without_swidq(e2):
 			return False
 		return True
@@ -233,14 +234,15 @@ class SWIDTag:
 		}
 		value_source = {}
 
-		self = SWIDTag(copy_from=self)
-		last_child = list(self.xml.getroot())[-1]
+		newself = SWIDTag(copy_from=self)
+		last_child = list(newself.xml.getroot())[-1]
 
+		#pylint: disable=protected-access
 		supplementals = []
-		for s in collection.supplemental_for(self):
+		for s in collection.supplemental_for(newself):
 			spath = s.get_path()
 			if seen and spath in seen:
-				break_loop = etree.SubElement(self.xml.getroot(), "{%s}supplemental" % SWIDQ_XMLNS)
+				break_loop = etree.SubElement(newself.xml.getroot(), "{%s}supplemental" % SWIDQ_XMLNS)
 				break_loop.set("path", spath)
 				break_loop.set("break-loop", "true")
 				break_loop.tail = "\n"
@@ -263,7 +265,7 @@ class SWIDTag:
 						continue
 					ne = deepcopy(e)
 					ne.set("role", r)
-					for t in self.xml.getroot().iterfind("{%s}Entity" % SWID_XMLNS):
+					for t in newself.xml.getroot().iterfind("{%s}Entity" % SWID_XMLNS):
 						if __class__._elements_match(ne, t):
 							__class__._add_element_source(t, spath, to_existing=True)
 							break
@@ -275,20 +277,20 @@ class SWIDTag:
 							break
 					else:
 						__class__._add_element_source(ne, spath)
-						self.xml.getroot().append(ne)
+						newself.xml.getroot().append(ne)
 
 			for e in s.xml.getroot().iterfind("{%s}Link" % SWID_XMLNS):
 				rel = e.get("rel")
 				if not rel or rel == "supplemental":
 					continue
-				for t in self.xml.getroot().iterfind("{%s}Link" % SWID_XMLNS):
+				for t in newself.xml.getroot().iterfind("{%s}Link" % SWID_XMLNS):
 					if __class__._elements_match(e, t):
 						__class__._add_element_source(t, spath, to_existing=True)
 						break
 				else:
 					ne = deepcopy(e)
 					__class__._add_element_source(ne, spath)
-					self.xml.getroot().append(ne)
+					newself.xml.getroot().append(ne)
 
 			rs = etree.Element("{%s}supplemental" % SWIDQ_XMLNS)
 			rs.set("path", spath)
@@ -296,13 +298,13 @@ class SWIDTag:
 			rs.append(s.get_xml().getroot())
 			supplementals.append(rs)
 
-		__class__._attribs_into_dict(attrib_merge, self, None, value_source)
-		__class__._dict_into_attribs(self, attrib_merge, value_source, last_child)
+		__class__._attribs_into_dict(attrib_merge, newself, None, value_source)
+		__class__._dict_into_attribs(newself, attrib_merge, value_source, last_child)
 
 		for e in supplementals:
-			self.get_xml().getroot().append(e)
+			newself.get_xml().getroot().append(e)
 
-		return self
+		return newself
 
 class SWIDTagCollection:
 	def __init__(self):
@@ -349,12 +351,14 @@ class SWIDTagCollection:
 						self._add_to_cache_supplemental(t, tag, s[2], stderr=stderr, prefix=prefix, debug=debug)
 						continue
 				elif s[0] == 'swidpath':
+					found = False
 					for p in self.by_filenames.values():
 						for si in p.xml.xpath(s[1], namespaces = { 'swid': SWID_XMLNS }):
+							found = True
 							if not si.getparent():
 								self._add_to_cache_supplemental(p.get_path(), tag, s[2], stderr=stderr, prefix=prefix, debug=debug)
 								break
-					else:
+					if found:
 						continue
 				if not silent:
 					stderr.write("%s[%s] supplements [%s] which we do not know\n" % (prefix, tag.get_tagid(), s[2]))

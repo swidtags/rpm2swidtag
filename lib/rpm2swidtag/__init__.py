@@ -13,6 +13,7 @@ SWID_XMLNS = 'http://standards.iso.org/iso/19770/-2/2015/schema.xsd'
 
 class Error(Exception):
 	def __init__(self, strerror):
+		super().__init__()
 		self.strerror = strerror
 
 from rpm2swidtag import rpm
@@ -29,7 +30,7 @@ def _parse_xml(file, msg):
 	return x
 
 def _pass_in_hdr(ih):
-	def tag_from_header(c, tag):
+	def tag_from_header(_context, tag):
 		if tag == 'arch' and rpm.is_source_package(ih):
 			return b'src.rpm'
 		try:
@@ -50,17 +51,17 @@ class Tag:
 		self.xml = xml
 		self.checksum = checksum
 
-	def save_to_directory(self, dir):
-		if not dir.endswith("/."):
-                        dir = path.join(dir, escape_path(self.get_tagcreator_regid()))
-		if not path.exists(dir):
-                        makedirs(dir)
+	def save_to_directory(self, dirname):
+		if not dirname.endswith("/."):
+			dirname = path.join(dirname, escape_path(self.get_tagcreator_regid()))
+		if not path.exists(dirname):
+			makedirs(dirname)
 		filename = escape_path(self.get_tagid() + '-rpm-' + self.checksum) + '.swidtag'
 		stderr.write(filename + "\n")
 		if len(filename) > 255:
 			filename = sha256(self.get_tagid().encode()).hexdigest() + '-rpm-' + self.checksum + '.swidtag'
-		self.write_output(path.join(dir, filename))
-		return ( dir, filename )
+		self.write_output(path.join(dirname, filename))
+		return ( dirname, filename )
 
 	def write_output(self, file):
 		if callable(getattr(self.xml, 'write_output', None)):
@@ -91,8 +92,8 @@ class SignedTag(Tag):
 			stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=False)
 		if result.returncode != 0:
 			raise Error("Error signing using [%s]: %s" % (pem_opt, result.stderr))
-		self.xml = etree.parse(io.BytesIO(result.stdout), etree.XMLParser(remove_blank_text = True))
-		self.checksum = tag.checksum
+		super().__init__(etree.parse(io.BytesIO(result.stdout), etree.XMLParser(remove_blank_text = True)),
+			tag.checksum)
 
 	def write_output(self, file):
 		self.xml.write(file, xml_declaration=True, encoding="utf-8", pretty_print=True)
@@ -102,7 +103,7 @@ class Template:
 		self.xml_template = _parse_xml(xml_template, "SWID template file")
 		self.xslt_stylesheet = _parse_xml(xslt, "processing XSLT file")
 
-	def generate_tag_for_header(self, rpm_header, params={}):
+	def generate_tag_for_header(self, rpm_header, params=None):
 		ns = etree.FunctionNamespace(XMLNS)
 		ns['package_tag'] = _pass_in_hdr(rpm_header)
 
@@ -113,8 +114,9 @@ class Template:
 				extensions = { (XMLNS, 'generate-payload') : generate_payload })
 
 			str_params = {}
-			for i in params:
-				str_params[i] = etree.XSLT.strparam(params[i])
+			if params:
+				for i in params:
+					str_params[i] = etree.XSLT.strparam(params[i])
 			checksum = rpm.get_checksum(rpm_header)
 			tag = Tag(transform(self.xml_template, **str_params), checksum)
 			generate_payload.cleanup_namespaces(tag.xml.getroot())

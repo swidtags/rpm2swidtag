@@ -1,12 +1,14 @@
 
-from os import open, O_RDONLY, close
+from os import open as os_open, close as os_close, O_RDONLY
 import rpm, re
 from rpm2swidtag import Error
 
 def read_from_file(file):
 	fdno = None
 	try:
-		fdno = open(file, O_RDONLY)
+		fdno = os_open(file, O_RDONLY)
+		# Using rpm._RPMVSF_NOSIGNATURES seems like the only way to get to that value
+		#pylint: disable=protected-access
 		ts = rpm.TransactionSet('', rpm._RPMVSF_NOSIGNATURES)
 		h = ts.hdrFromFdno(fdno)
 		return h
@@ -16,7 +18,7 @@ def read_from_file(file):
 		raise Error("Error reading rpm file [%s]: %s" % (file, str(e)))
 	finally:
 		if fdno:
-			close(fdno)
+			os_close(fdno)
 
 def read_from_db(package, rpmdb_path=None, glob=False):
 	if rpmdb_path is not None:
@@ -43,7 +45,7 @@ def is_source_package(h):
 
 def get_signature_key_id(h):
 	key = h.format('%|DSAHEADER?{%{DSAHEADER:pgpsig}}:{%|RSAHEADER?{%{RSAHEADER:pgpsig}}:{%|SIGGPG?{%{SIGGPG:pgpsig}}:{%|SIGPGP?{%{SIGPGP:pgpsig}}:{}|}|}|}|')
-	return re.sub(r'^.*Key ID \S{8}(\S{8})$', '\g<1>', key)
+	return re.sub(r'^.*Key ID \S{8}(\S{8})$', r'\g<1>', key)
 
 def get_nevra(h):
 	if isinstance(h["name"], str):
