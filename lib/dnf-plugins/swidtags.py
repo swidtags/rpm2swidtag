@@ -163,7 +163,7 @@ class swidtags(Plugin):
 		remove_packages = {}
 		for p in self.remove_set:
 			if p not in self.remove_set_checksum:
-				logger.warning("Could not identify checksum for %p, potential SWID tag will not be removed", p)
+				logger.warning("Could not identify checksum for %s, potential SWID tag will not be removed", p)
 				continue
 			remove_packages[self.remove_set_checksum[p]] = True
 		if len(remove_packages) > 0:
@@ -246,7 +246,7 @@ class swidtags(Plugin):
 				unlink(path.join(self.dir_generated, f))
 				count += 1
 			except OSError as e:
-				logger.warning("Failed to remove [%s]: %s" % (file, e))
+				logger.warning("Failed to remove [%s]: %s" % (f, e))
 		try:
 			rmdir(self.dir_generated)
 		except OSError:

@@ -3,7 +3,7 @@ python3 setup.py install --single-version-externally-managed -O1 --root=$RPM_BUI
 sed -i 's#^/etc#%config(noreplace) /etc#' INSTALLED_FILES
 
 %check
-./test.sh
+make test-pylint test
 
 %post
 

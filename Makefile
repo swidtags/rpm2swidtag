@@ -14,6 +14,9 @@ spec:
 test:
 	./test.sh
 
+test-pylint:
+	pylint-3 -E lib/*/*.py setup.py
+
 clean:
 	rm -rf $(shell cat .gitignore)
 

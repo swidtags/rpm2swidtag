@@ -1,2 +1,2 @@
-include test.sh LICENSE
+include test.sh LICENSE Makefile
 recursive-include tests *

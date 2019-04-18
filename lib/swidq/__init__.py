@@ -35,7 +35,7 @@ class SWIDTag:
 		if copy_from:
 			self.__dict__ = deepcopy(copy_from.__dict__)
 		else:
-			return self._load_from_file( file)
+			self._load_from_file( file)
 
 	def _load_from_file(self, file):
 		self.path = file
