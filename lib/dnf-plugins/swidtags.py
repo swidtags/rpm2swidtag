@@ -95,7 +95,7 @@ class swidtagsCommand(commands.Command):
 				self.plugin.create_swidtags_d_symlink(path.basename(d))
 
 			if len(pkgs) > 0:
-				run_ret = self.plugin.run_rpm2swidtag_for([ get_nevra(p) for p in pkgs ]) == 0
+				run_ret = self.plugin.run_rpm2swidtag_for([ get_nevra(p) for p in pkgs ])
 				if run_ret == 0:
 					pkgs_missing = {}
 					for p in pkgs:
@@ -104,8 +104,8 @@ class swidtagsCommand(commands.Command):
 						m = re.search(r'-rpm-([0-9a-f]{40}([0-9a-f]{24})?)\.swidtag$', f)
 						if m and m.group(1) in pkgs_missing:
 							del pkgs_missing[m.group(1)]
-					for c in pkgs_missing:
-						logger.warning("The SWID tag for rpm %s should have been generated but could not be found", get_nevra(pkgs_missing[c]))
+					for p in pkgs_missing.values():
+						logger.warning("The SWID tag for rpm %s should have been generated but could not be found", get_nevra(p))
 				if run_ret == -2:
 					logger.warning("The rpm2swidtag_command not configured for the %s plugin.\nSWID tags not generated locally for %d packages.", NAME, len(pkgs))
 
@@ -229,8 +229,8 @@ class swidtags(Plugin):
 					m = re.search(r'-rpm-([0-9a-f]{40}([0-9a-f]{24})?)\.swidtag$', f)
 					if m and m.group(1) in pkgs_missing:
 						del pkgs_missing[m.group(1)]
-				for p in pkgs_missing:
-					logger.warning("The SWID tag for rpm %s should have been generated but could not be found", str(p[0]))
+				for p in pkgs_missing.values():
+					logger.warning("The SWID tag for rpm %s should have been generated but could not be found", str(p))
 
 	def remove_file(self, file):
 		try:
