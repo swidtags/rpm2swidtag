@@ -1,10 +1,11 @@
 
 from lxml import etree
-from os import path, stat
+from os import path, stat, rename
 from hashlib import sha256
 from io import BytesIO
 from gzip import GzipFile
 from rpm2swidtag import Error, SWID_XMLNS, Tag
+from tempfile import NamedTemporaryFile
 
 REPO_XMLNS = "http://linux.duke.edu/metadata/repo"
 COMMON_XMLNS = "http://linux.duke.edu/metadata/common"
@@ -45,7 +46,9 @@ class Repomd:
 		return self.__primary
 
 	def save(self):
-		self.xml.write(self.path, xml_declaration=True, encoding="utf-8", pretty_print=True)
+		outpath = NamedTemporaryFile(dir=path.dirname(self.path), prefix="." + path.basename(self.path), delete=False)
+		self.xml.write(outpath.file, xml_declaration=True, encoding="utf-8", pretty_print=True)
+		rename(outpath.name, self.path)
 
 class Primary:
 	def __init__(self, repo, primary):
