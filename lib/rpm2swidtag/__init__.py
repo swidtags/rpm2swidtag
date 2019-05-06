@@ -1,6 +1,5 @@
 
 from lxml import etree
-from sys import stderr
 import re
 import sys
 import io
@@ -57,7 +56,6 @@ class Tag:
 		if not path.exists(dirname):
 			makedirs(dirname)
 		filename = escape_path(self.get_tagid() + '-rpm-' + self.checksum) + '.swidtag'
-		stderr.write(filename + "\n")
 		if len(filename) > 255:
 			filename = sha256(self.get_tagid().encode()).hexdigest() + '-rpm-' + self.checksum + '.swidtag'
 		self.write_output(path.join(dirname, filename))
