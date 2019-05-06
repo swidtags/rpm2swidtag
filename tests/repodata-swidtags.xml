@@ -415,7 +415,7 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
         </KeyInfo>
       </Signature>
     </SoftwareIdentity>
-    <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" tagId="example/test.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64" name="pkg1" supplemental="true">
+    <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" tagId="example/test.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64" name="pkg1" supplemental="true">
       <Link rel="supplemental" href="swid:test.a.Example-OS-Distro-3.x86_64"/>
       <Link rel="component" href="swid:example/test.pkg1-1.3.0-1.fc28.x86_64"/>
       <Entity name="Example Org." regid="example/test" role="tagCreator"/>
@@ -430,20 +430,20 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
               <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
             </Transforms>
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-            <DigestValue>Ky/fC/49X9i+Dga5MXzsjwOmF/EytZt3Y2Lrv/Au+v4=</DigestValue>
+            <DigestValue>Z2goctOd8hVsOjhwYMwxK06/+anp1Lglv6JUNZArLMs=</DigestValue>
           </Reference>
         </SignedInfo>
-        <SignatureValue>wWB01IbZQ0nKB1sPbw9SDM9gYC3hrffAmY+l+5Vwsohps+wE+YgisDF5N5CcrGRv
-stm7EsR26THuQ7L9JoAJudE/ptVKCbj9woCzJn+DxHJLfG7Tm8L32DOzPd3eJYjJ
-JJHJG93YH1JT3Y+y2iZWoWTifw+yPdp8ukKi25l1cYGowS+i5M87w/44XSFhmvGX
-u9A2ICW+kQx3R5UlFgM43uIIv/pLWjCb4STbh6BOsQqhntQB5a4ynkj6VVznj56Q
-L6sVuqpOp6oUCV1lt8vyvN1f3IC5FcNVut9yV9DLHajSsEKQaFFP6R3MV5AqZOCo
-a7u43MFhIl7pCR40bxpjxbzUsPjoHo98KIgxgT0tOnSPV2M2M/fX9a+T4JUFZxp2
-c4NyVI7ZHJ/yP00YpLQBd9xraQk+EB6pi34ghYOgZWZZBdHhKthsN1TjVFNtBKa3
-6aV2XZ35jaxex+hPL4UP3k0DjlW1VjrwVYqRvGe8od06jktKnGwIgFZKq3ylzHRt
-XhzWNtW/uYPkJb7qkG2UK0k0w0njpqbNRXQqBtAEaYnty80nunTQijX7pplLi8tS
-wn3EDT2toXfyYmrLSgpt/bkhch5oYgQ6RNK7PkH1f1sViYkYakiJgK4xuYYUPKQN
-DzQ5YBVJDC+juwuhjjfEua8jjOjY/CUAly8Zn6YBBxM=</SignatureValue>
+        <SignatureValue>t27CcmG9E4C67V+0CD20I+RE4krT3b5/NbkwIP3Sxn0tfz6eSTm2BKgJ3x15bh4l
+WpOb99APmRckamq7qsJi3Dgfo9v0aK6HJi4GwsXwA7aQemagDoMyg0rCHCctrma5
+nOBh3e8TCqvvhX/90iXbFjaZDsGEviGCCYEK2Ro4KSYUFm9i++8S3k4aKx9MViIX
+fRLc2entQQjg0G63XyORhonhqi9uFgr0q7XbBUp0uQjknjDYikxaxRUIO7d6nnxg
+SemGVk4B4H+peW0noM8mdrY0G2ETqmZZpCaAATkp4UPeGmF9zoRji0eez2siF2OR
+X0hCFApy/IjLmTpEEg/ZXDz/ZdyDw6SQ1wmimgMM5euxRu21p0B3D9ySP/RC3VQ/
+g2mnEyevOzMICAI4SDl4ErUDM5ZXX1SpSGwcp63MvrG3WRInBeh59BA6NmoLC7VB
+Ftcbu2AF79rxxXozk4KZSX0wPqOXMNU7CkeV0xukTnzRlwQ2QntgMJYXimak96PP
+PcLGVDvLEyn92ij14KzUGlYO7vEpKx5KfDpTd/ffjJW4GhCTnFJK0+rIvJinWLZA
+oWQtG0tKCJa3f3AiDfccOUoK6mh3erEwHKOzke+dKi19vabQrbUc0zKh2SBIahYc
+3iQcbkfY9sDyrCIy2ikQ6QhNICXyh23/yIC9NSRrX5I=</SignatureValue>
         <KeyInfo>
           <X509Data>
             <X509Certificate>MIIFCzCCAvOgAwIBAgIUKccDx8ZvI/Xhsk8a3l0Z31S31LQwDQYJKoZIhvcNAQEL
@@ -697,7 +697,7 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
         </KeyInfo>
       </Signature>
     </SoftwareIdentity>
-    <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" tagId="example/test.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64" name="pkgdep" supplemental="true">
+    <SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" tagId="example/test.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64" name="pkgdep" supplemental="true">
       <Link rel="supplemental" href="swid:test.a.Example-OS-Distro-3.x86_64"/>
       <Link rel="component" href="swid:example/test.pkgdep-1.0.0-1.fc28.noarch"/>
       <Entity name="Example Org." regid="example/test" role="tagCreator"/>
@@ -712,20 +712,20 @@ GTl3enhnP/KxiO4l1J239liF</X509Certificate>
               <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
             </Transforms>
             <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-            <DigestValue>IM3qRdVW8ZGYWzImk0ZDuZ1MzhxSFM1bHO6khK+9sHM=</DigestValue>
+            <DigestValue>ga6TuIq0npQXqlhCzCrs2tuakfq6aEqIP/Y+EC/NZQI=</DigestValue>
           </Reference>
         </SignedInfo>
-        <SignatureValue>phW6gIqmjJy8M7dEIa0JKL4R+nq8ks+CnD0wVpVkq2kdU1j2xjOBngfPSEYgGMRN
-/NhViNWw2LgRv01aZHsk/wXZYm25+BbC6vGFL/1jtLkeIrnq1FkNjdCgudSTmsre
-0lXGTLun7qVSW94sytqXfBpOFWmrT5Sriy206l+N2v5u6Z13g/qkq2R4wHnAjncL
-jgROZVw1U3qUO5AgrFn+xQhKgU1+CKBj5+YMrdKVhzsDmwoOL+BWOd319mDaZbvm
-Qrn5nK2Uja7ATmZu0tbV+7AHxSQVB0x/K6SO4Aido5W01BAHdJq2TBTyGN+3Ytps
-IaUnzMDn0HWweRXpex1M6GvtOTALPHk7lwDn+IbeBDwW/+R0IiggUH1EF/iIxEGB
-FDqFVPRlSAHSk3KnWj5nAFVEAfBa25Da0oSbuxykyaLztTgSrD/AINQS9PCTtjyj
-JKke2IwsAsZLRzKhKMCsDNmFOWJbm8hDXrrWGGKYPIkSSqWOkE6I+wY9xBloaI3n
-yb2L/p2WWHKBa9SlHq5MFN/ctB4VyWC+K72uDgpDya4ihSprbfoMNJTsC40nJRb+
-vAwndaOrOLdJaq2YRxg+a49/zm85O/BXUTMafDFUuV7ZLS4nxIA6FpZHUhSJ1eof
-mdXiIZotKoat7OIZpMVZeMlkouKfUUExhVo9yMgxjz8=</SignatureValue>
+        <SignatureValue>Js3b7gk/UOCbz9zrx7tw6nlLsdIJ7E8zAeXJZojyVa1yAZwv16LTeztXGCipT4UL
+elwfA1kMyKYXJnBy5Maimk8LsEUcYY1/3k72rQiEVrFb8A9BIqMaPySE4YnIoof8
+QEB63xNDAUarXV4JEF2JEtzC+ry82UxAmvfojJEqoHt/PhsnGQGW8fI7hl/Q+m/q
+6mU3GORZlBfbA4jR1nvN7yG9CRypLkRTyfLKJ8FsbnOTb9FNRcf62SAQ7yPRtt14
+g5TLdVeNx+qSfycjielihZoiorDaDsrdJOMSi5dQ21KxWKDxZ5bQ7ONINc45ZYL3
+DfTvMSLq3GdyhNeYERx+kihruuxTsVuETMTUQV6tdOk1VoEnucKKStc9J4owKwRe
+cVDVRJ5KL8I+PknK1g1P/D7nQ1kNiynU+b7J2dixjfJvb9R5zRxKKRCvcYx2KC9K
++23GQ617ldtpXOEJG4psgindDRlT8R94miWvz/6j3guoeVPHOXEypghQ/WKs6cbr
+hg3AJOyJJcLmBpZQK4Hw/iMym3AG4op9XVsdS9jjYAbLuOIDStEGEhsaK61ilUA/
+YB87EJtg91E8Vu9nyF5g+Gbkj5NomHpjpax9qyAT3G60qz2vPx+QZEO9sh8hRfio
+zNEE8XmELeJb61dH/8aBUF97KExdSOqFPBN/VkApC8A=</SignatureValue>
         <KeyInfo>
           <X509Data>
             <X509Certificate>MIIFCzCCAvOgAwIBAgIUKccDx8ZvI/Xhsk8a3l0Z31S31LQwDQYJKoZIhvcNAQEL

@@ -213,6 +213,7 @@
 
 <xsl:template match="swid:SoftwareIdentity" mode="component-of">
   <xsl:copy>
+    <xsl:apply-templates select="@xsi:schemaLocation"/>
     <xsl:attribute name="tagId">
       <xsl:call-template name="component_of_tagid">
         <xsl:with-param name="component_tagid">
