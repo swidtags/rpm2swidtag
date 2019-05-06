@@ -31,6 +31,7 @@ def setup_opts():
 	parser.add_argument('--primary-only', action='store_true', help="do not generate supplemental tags")
 	parser.add_argument('--print-tagid', action='store_true', help="compute and print tagId(s) to standard output")
 	parser.add_argument('--preserve-signing-template', action='store_true', help="keep the XML signing template in the output (for subsequent signing)")
+	parser.add_argument('--retain-old-md', metavar='N', action='store', type=int, help="preserve N latest copies of *-swidtags.xml.gz when used with --repo'")
 	other_group = parser.add_argument_group("config options")
 	other_group.add_argument('--config', default=CONFIG_FILE, metavar='FILE', help="location of the configuration file")
 	parser.add_argument('package', type=str, nargs='*', help='package(s), glob(s) or file name(s)', metavar='...')
@@ -166,7 +167,7 @@ def process_repo(repo, template, opts, config):
 		f = path.join(repo, p.href)
 		h = rpm.read_from_file(f)
 		swidtags.add(p, process_rpm_with_template(h, template, opts, config, return_xml_list=True))
-	swidtags.save()
+	swidtags.save(retain_old_md=opts.retain_old_md)
 
 def main():
 	opts = setup_opts()

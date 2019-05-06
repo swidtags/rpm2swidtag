@@ -14,7 +14,8 @@ usage: rpm2swidtag [-h] [-a | -p | --repo DIR]
                    [--sign-pem KEYFILE.pem[,CA.pem[...]]] [--output-dir DIR]
                    [--authoritative | --evidence-deviceid DEVICE]
                    [--primary-only] [--print-tagid]
-                   [--preserve-signing-template] [--config FILE]
+                   [--preserve-signing-template] [--retain-old-md N]
+                   [--config FILE]
                    [... [... ...]]
 
 Generating SWID tags for rpm packages.
@@ -44,6 +45,8 @@ optional arguments:
   --preserve-signing-template
                         keep the XML signing template in the output (for
                         subsequent signing)
+  --retain-old-md N     preserve N latest copies of *-swidtags.xml.gz when
+                        used with --repo'
 
 config options:
   --config FILE         location of the configuration file

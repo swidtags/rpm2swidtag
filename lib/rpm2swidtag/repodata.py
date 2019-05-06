@@ -1,11 +1,12 @@
 
 from lxml import etree
-from os import path, stat, rename
+from os import path, stat, rename, unlink
 from hashlib import sha256
 from io import BytesIO
 from gzip import GzipFile
 from rpm2swidtag import Error, SWID_XMLNS, Tag
 from tempfile import NamedTemporaryFile
+from glob import iglob
 
 REPO_XMLNS = "http://linux.duke.edu/metadata/repo"
 COMMON_XMLNS = "http://linux.duke.edu/metadata/common"
@@ -122,7 +123,7 @@ class Swidtags:
 		self.xml.append(pxml)
 		self.xml.set("packages", str(len(self.xml.getchildren())))
 
-	def save(self):
+	def save(self, retain_old_md=None):
 		data = BytesIO()
 		etree.ElementTree(self.xml).write(data, xml_declaration=True, encoding="utf-8", pretty_print=True)
 		data_gz = BytesIO()
@@ -158,6 +159,17 @@ class Swidtags:
 		for t in repomd.xml.xpath("/repo:repomd/repo:revision", namespaces = { 'repo': REPO_XMLNS }):
 			t.text = timestamp
 		repomd.save()
+
+		swidtags = sorted(iglob(path.join(self.repo.path, "repodata/*-swidtags.xml.gz")), key=path.getmtime)
+		remaining = len(swidtags)
+		if not retain_old_md:
+			retain_old_md = 0
+		for f in swidtags:
+			if f == filename:
+				continue
+			if remaining > retain_old_md + 1:
+				unlink(f)
+				remaining -= 1
 
 	def tags_for_repo_packages(self, pkgs):
 		pkgids = {}

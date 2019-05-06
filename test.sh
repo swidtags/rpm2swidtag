@@ -526,11 +526,27 @@ test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.no
 test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag
 
 REPOMD_INODE=$( ls -i tmp/repo/repodata/repomd.xml )
-$BIN/rpm2swidtag --repo=tmp/repo $RPM2SWIDTAG_OPTS --authoritative --tag-creator "example/test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt
-zcat tmp/repo/repodata/*-swidtags.xml.gz > tmp/repo/swidtags.xml
+touch tmp/repo/repodata/z-swidtags.xml.gz
+sleep 1.5
+touch tmp/repo/repodata/a-swidtags.xml.gz
+sleep 1.5
+touch tmp/repo/repodata/c-swidtags.xml.gz
+$BIN/rpm2swidtag --repo=tmp/repo $RPM2SWIDTAG_OPTS --authoritative --tag-creator "example/test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --retain-old-md 2
+zcat tmp/repo/repodata/???*-swidtags.xml.gz > tmp/repo/swidtags.xml
 diff tests/repodata-swidtags.xml tmp/repo/swidtags.xml
 
 test "$REPOMD_INODE" != "$( ls -i tmp/repo/repodata/repomd.xml )"
+
+( ! test -f tmp/repo/repodata/z-swidtags.xml.gz )
+test -f tmp/repo/repodata/a-swidtags.xml.gz
+test -f tmp/repo/repodata/c-swidtags.xml.gz
+
+$BIN/rpm2swidtag --repo=tmp/repo $RPM2SWIDTAG_OPTS --authoritative --tag-creator "example/test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt
+zcat tmp/repo/repodata/???*-swidtags.xml.gz > tmp/repo/swidtags.xml
+diff tests/repodata-swidtags.xml tmp/repo/swidtags.xml
+
+( ! test -f tmp/repo/repodata/a-swidtags.xml.gz )
+( ! test -f tmp/repo/repodata/c-swidtags.xml.gz )
 
 $FAKECHROOT $FAKEROOT dnf --setopt=reposdir=/dev/null $DNF_OPTS clean expire-cache
 
