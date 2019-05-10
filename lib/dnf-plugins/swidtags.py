@@ -290,6 +290,10 @@ class swidtags(Plugin):
 			rpm2swidtag_command = self.conf.get("main", "rpm2swidtag_command")
 		except KeyError:
 			return -2
+		except Exception as e:
+			if e.__class__.__name__ == "NoOptionError":
+				return -2
+			raise e
 		logger.debug("Running %s for %s ...", rpm2swidtag_command, pkgs)
 		env = { "_RPM2SWIDTAG_RPMDBPATH": path.join(self.base.conf.installroot, "var/lib/rpm") }
 		if "PYTHONPATH" in environ:
