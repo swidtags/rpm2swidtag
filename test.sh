@@ -531,11 +531,15 @@ sleep 1.5
 touch tmp/repo/repodata/a-swidtags.xml.gz
 sleep 1.5
 touch tmp/repo/repodata/c-swidtags.xml.gz
+(
+umask 022
 $BIN/rpm2swidtag --repo=tmp/repo $RPM2SWIDTAG_OPTS --authoritative --tag-creator "example/test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --retain-old-md 2
+)
 zcat tmp/repo/repodata/???*-swidtags.xml.gz > tmp/repo/swidtags.xml
 diff tests/repodata-swidtags.xml tmp/repo/swidtags.xml
 
 test "$REPOMD_INODE" != "$( ls -i tmp/repo/repodata/repomd.xml )"
+ls -l tmp/repo/repodata/repomd.xml | grep '^-rw-r--r--'
 
 ( ! test -f tmp/repo/repodata/z-swidtags.xml.gz )
 test -f tmp/repo/repodata/a-swidtags.xml.gz

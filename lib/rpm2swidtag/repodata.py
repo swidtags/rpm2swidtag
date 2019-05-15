@@ -1,6 +1,6 @@
 
 from lxml import etree
-from os import path, stat, rename, unlink
+from os import path, stat, rename, unlink, umask, chmod
 from hashlib import sha256
 from io import BytesIO
 from gzip import GzipFile
@@ -49,6 +49,9 @@ class Repomd:
 	def save(self):
 		outpath = NamedTemporaryFile(dir=path.dirname(self.path), prefix="." + path.basename(self.path), delete=False)
 		self.xml.write(outpath.file, xml_declaration=True, encoding="utf-8", pretty_print=True)
+		orig_umask = umask(0)
+		umask(orig_umask)
+		chmod(outpath.name, 0o666 & ~orig_umask)
 		rename(outpath.name, self.path)
 
 class Primary:
