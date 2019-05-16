@@ -113,7 +113,9 @@ class Swidtags:
 		self.href = None
 		self.file = file
 		if self.file:
-			self.xml = etree.parse(self.file)
+			self.iterparse = None
+			self.root_element = None
+			self.prev_element = None
 		else:
 			self.xml = etree.Element("{%s}swidtags" % SWIDTAGLIST_XMLNS, nsmap={ None: SWIDTAGLIST_XMLNS })
 			self.xml.set("packages", "0")
@@ -174,19 +176,52 @@ class Swidtags:
 				unlink(f)
 				remaining -= 1
 
+	def __iter__(self):
+		f = self.file
+		if f.endswith(".gz"):
+			f = GzipFile(f, "rb")
+		self.iterparse = etree.iterparse(f, events=("end",), tag=("{%s}package" % SWIDTAGLIST_XMLNS),
+			remove_blank_text=True)
+		self.root_element = None
+		return self
+
+	def __next__(self):
+		if self.prev_element is not None:
+			self.prev_element.clear()
+			self.prev_element = None
+
+		for _, element in self.iterparse:
+			if self.root_element is None:
+				root = element.getparent()
+				if root is not None \
+					and root.getparent() is None \
+					and root.tag == "{%s}swidtags" % SWIDTAGLIST_XMLNS:
+					self.root_element = root
+				else:
+					element.clear()
+					continue
+			elif element.getparent() != self.root_element:
+				element.clear()
+				continue
+
+			self.prev_element = element
+			return self.prev_element
+
+		raise StopIteration
+
 	def tags_for_repo_packages(self, pkgs):
 		pkgids = {}
 		for p in pkgs:
 			pkgids[p[0].chksum[1].hex()] = [p, p[1]]
 		tags = {}
-		for e in self.xml.xpath("/swidtags:swidtags/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
+		for e in self:
 			pkgid = e.get("pkgid")
 			if pkgid not in pkgids:
 				continue
 			tp = pkgids[pkgid]
 			tags[tp[0]] = []
 			for p in e:
-				tags[tp[0]].append(Tag(etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True)), tp[1]))
+				tags[tp[0]].append(Tag(etree.ElementTree(p), tp[1]))
 		return tags
 
 	def tags_for_rpm_packages(self, pkgs):
@@ -198,7 +233,7 @@ class Swidtags:
 				else:
 					pkg256headers[( p["name"].decode("utf-8"), p["SHA256HEADER"].decode("utf-8") )] = p
 		tags = {}
-		for e in self.xml.xpath("/swidtags:swidtags/swidtags:package", namespaces = { "swidtags": SWIDTAGLIST_XMLNS }):
+		for e in self:
 			found = None
 			for rs in e.xpath("swid:SoftwareIdentity/swid:Payload/swid:Resource[@type = 'rpm'] | swid:SoftwareIdentity/swid:Evidence/swid:Resource[@type = 'rpm']", namespaces = { 'swid': SWID_XMLNS }):
 				h = rs.get("sha256header")
@@ -210,6 +245,6 @@ class Swidtags:
 			tp = pkg256headers[found]
 			tags[tp] = []
 			for p in e:
-				tags[tp].append(Tag(etree.parse(BytesIO(etree.tostring(p)), etree.XMLParser(remove_blank_text = True)), found[1]))
+				tags[tp].append(Tag(etree.ElementTree(p), found[1]))
 		return tags
 
