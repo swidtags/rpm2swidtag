@@ -608,7 +608,7 @@ ls -l $DNF_ROOT/usr/lib/swidtag/example^2ftest/* | tee /dev/stderr | wc -l | gre
 # Test that README has up-to-date usage section
 diff -u <( $BIN/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
 
-diff -u <(PYTHONPATH=lib dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags --help | sed -n '/SWID/,/^optional/!b;/^optional/b;p') <(sed -n '/^Maintain SWID tags/,/```/{/```/T;p}' README.md )
+diff -u <(PYTHONPATH=lib dnf --setopt=reposdir=/dev/null $DNF_OPTS swidtags --help | sed -n '/SWID/,/^optional/!b;/^optional/b;p') <(sed -n '/^Maintain SWID tags/,/positional/{/positional/T;p}' README.md )
 
 
 echo OK.
