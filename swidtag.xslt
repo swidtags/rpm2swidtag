@@ -211,6 +211,10 @@
   </xsl:for-each>
 </xsl:template>
 
+<xsl:template name="component_of_name">
+  <xsl:value-of select="document($component-of)/swid:SoftwareIdentity/@name"/>
+</xsl:template>
+
 <xsl:template match="swid:SoftwareIdentity" mode="component-of">
   <xsl:copy>
     <xsl:apply-templates select="@xsi:schemaLocation"/>
@@ -221,7 +225,9 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:attribute>
-    <xsl:call-template name="si_name_attr"/>
+    <xsl:attribute name="name">
+      <xsl:call-template name="component_of_name"/>
+    </xsl:attribute>
     <xsl:attribute name="supplemental">true</xsl:attribute>
     <Link rel="supplemental">
       <xsl:attribute name="href">
