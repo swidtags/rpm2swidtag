@@ -5,6 +5,7 @@
   xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:str="http://exslt.org/strings"
+  xmlns:exslt="http://exslt.org/common"
   xmlns:xmlsig="http://www.w3.org/2000/09/xmldsig#"
   exclude-result-prefixes="swid"
   >
@@ -102,14 +103,29 @@
       </xsl:if>
     </xsl:if>
     <xsl:call-template name="tag-and-software-creator"/>
-    <xsl:apply-templates select="node()"/>
+    <xsl:apply-templates select="node()[name() != 'Entity']"/>
   </xsl:copy>
 </xsl:template>
 
 <!-- we set tagCreator and softwareCreator Entities using tag-and-software-creator template -->
 <xsl:template match="swid:Entity">
+  <xsl:param name="tag-creator-remove"/>
+  <xsl:param name="software-creator-remove"/>
   <xsl:variable name="role">
-    <xsl:value-of select="normalize-space(str:replace(str:replace(concat(' ', @role, ' '), ' tagCreator ', ' '), ' softwareCreator ', ' '))"/>
+    <xsl:choose>
+      <xsl:when test="$tag-creator-remove = 'true' and $software-creator-remove = 'true'">
+        <xsl:value-of select="normalize-space(str:replace(str:replace(concat(' ', @role, ' '), ' tagCreator ', ' '), ' softwareCreator ', ' '))"/>
+      </xsl:when>
+      <xsl:when test="$tag-creator-remove = 'true'">
+        <xsl:value-of select="normalize-space(str:replace(concat(' ', @role, ' '), ' tagCreator ', ' '))"/>
+      </xsl:when>
+      <xsl:when test="$software-creator-remove = 'true'">
+        <xsl:value-of select="normalize-space(str:replace(concat(' ', @role, ' '), ' softwareCreator ', ' '))"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@role"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:variable>
   <xsl:if test="$role != ''">
     <xsl:copy>
@@ -241,19 +257,52 @@
         <xsl:call-template name="si_tagid_value" />
       </xsl:attribute>
     </Link>
-    <xsl:apply-templates select="swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]" mode="component-of"/>
     <xsl:call-template name="tag-and-software-creator"/>
     <xsl:apply-templates select="xmlsig:Signature"/>
   </xsl:copy>
 </xsl:template>
 
-<xsl:template match="swid:Entity" mode="component-of">
-  <xsl:apply-templates select="."/>
-</xsl:template>
-
 <xsl:template match="swid:Payload" mode="component-of"/>
 
 <xsl:template name="tag-and-software-creator">
+    <xsl:variable name="tag-creator-needed">
+      <xsl:call-template name="tag-creator-needed"/>
+    </xsl:variable>
+    <xsl:variable name="software-creator-needed">
+      <xsl:call-template name="software-creator-needed"/>
+    </xsl:variable>
+    <xsl:apply-templates select="swid:Entity">
+      <xsl:with-param name="tag-creator-remove">
+        <xsl:if test="exslt:node-set($tag-creator-needed)/swid:Entity">true</xsl:if>
+      </xsl:with-param>
+      <xsl:with-param name="software-creator-remove">
+        <xsl:if test="exslt:node-set($software-creator-needed)/swid:Entity">true</xsl:if>
+      </xsl:with-param>
+    </xsl:apply-templates>
+    <xsl:choose>
+      <xsl:when test="exslt:node-set($tag-creator-needed)/swid:Entity
+        and exslt:node-set($software-creator-needed)/swid:Entity
+        and exslt:node-set($tag-creator-needed)/swid:Entity/@regid = exslt:node-set($software-creator-needed)/swid:Entity/@regid
+        and exslt:node-set($tag-creator-needed)/swid:Entity/@name = exslt:node-set($software-creator-needed)/swid:Entity/@name
+	">
+	<Entity name="{exslt:node-set($tag-creator-needed)/swid:Entity/@name}"
+	  regid="{exslt:node-set($tag-creator-needed)/swid:Entity/@regid}"
+	  role="tagCreator softwareCreator"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="exslt:node-set($tag-creator-needed)/swid:Entity"/>
+        <xsl:copy-of select="exslt:node-set($software-creator-needed)/swid:Entity"/>
+      </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+<xsl:template name="tag-creator-needed">
+  <xsl:variable name="tag-creator-existing">
+    <xsl:for-each select="swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')][last()]">
+      <Entity name="{@name}" regid="{@regid}"/>
+    </xsl:for-each>
+  </xsl:variable>
+  <xsl:variable name="tag-creator-wanted">
     <xsl:choose>
       <xsl:when test="$tag-creator-regid">
         <Entity name="{$tag-creator-name}" regid="{$tag-creator-regid}" role="tagCreator"/>
@@ -263,27 +312,43 @@
           <Entity name="{@name}" regid="{@regid}" role="tagCreator"/>
         </xsl:for-each>
       </xsl:when>
-      <xsl:otherwise>
-        <xsl:for-each select="swid:Entity[contains(concat(' ', @role, ' '), ' tagCreator ')]">
-          <Entity name="{@name}" regid="{@regid}" role="tagCreator"/>
-        </xsl:for-each>
-      </xsl:otherwise>
     </xsl:choose>
+  </xsl:variable>
+  <xsl:if test="exslt:node-set($tag-creator-wanted)/swid:Entity
+    and not (exslt:node-set($tag-creator-wanted)/swid:Entity/@regid
+      = exslt:node-set($tag-creator-existing)/swid:Entity/@regid
+      and exslt:node-set($tag-creator-wanted)/swid:Entity/@name
+      = exslt:node-set($tag-creator-existing)/swid:Entity/@name)">
+    <xsl:copy-of select="exslt:node-set($tag-creator-wanted)/*"/>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template name="software-creator-needed">
+  <xsl:variable name="software-creator-existing">
+    <xsl:for-each select="swid:Entity[contains(concat(' ', @role, ' '), ' softwareCreator ')][last()]">
+      <Entity name="{@name}" regid="{@regid}"/>
+    </xsl:for-each>
+  </xsl:variable>
+  <xsl:variable name="software-creator-wanted">
     <xsl:choose>
       <xsl:when test="$software-creator-regid">
         <Entity name="{$software-creator-name}" regid="{$software-creator-regid}" role="softwareCreator"/>
       </xsl:when>
       <xsl:when test="$software-creator-from">
-        <xsl:for-each select="document($software-creator-from)/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' softwareCreator ')]">
+        <xsl:for-each
+	select="document($software-creator-from)/swid:SoftwareIdentity/swid:Entity[contains(concat(' ', @role, ' '), ' softwareCreator ')]">
           <Entity name="{@name}" regid="{@regid}" role="softwareCreator"/>
         </xsl:for-each>
       </xsl:when>
-      <xsl:otherwise>
-        <xsl:for-each select="swid:Entity[contains(concat(' ', @role, ' '), ' softwareCreator ')]">
-          <Entity name="{@name}" regid="{@regid}" role="softwareCreator"/>
-        </xsl:for-each>
-      </xsl:otherwise>
     </xsl:choose>
+  </xsl:variable>
+  <xsl:if test="exslt:node-set($software-creator-wanted)/swid:Entity
+    and not(exslt:node-set($software-creator-wanted)/swid:Entity/@regid
+      = exslt:node-set($software-creator-existing)/swid:Entity/@regid
+      and exslt:node-set($software-creator-wanted)/swid:Entity/@name
+      = exslt:node-set($software-creator-existing)/swid:Entity/@name)">
+    <xsl:copy-of select="exslt:node-set($software-creator-wanted)/*"/>
+  </xsl:if>
 </xsl:template>
 
 <xsl:template match="xmlsig:Signature">

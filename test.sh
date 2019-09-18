@@ -79,6 +79,15 @@ diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid-name-ref tmp/pkg-generate
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --software-creator=./tests/swiddata1/sup/p1.swidtag tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-regid-name-ref tmp/pkg-generated-regid.swidtag
 
+$BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --tag-creator=example.test --software-creator=example.test tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.tag-equals-software-regid tmp/pkg-generated-regid.swidtag
+
+$BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --software-creator=./tests/swiddata1/sup/p1.swidtag --tag-creator=./tests/swiddata1/sup/p1.swidtag tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.tag-equals-software-regid-ref tmp/pkg-generated-regid.swidtag
+
+$BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --software-creator=./tests/swiddata1/sup/p1.swidtag --tag-creator="a.test Example A Organization" tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
+diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.tag-equals-software-regid-ref tmp/pkg-generated-regid.swidtag
+
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/rpms/src/pkg1-1.2.0-1.fc28.src.rpm | normalize > tmp/pkg-generated-src.swidtag
 diff tests/pkg1/pkg1-1.2.0-1.fc28.src.swidtag tmp/pkg-generated-src.swidtag
 
