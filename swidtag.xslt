@@ -102,12 +102,39 @@
         </Meta>
       </xsl:if>
     </xsl:if>
-    <xsl:call-template name="tag-and-software-creator"/>
+    <xsl:variable name="tag-creator-needed">
+      <xsl:call-template name="tag-creator-needed"/>
+    </xsl:variable>
+    <xsl:variable name="software-creator-needed">
+      <xsl:call-template name="software-creator-needed"/>
+    </xsl:variable>
+    <xsl:apply-templates select="swid:Entity">
+      <xsl:with-param name="tag-creator-remove">
+        <xsl:if test="exslt:node-set($tag-creator-needed)/swid:Entity">true</xsl:if>
+      </xsl:with-param>
+      <xsl:with-param name="software-creator-remove">
+        <xsl:if test="exslt:node-set($software-creator-needed)/swid:Entity">true</xsl:if>
+      </xsl:with-param>
+    </xsl:apply-templates>
+    <xsl:choose>
+      <xsl:when test="exslt:node-set($tag-creator-needed)/swid:Entity
+        and exslt:node-set($software-creator-needed)/swid:Entity
+        and exslt:node-set($tag-creator-needed)/swid:Entity/@regid = exslt:node-set($software-creator-needed)/swid:Entity/@regid
+        and exslt:node-set($tag-creator-needed)/swid:Entity/@name = exslt:node-set($software-creator-needed)/swid:Entity/@name
+	">
+	<Entity name="{exslt:node-set($tag-creator-needed)/swid:Entity/@name}"
+	  regid="{exslt:node-set($tag-creator-needed)/swid:Entity/@regid}"
+	  role="tagCreator softwareCreator"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="exslt:node-set($tag-creator-needed)/swid:Entity"/>
+        <xsl:copy-of select="exslt:node-set($software-creator-needed)/swid:Entity"/>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:apply-templates select="node()[name() != 'Entity']"/>
   </xsl:copy>
 </xsl:template>
 
-<!-- we set tagCreator and softwareCreator Entities using tag-and-software-creator template -->
 <xsl:template match="swid:Entity">
   <xsl:param name="tag-creator-remove"/>
   <xsl:param name="software-creator-remove"/>
@@ -257,44 +284,26 @@
         <xsl:call-template name="si_tagid_value" />
       </xsl:attribute>
     </Link>
-    <xsl:call-template name="tag-and-software-creator"/>
-    <xsl:apply-templates select="xmlsig:Signature"/>
-  </xsl:copy>
-</xsl:template>
-
-<xsl:template match="swid:Payload" mode="component-of"/>
-
-<xsl:template name="tag-and-software-creator">
     <xsl:variable name="tag-creator-needed">
       <xsl:call-template name="tag-creator-needed"/>
     </xsl:variable>
-    <xsl:variable name="software-creator-needed">
-      <xsl:call-template name="software-creator-needed"/>
-    </xsl:variable>
+    <xsl:copy-of select="exslt:node-set($tag-creator-needed)/swid:Entity"/>
+
     <xsl:apply-templates select="swid:Entity">
       <xsl:with-param name="tag-creator-remove">
         <xsl:if test="exslt:node-set($tag-creator-needed)/swid:Entity">true</xsl:if>
       </xsl:with-param>
-      <xsl:with-param name="software-creator-remove">
-        <xsl:if test="exslt:node-set($software-creator-needed)/swid:Entity">true</xsl:if>
-      </xsl:with-param>
     </xsl:apply-templates>
-    <xsl:choose>
-      <xsl:when test="exslt:node-set($tag-creator-needed)/swid:Entity
-        and exslt:node-set($software-creator-needed)/swid:Entity
-        and exslt:node-set($tag-creator-needed)/swid:Entity/@regid = exslt:node-set($software-creator-needed)/swid:Entity/@regid
-        and exslt:node-set($tag-creator-needed)/swid:Entity/@name = exslt:node-set($software-creator-needed)/swid:Entity/@name
-	">
-	<Entity name="{exslt:node-set($tag-creator-needed)/swid:Entity/@name}"
-	  regid="{exslt:node-set($tag-creator-needed)/swid:Entity/@regid}"
-	  role="tagCreator softwareCreator"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:copy-of select="exslt:node-set($tag-creator-needed)/swid:Entity"/>
-        <xsl:copy-of select="exslt:node-set($software-creator-needed)/swid:Entity"/>
-      </xsl:otherwise>
-    </xsl:choose>
+
+    <xsl:apply-templates select="xmlsig:Signature"/>
+  </xsl:copy>
 </xsl:template>
+
+<xsl:template match="swid:Entity" mode="component-of">
+  <xsl:apply-templates select="."/>
+</xsl:template>
+
+<xsl:template match="swid:Payload" mode="component-of"/>
 
 <xsl:template name="tag-creator-needed">
   <xsl:variable name="tag-creator-existing">
