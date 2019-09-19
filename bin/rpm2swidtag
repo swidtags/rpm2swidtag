@@ -22,6 +22,7 @@ def setup_opts():
 	parser.add_argument('--software-creator-from', metavar='FILE', help=argparse.SUPPRESS)
 	parser.add_argument('--tag-creator', type=str, metavar='SOURCE-FILE, REGID or "REGID NAME"', help="tagCreator Entity attributes")
 	parser.add_argument('--software-creator', type=str, metavar='SOURCE-FILE, REGID or "REGID NAME"', help="softwareCreator Entity attributes")
+	parser.add_argument('--distributor', type=str, metavar='SOURCE-FILE, REGID or "REGID NAME"', help="distributor Entity attributes")
 	parser.add_argument('--sign-pem', metavar='KEYFILE.pem[,CA.pem[...]]', help="PEM files with key and certificates")
 	parser.add_argument('--output-dir', type=str, metavar='DIR',
 		help="write SWID tags files into regid subdirectory of DIR; or directly into DIR when the path ends with /.")
@@ -47,6 +48,11 @@ def setup_opts():
 		abs_path = path.abspath(opts.software_creator)
 		if not path.isfile(abs_path):
 			stderr.write("%s: --software-creator specifies file %s which does not exists, skipping\n" % (argv[0], opts.software_creator))
+			error = True
+	if opts.distributor and (opts.distributor.startswith("/") or opts.distributor.startswith("./")):
+		abs_path = path.abspath(opts.distributor)
+		if not path.isfile(abs_path):
+			stderr.write("%s: --distributor specifies file %s which does not exists, skipping\n" % (argv[0], opts.distributor))
 			error = True
 	if error:
 		exit(1)
@@ -117,6 +123,12 @@ def process_rpm_with_template(header, template, opts, config, return_xml_list=Fa
 				if creator_from and path.isfile(creator_from):
 					params['software-creator-from'] = creator_from
 
+				distributor_from = config.get(s, 'distributor-file', fallback=None)
+				if distributor_from:
+					distributor_from = path.abspath(distributor_from)
+				if distributor_from and path.isfile(distributor_from):
+					params['distributor-from'] = distributor_from
+
 				component_of = config.get(s, 'component-of-file', fallback=None)
 				if component_of:
 					component_of = path.abspath(component_of)
@@ -130,6 +142,12 @@ def process_rpm_with_template(header, template, opts, config, return_xml_list=Fa
 			params['software-creator-regid'], _, params['software-creator-name'] = opts.software_creator.partition(" ")
 	if opts.software_creator_from:
 		params['software-creator-from'] = path.abspath(opts.software_creator_from)
+
+	if opts.distributor:
+		if opts.distributor.startswith("/") or opts.distributor.startswith("./"):
+			params['distributor-from'] = path.abspath(opts.distributor)
+		else:
+			params['distributor-regid'], _, params['distributor-name'] = opts.distributor.partition(" ")
 
 	if opts.sign_pem or opts.preserve_signing_template:
 		params['preserve-signing-template'] = "true"

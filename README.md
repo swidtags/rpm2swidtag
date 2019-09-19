@@ -11,6 +11,7 @@ rpm database or rpm files:
 usage: rpm2swidtag [-h] [-a | -p | --repo DIR]
                    [--tag-creator SOURCE-FILE, REGID or "REGID NAME"]
                    [--software-creator SOURCE-FILE, REGID or "REGID NAME"]
+                   [--distributor SOURCE-FILE, REGID or "REGID NAME"]
                    [--sign-pem KEYFILE.pem[,CA.pem[...]]] [--output-dir DIR]
                    [--authoritative | --evidence-deviceid DEVICE]
                    [--primary-only] [--print-tagid]
@@ -32,6 +33,8 @@ optional arguments:
                         tagCreator Entity attributes
   --software-creator SOURCE-FILE, REGID or "REGID NAME"
                         softwareCreator Entity attributes
+  --distributor SOURCE-FILE, REGID or "REGID NAME"
+                        distributor Entity attributes
   --sign-pem KEYFILE.pem[,CA.pem[...]]
                         PEM files with key and certificates
   --output-dir DIR      write SWID tags files into regid subdirectory of DIR;
