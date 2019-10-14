@@ -84,6 +84,6 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 	def _cleanup_fullname(l):
 		for i in l:
 			del i.attrib["fullname"]
-			#pylint: disable=protected-access
+			#pylint: disable=protected-access,undefined-variable
 			__class__._cleanup_fullname(i)
 

@@ -202,7 +202,7 @@ class SWIDTag:
 			or e1.text != e2.text \
 			or e1.attrib != e2.attrib:
 			return False
-		#pylint: disable=protected-access
+		#pylint: disable=protected-access,undefined-variable
 		if __class__._children_without_swidq(e1) != __class__._children_without_swidq(e2):
 			return False
 		return True
@@ -254,7 +254,7 @@ class SWIDTag:
 				local_seen = set()
 			local_seen.add(spath)
 			s = s.with_supplemented(collection, seen=local_seen)
-			__class__._attribs_into_dict(attrib_merge, s, spath, value_source)
+			self.__class__._attribs_into_dict(attrib_merge, s, spath, value_source)
 
 			for e in s.xml.getroot().iterfind("{%s}Entity" % SWID_XMLNS):
 				roles = e.get("role")
@@ -266,17 +266,17 @@ class SWIDTag:
 					ne = deepcopy(e)
 					ne.set("role", r)
 					for t in newself.xml.getroot().iterfind("{%s}Entity" % SWID_XMLNS):
-						if __class__._elements_match(ne, t):
-							__class__._add_element_source(t, spath, to_existing=True)
+						if self.__class__._elements_match(ne, t):
+							self.__class__._add_element_source(t, spath, to_existing=True)
 							break
 						te = deepcopy(t)
 						te.set("role", r)
-						if __class__._elements_match(ne, te) \
+						if self.__class__._elements_match(ne, te) \
 							and t.find("{%s}element-source" % SWIDQ_XMLNS) is None:
-							__class__._add_element_source(t, spath, to_existing=True)
+							self.__class__._add_element_source(t, spath, to_existing=True)
 							break
 					else:
-						__class__._add_element_source(ne, spath)
+						self.__class__._add_element_source(ne, spath)
 						newself.xml.getroot().append(ne)
 
 			for e in s.xml.getroot().iterfind("{%s}Link" % SWID_XMLNS):
@@ -284,12 +284,12 @@ class SWIDTag:
 				if not rel or rel == "supplemental":
 					continue
 				for t in newself.xml.getroot().iterfind("{%s}Link" % SWID_XMLNS):
-					if __class__._elements_match(e, t):
-						__class__._add_element_source(t, spath, to_existing=True)
+					if self.__class__._elements_match(e, t):
+						self.__class__._add_element_source(t, spath, to_existing=True)
 						break
 				else:
 					ne = deepcopy(e)
-					__class__._add_element_source(ne, spath)
+					self.__class__._add_element_source(ne, spath)
 					newself.xml.getroot().append(ne)
 
 			rs = etree.Element("{%s}supplemental" % SWIDQ_XMLNS)
@@ -298,8 +298,8 @@ class SWIDTag:
 			rs.append(s.get_xml().getroot())
 			supplementals.append(rs)
 
-		__class__._attribs_into_dict(attrib_merge, newself, None, value_source)
-		__class__._dict_into_attribs(newself, attrib_merge, value_source, last_child)
+		self.__class__._attribs_into_dict(attrib_merge, newself, None, value_source)
+		self.__class__._dict_into_attribs(newself, attrib_merge, value_source, last_child)
 
 		for e in supplementals:
 			newself.get_xml().getroot().append(e)

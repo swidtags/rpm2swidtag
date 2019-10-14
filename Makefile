@@ -15,9 +15,7 @@ test:
 	./test.sh
 
 test-pylint:
-	if pylint-3 --version | grep 'astroid 2\.3\.0' ; then echo "Skipping pylint due to https://github.com/PyCQA/pylint/issues/3090." >&2 ; \
-	else pylint-3 --disable=R --disable=C --indent-string="\t" lib/*/*.py setup.py ; \
-	fi
+	pylint-3 --disable=R --disable=C --indent-string="\t" lib/*/*.py setup.py
 
 clean:
 	rm -rf $(shell cat .gitignore)
