@@ -86,6 +86,7 @@ class SignedTag(Tag):
 		result = subprocess.run(['xmlsec1', '--sign',
 			'--enabled-reference-uris', 'empty',
 			'--privkey-pem', pem_opt, '-'],
+			check=False,
 			input=in_data.getvalue(),
 			stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=False)
 		if result.returncode != 0:

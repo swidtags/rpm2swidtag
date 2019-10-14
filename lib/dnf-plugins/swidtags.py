@@ -300,7 +300,7 @@ class swidtags(Plugin):
 		if "PYTHONPATH" in environ:
 			env["PYTHONPATH"] = environ["PYTHONPATH"]
 		ret = run(rpm2swidtag_command.split() + ["--tag-creator", hostname, "--output-dir", path.join(self.dir_generated, ".")] + pkgs,
-			env=env).returncode
+			env=env, check=False).returncode
 		self.create_generated_dir()
 		self.create_swidtags_d_symlink()
 		return ret
