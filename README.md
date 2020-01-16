@@ -49,7 +49,7 @@ optional arguments:
                         keep the XML signing template in the output (for
                         subsequent signing)
   --retain-old-md N     preserve N latest copies of *-swidtags.xml.gz when
-                        used with --repo'
+                        used with --repo
 
 config options:
   --config FILE         location of the configuration file
