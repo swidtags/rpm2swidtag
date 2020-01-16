@@ -16,9 +16,12 @@ matrix:
       env: fedora=31
     - stage: build-and-test
       env: fedora=30
+    - stage: build-and-test
+      env: centos=8
 
 before_script:
 - if test -n "$fedora" ; then sed -i "s#^FROM.*#FROM registry.fedoraproject.org/fedora:$fedora#" tests/Dockerfile ; fi
+- if test -n "$centos" ; then sed -i "s#^FROM.*#FROM centos:$centos#" tests/Dockerfile ; fi
 
 script:
 - docker build -t rpm2swidtag -f tests/Dockerfile .
