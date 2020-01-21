@@ -268,7 +268,7 @@ test "$OUT" == "$BIN/rpm2swidtag: No package [x] found in database"
 diff tmp/pkg1-and-pkg2.swidtag /tmp/pkg-generated.swidtag
 
 # Test that README has up-to-date usage section
-diff -u <( $BIN/rpm2swidtag -h ) <( sed -n '/^usage: rpm2swidtag/,/```/{/```/T;p}' README.md )
+diff -u <( $BIN/rpm2swidtag -h | sed 's#\.\.\. \[\.\.\. \.\.\.\]#... ...#' ) <( sed -n '/^usage: rpm2swidtag/,/```/{/```/T;p}' README.md )
 
 
 # Testing swidq
@@ -470,7 +470,7 @@ diff <( echo "$BIN/swidq: file [tests/swiddata-wrong/supplemental-without-attrib
 diff /dev/null tmp/swidq.out
 
 # Test that README has up-to-date usage section
-diff -u <( $BIN/swidq -h ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
+diff -u <( $BIN/swidq -h | sed 's#\.\.\. \[\.\.\. \.\.\.\]#... ...#' ) <( sed -n '/^usage: swidq/,/```/{/```/T;p}' README.md )
 
 
 # rpm2swidtag to swidq

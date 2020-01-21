@@ -17,7 +17,7 @@ usage: rpm2swidtag [-h] [-a | -p | --repo DIR]
                    [--primary-only] [--print-tagid]
                    [--preserve-signing-template] [--retain-old-md N]
                    [--config FILE]
-                   [... [... ...]]
+                   [... ...]
 
 Generating SWID tags for rpm packages.
 
@@ -106,7 +106,7 @@ Produced SWID tags can be listed using the `swidq` utility:
 ```
 usage: swidq [-h] [-p PATH [PATH ...]] [-a] [-n] [--rpm] [-i] [-l] [--dump]
              [--xml] [--output-stylesheet FILE] [--debug] [--silent] [-c FILE]
-             [... [... ...]]
+             [... ...]
 
 Querying SWID tags.
 
@@ -176,10 +176,10 @@ locally into `/var/lib/swidtag/rpm2swidtag-generated`.
 
 ## Author
 
-Written by Jan Pazdziora, 2018--2019.
+Written by Jan Pazdziora, 2018--2020.
 
 ## License
 
-Copyright 2018--2019, Red Hat, Inc.
+Copyright 2018--2020, Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0.
