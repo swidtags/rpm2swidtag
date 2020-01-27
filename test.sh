@@ -296,6 +296,9 @@ $BIN/swidq -p tests/swiddata1/*/*.swidtag tests/swiddata1/*/*.swidtag --silent >
 diff /dev/null tmp/swidq.err
 diff <( cat tests/swidq-swiddata1.out ) tmp/swidq.out
 
+# Workaround centos-release not shipping SWID tags and directories yet
+test "$TEST_INSTALLED" = true -a -f /etc/centos-release && mkdir /etc/swid/swidtags.d/empty
+
 $BIN/swidq $SWIDQ_OPTS --silent > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff /dev/null tmp/swidq.out
@@ -419,6 +422,8 @@ diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.tes
 SWIDQ_STYLESHEET_DIR=$SWIDQ_STYLESHEET_DIR2 $BIN/swidq --xml -p tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.xmlns.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
 diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/swidq.out
+
+test "$TEST_INSTALLED" = true -a -f /etc/centos-release && rm -rf /etc/swid/swidtags.d/empty
 
 rm -f tmp/stylesheet.xslt
 if [ "$TEST_INSTALLED" = true ] ; then
