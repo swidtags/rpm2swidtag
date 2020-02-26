@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
 	name = 'rpm2swidtag',
-	version = '0.8.8',
+	version = '0.8.9',
 	description = 'Tools for producing SWID tags from rpm package headers and inspecting the SWID tags',
 	author = 'Jan Pazdziora',
 	author_email = 'jpazdziora@redhat.com',
