@@ -19,8 +19,6 @@ matrix:
     - stage: build-and-test
       env: fedora=31
     - stage: build-and-test
-      env: fedora=30
-    - stage: build-and-test
       env: centos=8
 
 before_script:
