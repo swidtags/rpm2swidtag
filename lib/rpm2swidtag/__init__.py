@@ -122,5 +122,5 @@ class Template:
 			return tag
 		# except etree.XSLTApplyError as e:
 		except TypeError as e:
-			raise Error("Error processing SWID tag: %s" % str(e))
+			raise Error("Error processing SWID tag: %s" % str(e)) from e
 

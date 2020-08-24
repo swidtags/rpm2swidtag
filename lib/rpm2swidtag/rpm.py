@@ -13,9 +13,9 @@ def read_from_file(file):
 		h = ts.hdrFromFdno(fdno)
 		return h
 	except FileNotFoundError as e:
-		raise Error("Error reading rpm file [%s]: %s" % (file, e.strerror))
+		raise Error("Error reading rpm file [%s]: %s" % (file, e.strerror)) from e
 	except rpm.error as e:
-		raise Error("Error reading rpm file [%s]: %s" % (file, str(e)))
+		raise Error("Error reading rpm file [%s]: %s" % (file, str(e))) from e
 	finally:
 		if fdno:
 			os_close(fdno)
@@ -36,7 +36,7 @@ def read_from_db(package, rpmdb_path=None, glob=False):
 			l = ts.dbMatch(rpm.RPMDBI_LABEL, package)
 		return l
 	except rpm.error as e:
-		raise Error(str(e))
+		raise Error(str(e)) from e
 
 def is_source_package(h):
 	if h[rpm.RPMTAG_SOURCEPACKAGE]:
