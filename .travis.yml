@@ -15,6 +15,8 @@ matrix:
     - stage: build-and-test
       env: fedora=rawhide
     - stage: build-and-test
+      env: fedora=33
+    - stage: build-and-test
       env: fedora=32
     - stage: build-and-test
       env: fedora=31
