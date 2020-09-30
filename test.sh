@@ -612,6 +612,9 @@ if [ "$TEST_INSTALLED" = true ] ; then
 	test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated
 	( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag )
 	( ! test -f $DNF_ROOT/var/lib/swidtag/rpm2swidtag-generated/*.pkgdep-1.0.0-1.fc28.noarch-component-of-test.a.Example-OS-Distro-3.x86_64-rpm-e68d051de967c5db82e1f00c8bc8510acaed3855b1cc19b2a81eb1a353eedcf0.swidtag )
+	if test -f /etc/fedora-release ; then
+		rpm2swidtag --print-tagid bash | ( . /etc/os-release ; grep '.-component-of-org\.fedoraproject\.Fedora-'$REDHAT_BUGZILLA_PRODUCT_VERSION )
+	fi
 else
 	( ! test -L $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
 	( ! test -d $DNF_ROOT/etc/swid/swidtags.d/rpm2swidtag-generated )
