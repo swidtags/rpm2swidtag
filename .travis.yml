@@ -7,21 +7,23 @@ services:
 
 install: true
 
-stages:
-- build-and-test
+arch:
+- amd64
+- arm64
+- ppc64le
+- s390x
+
+env:
+- fedora=rawhide
+- fedora=33
+- fedora=32
+- fedora=31
+- centos=8
 
 matrix:
-  include:
-    - stage: build-and-test
-      env: fedora=rawhide
-    - stage: build-and-test
-      env: fedora=33
-    - stage: build-and-test
-      env: fedora=32
-    - stage: build-and-test
-      env: fedora=31
-    - stage: build-and-test
-      env: centos=8
+  exclude:
+    - env: centos=8
+      arch: s390x
 
 before_script:
 - if test -n "$fedora" ; then sed -i "s#^FROM.*#FROM registry.fedoraproject.org/fedora:$fedora#" tests/Dockerfile ; fi
