@@ -23,11 +23,15 @@ env:
 matrix:
   exclude:
     - env: centos=8
+      arch: arm64
+    - env: centos=8
+      arch: ppc64le
+    - env: centos=8
       arch: s390x
 
 before_script:
 - if test -n "$fedora" ; then sed -i "s#^FROM.*#FROM registry.fedoraproject.org/fedora:$fedora#" tests/Dockerfile ; fi
-- if test -n "$centos" ; then sed -i "s#^FROM.*#FROM centos:$centos#" tests/Dockerfile ; fi
+- if test -n "$centos" ; then sed -i "s#^FROM.*#FROM registry.centos.org/centos:$centos#" tests/Dockerfile ; fi
 
 script:
 - docker build -t rpm2swidtag -f tests/Dockerfile .
