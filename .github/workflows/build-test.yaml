@@ -1,0 +1,43 @@
+name: Build and test rpm2swidtag
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '10 4 * * 1,3,5'
+
+jobs:
+  build:
+    name: Run tests in container
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ fedora-rawhide, fedora-34, fedora-33, fedora-32, centos-8 ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set the right OS in the Dockerfile
+        run: sed -i "s#^FROM.*#FROM $( echo ${{ matrix.os }} | sed 's#^fedora-#registry.fedoraproject.org/fedora:#; s#^centos-#registry.centos.org/centos:#;' )#" tests/Dockerfile
+      - name: Build image
+        run: docker build -t rpm2swidtag -f tests/Dockerfile .
+      - name: Run container
+        run: docker run --name rpm2swidtag -d rpm2swidtag sleep 600
+      - run: docker exec rpm2swidtag mkdir the-tests
+      - run: docker exec rpm2swidtag cp -rp Makefile test.sh tests README.md the-tests/
+      - name: Run TEST_INSTALLED=true tests
+        run: docker exec rpm2swidtag make -C the-tests test TEST_INSTALLED=true
+      - name: See what rpm2swidtag generated for bash
+        run: docker exec rpm2swidtag /usr/bin/rpm2swidtag bash
+      - name: Get us full set of tags
+        run: docker exec rpm2swidtag dnf swidtags regen
+      - name: Check all packages have component-of tags
+        run: diff <( docker exec rpm2swidtag rpm -qa | grep -v gpg-pubkey | wc -l ) <( docker exec rpm2swidtag ls /var/lib/swidtag/rpm2swidtag-generated | grep -v component-of | wc -l )
+      - name: There has to be a tag for bash
+        run: docker exec rpm2swidtag swidq -n bash | grep .
+      - name: There should not be a tag for zsh
+        run: if docker exec rpm2swidtag swidq -n zsh | grep . ; then exit 1 ; fi
+      - name: But after we install zsh ...
+        run: docker exec rpm2swidtag dnf install -y zsh
+      - name: ... the tag should have been generated
+        run: docker exec rpm2swidtag swidq -n zsh | grep .
