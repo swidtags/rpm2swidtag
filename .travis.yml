@@ -15,9 +15,9 @@ arch:
 
 env:
 - fedora=rawhide
+- fedora=34
 - fedora=33
 - fedora=32
-- fedora=31
 - centos=8
 
 matrix:
