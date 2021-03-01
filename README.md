@@ -24,7 +24,7 @@ Generating SWID tags for rpm packages.
 positional arguments:
   ...                   package(s), glob(s) or file name(s)
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -a, --all             query all packages with glob pattern
   -p, --package         process rpm package file
@@ -110,7 +110,7 @@ usage: swidq [-h] [-p PATH [PATH ...]] [-a] [-n] [--rpm] [-i] [-l] [--dump]
 
 Querying SWID tags.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
 
 selection options:
@@ -176,10 +176,10 @@ locally into `/var/lib/swidtag/rpm2swidtag-generated`.
 
 ## Author
 
-Written by Jan Pazdziora, 2018--2020.
+Written by Jan Pazdziora, 2018--2021.
 
 ## License
 
-Copyright 2018--2020, Red Hat, Inc.
+Copyright 2018--2021, Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0.
