@@ -56,7 +56,7 @@ class Tag:
 		if not path.exists(dirname):
 			makedirs(dirname)
 		filename = escape_path(self.get_tagid() + '-rpm-' + self.checksum) + '.swidtag'
-		if len(filename) > 255:
+		if len(filename) > 251:
 			filename = sha256(self.get_tagid().encode()).hexdigest() + '-rpm-' + self.checksum + '.swidtag'
 		self.write_output(path.join(dirname, filename))
 		return ( dirname, filename )
