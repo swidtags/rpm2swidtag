@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ fedora-rawhide, fedora-35, fedora-34, centos-8-stream ]
+        os: [ fedora-rawhide, fedora-36, fedora-35, fedora-34, centos-8-stream ]
     steps:
       - uses: actions/checkout@v2
       - name: Set the right OS in the Dockerfile
