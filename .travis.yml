@@ -17,7 +17,7 @@ env:
 - fedora=rawhide
 - fedora=35
 - fedora=34
-- centos=8
+- centos=stream8
 
 matrix:
   exclude:
@@ -30,7 +30,7 @@ matrix:
 
 before_script:
 - if test -n "$fedora" ; then sed -i "s#^FROM.*#FROM registry.fedoraproject.org/fedora:$fedora#" tests/Dockerfile ; fi
-- if test -n "$centos" ; then sed -i "s#^FROM.*#FROM registry.centos.org/centos:$centos#" tests/Dockerfile ; fi
+- if test -n "$centos" ; then sed -i "s#^FROM.*#FROM quay.io/centos/centos:$centos#" tests/Dockerfile ; fi
 
 script:
 - docker build -t rpm2swidtag -f tests/Dockerfile .
