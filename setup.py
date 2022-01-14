@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
 	name = 'rpm2swidtag',
-	version = '0.8.12',
+	version = '0.8.13',
 	description = 'Tools for producing SWID tags from rpm package headers and inspecting the SWID tags',
 	author = 'Jan Pazdziora',
 	author_email = 'jpazdziora@redhat.com',
