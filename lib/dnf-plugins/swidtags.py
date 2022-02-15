@@ -296,7 +296,9 @@ class swidtags(Plugin):
 				return -2
 			raise e
 		logger.debug("Running %s for %s ...", rpm2swidtag_command, pkgs)
-		env = { "_RPM2SWIDTAG_RPMDBPATH": path.join(self.base.conf.installroot, "var/lib/rpm") }
+		env = { "_RPM2SWIDTAG_RPMDBPATH": path.join(self.base.conf.installroot, "usr/lib/sysimage/rpm") }
+		if not path.isdir(env["_RPM2SWIDTAG_RPMDBPATH"]):
+			env["_RPM2SWIDTAG_RPMDBPATH"] = path.join(self.base.conf.installroot, "var/lib/rpm")
 		if "PYTHONPATH" in environ:
 			env["PYTHONPATH"] = environ["PYTHONPATH"]
 		ret = run(rpm2swidtag_command.split() + ["--tag-creator", hostname, "--output-dir", path.join(self.dir_generated, ".")] + pkgs,
