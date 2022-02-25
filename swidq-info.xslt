@@ -50,6 +50,13 @@
 </xsl:template>
 
 
+<xsl:template match="t:SoftwareIdentity/*">
+  <xsl:message terminate="no">Unknown entry in display template.</xsl:message>
+  <xsl:value-of select="text()"/>
+  <xsl:text>: ERROR: info stylesheet broken</xsl:text>
+  <xsl:call-template name="newline"/>
+</xsl:template>
+
 <xsl:template match="t:SoftwareIdentity/line[@attr]">
   <xsl:param name="source"/>
   <xsl:variable name="attr" select="@attr"/>
@@ -101,13 +108,6 @@
   <xsl:apply-templates select="$source/swid:Evidence/swid:Resource[@type = 'rpm']">
     <xsl:with-param name="label" select="."/>
   </xsl:apply-templates>
-</xsl:template>
-
-<xsl:template match="t:SoftwareIdentity/*">
-  <xsl:message terminate="no">Unknown entry in display template.</xsl:message>
-  <xsl:value-of select="text()"/>
-  <xsl:text>: ERROR: info stylesheet broken</xsl:text>
-  <xsl:call-template name="newline"/>
 </xsl:template>
 
 <xsl:template match="t:SoftwareIdentity/line[not(text())]"/>
