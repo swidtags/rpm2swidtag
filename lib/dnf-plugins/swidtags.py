@@ -42,8 +42,7 @@ class swidtagsCommand(commands.Command):
 		self.cli.demands.resolving = False
 		self.cli.demands.root_user = True
 
-	@staticmethod
-	def set_argparser(parser):
+	def set_argparser(self, parser):
 		parser.add_argument("swidtagscmd", nargs=1, choices=["sync", "regen", "purge"], help="""
 sync   for installed rpms, fetch SWID tags from repository metadata or generate them locally
 regen  synonym to sync
