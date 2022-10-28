@@ -3,6 +3,8 @@
 set -e
 set -x
 
+export LC_ALL=C.utf8
+
 # Content packaged to .tar.gz via MANIFEST.in does not preserve symlinks
 if ! [ -L tests/swiddata1/symlinked ] ; then
 	rm -rf tests/swiddata1/symlinked
