@@ -3,5 +3,7 @@ test_task:
     matrix:
       image: registry.fedoraproject.org/fedora:rawhide
       image: registry.fedoraproject.org/fedora:latest
+      image: quay.io/centos/centos:stream9
+      image: quay.io/centos/centos:stream8
   build_script: tests/build.sh
   test_script: make test

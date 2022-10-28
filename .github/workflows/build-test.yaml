@@ -14,11 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ fedora-rawhide, fedora-37, fedora-36, fedora-35, centos-8-stream ]
+        os: [ fedora-rawhide, fedora-37, fedora-36, fedora-35, centos-stream-8, centos-stream-9 ]
     steps:
       - uses: actions/checkout@v2
       - name: Set the right OS in the Dockerfile
-        run: sed -i "s#^FROM.*#FROM $( echo ${{ matrix.os }} | sed 's#^fedora-#registry.fedoraproject.org/fedora:#; s#^centos-8-stream#quay.io/centos/centos:stream8#;' )#" tests/Dockerfile
+        run: sed -i "s#^FROM.*#FROM $( echo ${{ matrix.os }} | sed 's#^fedora-#registry.fedoraproject.org/fedora:#; s#^centos-stream-#quay.io/centos/centos:stream#;' )#" tests/Dockerfile
       - name: Build image
         run: podman build -t rpm2swidtag -f tests/Dockerfile .
       - name: Run container
