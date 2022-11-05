@@ -61,58 +61,58 @@ fi
 # Testing rpm2swidtag
 # For testing, let's default the data location to the current directory
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag tmp/pkg-generated.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag tmp/pkg-generated.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS2 --authoritative -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm > tmp/pkg-generated.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/pkg-generated.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/pkg-generated.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS3 --evidence-deviceid specific.machine.example.test -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | sed 's/<Evidence date="[^"]*Z"/<Evidence date="2018-01-01T12:13:14Z"/' > tmp/pkg-generated.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.deviceid.swidtag tmp/pkg-generated.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.deviceid.swidtag tmp/pkg-generated.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --tag-creator=example.test tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid tmp/pkg-generated-regid.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid tmp/pkg-generated-regid.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --tag-creator="example.test Example Corp." tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid-name tmp/pkg-generated-regid.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid-name tmp/pkg-generated-regid.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --tag-creator=./tests/swiddata1/sup/p1.swidtag tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid-name-ref tmp/pkg-generated-regid.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.regid-name-ref tmp/pkg-generated-regid.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --software-creator=./tests/swiddata1/sup/p1.swidtag tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-regid-name-ref tmp/pkg-generated-regid.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-regid-name-ref tmp/pkg-generated-regid.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --tag-creator=example.test --software-creator=example.test tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.tag-equals-software-regid tmp/pkg-generated-regid.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.tag-equals-software-regid tmp/pkg-generated-regid.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --software-creator=./tests/swiddata1/sup/p1.swidtag --tag-creator=./tests/swiddata1/sup/p1.swidtag tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.tag-equals-software-regid-ref tmp/pkg-generated-regid.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.tag-equals-software-regid-ref tmp/pkg-generated-regid.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p --software-creator=./tests/swiddata1/sup/p1.swidtag --tag-creator="a.test Example A Organization" --distributor="a.test Example A Organization" tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-generated-regid.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.tag-equals-software-equals-distributor tmp/pkg-generated-regid.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.tag-equals-software-equals-distributor tmp/pkg-generated-regid.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/rpms/src/pkg1-1.2.0-1.fc28.src.rpm | normalize > tmp/pkg-generated-src.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.src.swidtag tmp/pkg-generated-src.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.src.swidtag tmp/pkg-generated-src.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/hello-rpm/hello-1.0-1.i386.rpm | normalize > tmp/pkg-generated-src.swidtag
-diff tests/hello-rpm/hello-1.0-1.i386.swidtag tmp/pkg-generated-src.swidtag
+diff -u tests/hello-rpm/hello-1.0-1.i386.swidtag tmp/pkg-generated-src.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/hello-rpm/hello-2.0-1.x86_64-signed.rpm | normalize > tmp/pkg-generated-src.swidtag
-diff tests/hello-rpm/hello-2.0-1.x86_64-signed.swidtag tmp/pkg-generated-src.swidtag
+diff -u tests/hello-rpm/hello-2.0-1.x86_64-signed.swidtag tmp/pkg-generated-src.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm --software-creator a.test | normalize > tmp/pkg-generated.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-creator-regid tmp/pkg-generated.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.software-creator-regid tmp/pkg-generated.swidtag
 
 RPM2SWIDTAG_TEMPLATE=tests/swidtag-template-minimal.xml $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-minimal.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.minimal tmp/pkg-from-minimal.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.minimal tmp/pkg-from-minimal.swidtag
 
 RPM2SWIDTAG_TEMPLATE=tests/swidtag-template-extra.xml $BIN/rpm2swidtag --tag-creator="z.test Example Z" $RPM2SWIDTAG_OPTS -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-from-extra.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.extra tmp/pkg-from-extra.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.extra tmp/pkg-from-extra.swidtag
 
 RPM2SWIDTAG_XSLT=$RPM2SWIDTAG_XSLT1 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm | normalize > tmp/pkg-custom-tagid.swidtag
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.custom-tagid tmp/pkg-custom-tagid.swidtag
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.swidtag.custom-tagid tmp/pkg-custom-tagid.swidtag
 
 $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -p tests/rpms/x86_64/pkg2-0.0.1-1.git0f5628a6.fc28.x86_64.rpm | normalize > tmp/pkg-generated-epoch.swidtag
-diff tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag tmp/pkg-generated-epoch.swidtag
+diff -u tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag tmp/pkg-generated-epoch.swidtag
 
 rm -rf tmp/rpmdb
 rpm --ignorearch --dbpath $(pwd)/tmp/rpmdb --justdb --nodeps -iv tests/rpms/x86_64/pkg1-1.2.0-1.fc28.x86_64.rpm
@@ -128,21 +128,21 @@ gpg2 --homedir=tmp/gnupg --export --armor 19D5C7DD > tmp/key-19D5C7DD.gpg
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS pkg1-1.3.0 | normalize > tmp/pkg-generated.swidtag
 cat tests/pkg1/pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/pkg1-1.3.0.swidtag.with-supplemental
-diff tmp/pkg1-1.3.0.swidtag.with-supplemental tmp/pkg-generated.swidtag
+diff -u tmp/pkg1-1.3.0.swidtag.with-supplemental tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --primary-only pkg1-1.3.0 | normalize > tmp/pkg-generated.swidtag
-diff tests/pkg1/pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag tmp/pkg-generated.swidtag
+diff -u tests/pkg1/pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS pkg1 | normalize > tmp/pkg-generated.swidtag
 cat tests/pkg1/pkg1-1.2.0-1.fc28.x86_64-rpm-fc67230522bd0a0d030568a8cfb108419cd51f173753ff2ef618a42bbfa29096.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64-rpm-85a1c1a1f8ce5e66c4371d518dd716b2c289c5dea15bed8a3046970d02566e1a.swidtag tests/pkg1/pkg1-1.3.0-1.fc28.x86_64.swidtag.supplemental-component-of-distro > tmp/pkg1-1.2.0-and-1.3.0.swidtag
-diff tmp/pkg1-1.2.0-and-1.3.0.swidtag tmp/pkg-generated.swidtag
+diff -u tmp/pkg1-1.2.0-and-1.3.0.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -a 'pkg*' | normalize > tmp/pkg-generated.swidtag
 cat tmp/pkg1-1.2.0-and-1.3.0.swidtag tests/pkg2/pkg2-13:0.0.1-1.git0f5628a6.fc28.x86_64-rpm-a837a0715aeebaae7125ae56bcd1e347146cbc4cfc24aef99837ca693182166f.swidtag > tmp/pkg1-and-pkg2.swidtag
-diff tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
+diff -u tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS -a | normalize > tmp/pkg-generated.swidtag
-diff tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
+diff -u tmp/pkg1-and-pkg2.swidtag tmp/pkg-generated.swidtag
 
 rm -rf tmp/output-dir tmp/compare-dir
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag-creator=example.test --output-dir=tmp/output-dir -a
@@ -267,7 +267,7 @@ set -e
 test "$ERR" -eq 7
 normalize_i /tmp/pkg-generated.swidtag
 test "$OUT" == "$BIN/rpm2swidtag: No package [x] found in database"
-diff tmp/pkg1-and-pkg2.swidtag /tmp/pkg-generated.swidtag
+diff -u tmp/pkg1-and-pkg2.swidtag /tmp/pkg-generated.swidtag
 
 # Test that README has up-to-date usage section
 diff -u <( $BIN/rpm2swidtag -h | sed 's#\.\.\. \[\.\.\. \.\.\.\]#... ...#; s/optional arguments:/options:/;' ) <( sed -n '/^usage: rpm2swidtag/,/```/{/```/T;p}' README.md )
@@ -276,27 +276,27 @@ diff -u <( $BIN/rpm2swidtag -h | sed 's#\.\.\. \[\.\.\. \.\.\.\]#... ...#; s/opt
 # Testing swidq
 $BIN/swidq -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
 
 $BIN/swidq -c swidq.conf -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag --debug > tmp/swidq.out 2> tmp/swidq.err
-diff <( sed "s#^bin#$BIN#" tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.debug ) tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff -u <( sed "s#^bin#$BIN#" tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.debug ) tmp/swidq.err
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
 
 $BIN/swidq --silent -p - < tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 -' ) tmp/swidq.out
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 -' ) tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata1/*/*.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swidq-swiddata1.out tmp/swidq.out
+diff -u tests/swidq-swiddata1.out tmp/swidq.out
 
 $BIN/swidq -p 'tests/swiddata1/*' > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swidq-swiddata1.out tmp/swidq.out
+diff -u tests/swidq-swiddata1.out tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata1/*/*.swidtag tests/swiddata1/*/*.swidtag --silent > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( cat tests/swidq-swiddata1.out ) tmp/swidq.out
+diff -u <( cat tests/swidq-swiddata1.out ) tmp/swidq.out
 
 # Workaround centos-release not shipping SWID tags and directories yet
 test "$TEST_INSTALLED" = true -a -f /etc/centos-release && mkdir /etc/swid/swidtags.d/empty
@@ -307,23 +307,23 @@ diff /dev/null tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS2 -a > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swidq-swiddata1-swiddata2.out tmp/swidq.out
+diff -u tests/swidq-swiddata1-swiddata2.out tmp/swidq.out
 
 $BIN/swidq $SWIDQ_OPTS2 unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 --silent > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
 
 $BIN/swidq $SWIDQ_OPTS2 -a unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 --silent > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS2 -a '*pkg1*' > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS2 -a '*pkg1*' '*pkg5*' > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ) tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS unknown.tagid > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
@@ -331,15 +331,15 @@ diff /dev/null tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS2 -n 'qkg1' > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
+diff -u <( echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS2 -n 'qkg1' pkg1 > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS2 -a -n 'qkg*' 'p?g1' > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata1/a.test/qkg1.swidtag' ; echo 'test.a.qkg1-1.0.0-1.x86_64 tests/swiddata2/qkg1.swidtag' ) tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS -n qkg2 > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
@@ -347,83 +347,83 @@ diff /dev/null tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata1/a.test/pkg3.swidtag tests/swiddata2/pkg3.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata1/a.test/pkg3.swidtag' ; echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ) tmp/swidq.out
+diff -u <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata1/a.test/pkg3.swidtag' ; echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ) tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata2/pkg3.swidtag tests/swiddata1/a.test/pkg3.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ; echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata1/a.test/pkg3.swidtag' ) tmp/swidq.out
+diff -u <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ; echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata1/a.test/pkg3.swidtag' ) tmp/swidq.out
 
 $BIN/swidq -p $( find tests/swiddata[12] -name '*distro*.swidtag' ) tests/swiddata2/missing-tag-supplemental.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff <( echo "$BIN/swidq: [test.a.Example-OS-Distro-3.15.x86_64] supplements [swid:test.example.missing.Example-OS-Distro-3.x86_64] which we do not know" ) tmp/swidq.err
-diff <( echo 'test.a.Example-OS-Distro-3.x86_64 tests/swiddata1/a.test/distro.swidtag' ;
+diff -u <( echo 'test.a.Example-OS-Distro-3.x86_64 tests/swiddata1/a.test/distro.swidtag' ;
 	echo '+ test.a.Example-OS-Distro-3.14.x86_64 tests/swiddata2/distro-minor-supplemental.swidtag' ;
 	echo '  + test.a.Example-OS-Distro-3.14.x86_64-sup2 tests/swiddata2/distro-minor-supplemental-2.swidtag' ;
 	echo '- test.a.Example-OS-Distro-3.15.x86_64 tests/swiddata2/missing-tag-supplemental.swidtag' ) tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.out 2> tmp/swidq.err
-diff <( echo "$BIN/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know" ) tmp/swidq.err
-diff <( echo '- test.a.Example-OS-Distro-3.14.x86_64 tests/swiddata2/distro-minor-supplemental.swidtag' ) tmp/swidq.out
+diff -u <( echo "$BIN/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know" ) tmp/swidq.err
+diff -u <( echo '- test.a.Example-OS-Distro-3.14.x86_64 tests/swiddata2/distro-minor-supplemental.swidtag' ) tmp/swidq.out
 
 SWIDQ_STYLESHEET_DIR=$SWIDQ_STYLESHEET_DIR1 $BIN/swidq --dump -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.dump tmp/swidq.out
+diff -u tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.dump tmp/swidq.out
 
 $BIN/swidq --dump $SWIDQ_OPTS -p tests/swiddata1/a.test/minimal.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/a.test/minimal.dump tmp/swidq.out
+diff -u tests/swiddata1/a.test/minimal.dump tmp/swidq.out
 
 SWIDQ_STYLESHEET_DIR=$SWIDQ_STYLESHEET_DIR2 $BIN/swidq --info -p tests/swiddata1/a.test/minimal.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/a.test/minimal.info tmp/swidq.out
+diff -u tests/swiddata1/a.test/minimal.info tmp/swidq.out
 
 $BIN/swidq -i $SWIDQ_OPTS -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.info tmp/swidq.out
+diff -u tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.info tmp/swidq.out
 
 SWIDQ_STYLESHEET_DIR=$SWIDQ_STYLESHEET_DIR1 $BIN/swidq -il -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( cat tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.{info,files} ) tmp/swidq.out
+diff -u <( cat tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.{info,files} ) tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS2 -l -n pkg1 > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.files tmp/swidq.out
+diff -u tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.files tmp/swidq.out
 
 SWIDQ_STYLESHEET_DIR=$SWIDQ_STYLESHEET_DIR1 $BIN/swidq -i -p tests/swiddata1/a.test/distro.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/a.test/distro.info tmp/swidq.out
+diff -u tests/swiddata1/a.test/distro.info tmp/swidq.out
 
 SWIDQ_STYLESHEET_DIR=$SWIDQ_STYLESHEET_DIR2 $BIN/swidq -i -p tests/swiddata2/distro-minor-supplemental.swidtag > tmp/swidq.out 2> tmp/swidq.err
-diff <( echo "$BIN/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know" ) tmp/swidq.err
-diff tests/swiddata2/distro-minor-supplemental.info tmp/swidq.out
+diff -u <( echo "$BIN/swidq: [test.a.Example-OS-Distro-3.14.x86_64] supplements [swid:test.a.Example-OS-Distro-3.x86_64] which we do not know" ) tmp/swidq.err
+diff -u tests/swiddata2/distro-minor-supplemental.info tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata1/sup --info $SWIDQ_OPTS3 > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/sup/sup.info tmp/swidq.out
+diff -u tests/swiddata1/sup/sup.info tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata1/sup --output-stylesheet=$SWIDQ_STYLESHEET_SUP > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/sup/sup.xml tmp/swidq.out
+diff -u tests/swiddata1/sup/sup.xml tmp/swidq.out
 
 SWIDQ_STYLESHEET_DIR=$SWIDQ_STYLESHEET_DIR1 $BIN/swidq -p tests/swiddata1/sup --dump > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/sup/sup.dump tmp/swidq.out
+diff -u tests/swiddata1/sup/sup.dump tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS2 --rpm pkg3-1.0.0-1.x86_64 > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata1/a.test/pkg3.swidtag' ;
+diff -u <( echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata1/a.test/pkg3.swidtag' ;
 	echo 'test.b.pkg3-1.0.0-1.x86_64 tests/swiddata3/b.test/pkg3.swidtag' ;
 	echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ) tmp/swidq.out
 
 $BIN/swidq --silent $SWIDQ_OPTS2 --rpm -a > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ;
+diff -u <( echo 'unavailable.invalid.pkg1-1.2.0-1.fc28.x86_64 tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag' ;
 	echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata1/a.test/pkg3.swidtag' ;
 	echo 'test.b.pkg3-1.0.0-1.x86_64 tests/swiddata3/b.test/pkg3.swidtag' ;
 	echo 'test.a.pkg3-1.0.0-1.x86_64 tests/swiddata2/pkg3.swidtag' ) tmp/swidq.out
 
 SWIDQ_STYLESHEET_DIR=$SWIDQ_STYLESHEET_DIR2 $BIN/swidq --xml -p tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.xmlns.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/swidq.out
+diff -u tests/pkg1/pkg1-1.2.0-1.fc28.x86_64.auth.swidtag tmp/swidq.out
 
 test "$TEST_INSTALLED" = true -a -f /etc/centos-release && rm -rf /etc/swid/swidtags.d/empty
 
@@ -437,7 +437,7 @@ fi
 unset SWIDQ_STYLESHEET_DIR
 $BIN/swidq --output-stylesheet=tmp/stylesheet.xslt -p tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.dump tmp/swidq.out
+diff -u tests/swiddata1/a.test/pkg1-1.2.0-1.fc28.x86_64.dump tmp/swidq.out
 )
 
 # Testing errors
@@ -450,30 +450,30 @@ test "$OUT" == "$BIN/swidq: no file matching [nonexistent]"
 
 $BIN/swidq -p tests/swiddata-wrong/SoftwareIdentity-in-SoftwareIdentity.swidtag > tmp/swidq.out 2> tmp/swidq.err
 diff /dev/null tmp/swidq.err
-diff <( echo 'test.a.Example-OS-Distro-3.x86_64 tests/swiddata-wrong/SoftwareIdentity-in-SoftwareIdentity.swidtag' ) tmp/swidq.out
+diff -u <( echo 'test.a.Example-OS-Distro-3.x86_64 tests/swiddata-wrong/SoftwareIdentity-in-SoftwareIdentity.swidtag' ) tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata-wrong/wrong-schema.xml > tmp/swidq.out 2> tmp/swidq.err
-diff <( echo "$BIN/swidq: file [tests/swiddata-wrong/wrong-schema.xml] does not have SoftwareIdentity in the SWID 2015 namespace, found [{http://standards.iso.org/iso/19770/-2/2013-error/schema.xsd}SoftwareIdentity]" ) tmp/swidq.err
+diff -u <( echo "$BIN/swidq: file [tests/swiddata-wrong/wrong-schema.xml] does not have SoftwareIdentity in the SWID 2015 namespace, found [{http://standards.iso.org/iso/19770/-2/2013-error/schema.xsd}SoftwareIdentity]" ) tmp/swidq.err
 diff /dev/null tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata-wrong/wrong-root.xml > tmp/swidq.out 2> tmp/swidq.err
-diff <( echo "$BIN/swidq: file [tests/swiddata-wrong/wrong-root.xml] does not have SoftwareIdentity in the SWID 2015 namespace, found [{http://standards.iso.org/iso/19770/-2/2015/schema.xsd}Entity]" ) tmp/swidq.err
+diff -u <( echo "$BIN/swidq: file [tests/swiddata-wrong/wrong-root.xml] does not have SoftwareIdentity in the SWID 2015 namespace, found [{http://standards.iso.org/iso/19770/-2/2015/schema.xsd}Entity]" ) tmp/swidq.err
 diff /dev/null tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata-wrong/missing-tagId.xml > tmp/swidq.out 2> tmp/swidq.err
-diff <( echo "$BIN/swidq: file [tests/swiddata-wrong/missing-tagId.xml] does not have SoftwareIdentity/@tagId" ) tmp/swidq.err
+diff -u <( echo "$BIN/swidq: file [tests/swiddata-wrong/missing-tagId.xml] does not have SoftwareIdentity/@tagId" ) tmp/swidq.err
 diff /dev/null tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata-wrong/missing-name.xml > tmp/swidq.out 2> tmp/swidq.err
-diff <( echo "$BIN/swidq: file [tests/swiddata-wrong/missing-name.xml] does not have SoftwareIdentity/@name" ) tmp/swidq.err
+diff -u <( echo "$BIN/swidq: file [tests/swiddata-wrong/missing-name.xml] does not have SoftwareIdentity/@name" ) tmp/swidq.err
 diff /dev/null tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata-wrong/supplemental-without-link.swidtag > tmp/swidq.out 2> tmp/swidq.err
-diff <( echo "$BIN/swidq: file [tests/swiddata-wrong/supplemental-without-link.swidtag] is supplemental but does not have any supplemental Link" ) tmp/swidq.err
+diff -u <( echo "$BIN/swidq: file [tests/swiddata-wrong/supplemental-without-link.swidtag] is supplemental but does not have any supplemental Link" ) tmp/swidq.err
 diff /dev/null tmp/swidq.out
 
 $BIN/swidq -p tests/swiddata-wrong/supplemental-without-attribute.swidtag > tmp/swidq.out 2> tmp/swidq.err
-diff <( echo "$BIN/swidq: file [tests/swiddata-wrong/supplemental-without-attribute.swidtag] has Link with @rel='supplemental' but not @supplemental='true'") tmp/swidq.err
+diff -u <( echo "$BIN/swidq: file [tests/swiddata-wrong/supplemental-without-attribute.swidtag] has Link with @rel='supplemental' but not @supplemental='true'") tmp/swidq.err
 diff /dev/null tmp/swidq.out
 
 # Test that README has up-to-date usage section
@@ -552,7 +552,7 @@ umask 022
 $BIN/rpm2swidtag --repo=tmp/repo $RPM2SWIDTAG_OPTS --authoritative --tag-creator "example/test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --retain-old-md 2
 )
 zcat tmp/repo/repodata/???*-swidtags.xml.gz > tmp/repo/swidtags.xml
-diff tests/repodata-swidtags.xml tmp/repo/swidtags.xml
+diff -u tests/repodata-swidtags.xml tmp/repo/swidtags.xml
 
 test "$REPOMD_INODE" != "$( ls -i tmp/repo/repodata/repomd.xml )"
 ls -l tmp/repo/repodata/repomd.xml | grep '^-rw-r--r--'
@@ -563,7 +563,7 @@ test -f tmp/repo/repodata/c-swidtags.xml.gz
 
 $BIN/rpm2swidtag --repo=tmp/repo $RPM2SWIDTAG_OPTS --authoritative --tag-creator "example/test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt
 zcat tmp/repo/repodata/???*-swidtags.xml.gz > tmp/repo/swidtags.xml
-diff tests/repodata-swidtags.xml tmp/repo/swidtags.xml
+diff -u tests/repodata-swidtags.xml tmp/repo/swidtags.xml
 
 ( ! test -f tmp/repo/repodata/a-swidtags.xml.gz )
 ( ! test -f tmp/repo/repodata/c-swidtags.xml.gz )
