@@ -186,6 +186,7 @@ SIGNDIR=tests/signing
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag-creator=example.test --output-dir=tmp/output-dir/signed-internal/. -a --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --authoritative
 # XML declaration produced by XSLT output is different than the XML write gives us
 sed -i 's#^<?xml version='"'"'1\.0'"'"' encoding='"'"'UTF-8'"'"'?>$#<?xml version="1.0" encoding="utf-8"?>#' tmp/output-dir/signed-internal/*
+sed -i -E 's#([a-zA-Z0-9=])</X509Certificate>#\1\n</X509Certificate>#' tmp/output-dir/signed-internal/*
 
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag-creator=example.test --output-dir=tmp/output-dir/sign-input/. -a --preserve-signing-template --authoritative
 mkdir tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-pem
@@ -197,6 +198,7 @@ for i in tmp/output-dir/signed-internal/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt $i
 done
 diff -ru tmp/output-dir/signed-internal tests/pkg-signed
+sed -i -E 's#([a-zA-Z0-9=])</X509Certificate>#\1\n</X509Certificate>#' tmp/output-dir/signed-pkcs12/* tmp/output-dir/signed-pem/*
 diff -ru tmp/output-dir/signed-pkcs12 tests/pkg-signed
 diff -ru tmp/output-dir/signed-pem tests/pkg-signed
 
@@ -552,6 +554,7 @@ umask 022
 $BIN/rpm2swidtag --repo=tmp/repo $RPM2SWIDTAG_OPTS --authoritative --tag-creator "example/test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --retain-old-md 2
 )
 zcat tmp/repo/repodata/???*-swidtags.xml.gz > tmp/repo/swidtags.xml
+sed -i -E 's#([a-zA-Z0-9=])</X509Certificate>#\1\n</X509Certificate>#' tmp/repo/swidtags.xml
 diff -u tests/repodata-swidtags.xml tmp/repo/swidtags.xml
 
 test "$REPOMD_INODE" != "$( ls -i tmp/repo/repodata/repomd.xml )"
@@ -563,6 +566,7 @@ test -f tmp/repo/repodata/c-swidtags.xml.gz
 
 $BIN/rpm2swidtag --repo=tmp/repo $RPM2SWIDTAG_OPTS --authoritative --tag-creator "example/test Example Org." --software-creator "other.test Other Org." --sign-pem=$SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt
 zcat tmp/repo/repodata/???*-swidtags.xml.gz > tmp/repo/swidtags.xml
+sed -i -E 's#([a-zA-Z0-9=])</X509Certificate>#\1\n</X509Certificate>#' tmp/repo/swidtags.xml
 diff -u tests/repodata-swidtags.xml tmp/repo/swidtags.xml
 
 ( ! test -f tmp/repo/repodata/a-swidtags.xml.gz )
