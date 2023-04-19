@@ -188,11 +188,16 @@ _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag
 sed -i 's#^<?xml version='"'"'1\.0'"'"' encoding='"'"'UTF-8'"'"'?>$#<?xml version="1.0" encoding="utf-8"?>#' tmp/output-dir/signed-internal/*
 sed -i -E 's#([a-zA-Z0-9=])</X509Certificate>#\1\n</X509Certificate>#' tmp/output-dir/signed-internal/*
 
+XMLSEC_LAX_KEY_SEARCH=--lax-key-search
+if xmlsec1 --version | grep '^xmlsec1 1\.2\.' ; then
+	XMLSEC_LAX_KEY_SEARCH=
+fi
+
 _RPM2SWIDTAG_RPMDBPATH=$(pwd)/tmp/rpmdb $BIN/rpm2swidtag $RPM2SWIDTAG_OPTS --tag-creator=example.test --output-dir=tmp/output-dir/sign-input/. -a --preserve-signing-template --authoritative
 mkdir tmp/output-dir/signed-pkcs12 tmp/output-dir/signed-pem
 ( cd tmp/output-dir/sign-input && ls ) | while read i ; do
-	xmlsec1 --sign --pkcs12 $SIGNDIR/test.pkcs12 --pwd password8263 --enabled-reference-uris empty tmp/output-dir/sign-input/$i | xmllint --format - > tmp/output-dir/signed-pkcs12/$i
-	xmlsec1 --sign --privkey-pem $SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --enabled-reference-uris empty tmp/output-dir/sign-input/$i | xmllint --format - > tmp/output-dir/signed-pem/$i
+	xmlsec1 --sign $XMLSEC_LAX_KEY_SEARCH --pkcs12 $SIGNDIR/test.pkcs12 --pwd password8263 --enabled-reference-uris empty tmp/output-dir/sign-input/$i | xmllint --format - > tmp/output-dir/signed-pkcs12/$i
+	xmlsec1 --sign $XMLSEC_LAX_KEY_SEARCH --privkey-pem $SIGNDIR/test.key,$SIGNDIR/test-ca.crt,$SIGNDIR/test.crt --enabled-reference-uris empty tmp/output-dir/sign-input/$i | xmllint --format - > tmp/output-dir/signed-pem/$i
 done
 for i in tmp/output-dir/signed-internal/* ; do
 	xmlsec1 --verify --trusted-pem $SIGNDIR/test-ca.crt $i

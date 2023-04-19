@@ -83,9 +83,14 @@ class SignedTag(Tag):
 	def __init__(self, tag, pem_opt):
 		in_data = io.BytesIO()
 		tag.write_output(in_data)
+		LAX_KEY_SEARCH=[ '--lax-key-search' ]
+		result = subprocess.run(['xmlsec1', '--version'],
+			capture_output=True, text=True, check=False)
+		if re.search(r'^xmlsec1 1\.2\.', result.stdout):
+			LAX_KEY_SEARCH=[]
 		result = subprocess.run(['xmlsec1', '--sign',
 			'--enabled-reference-uris', 'empty',
-			'--privkey-pem', pem_opt, '-'],
+			'--privkey-pem', pem_opt] + LAX_KEY_SEARCH + [ '-' ],
 			check=False,
 			input=in_data.getvalue(),
 			stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=False)
