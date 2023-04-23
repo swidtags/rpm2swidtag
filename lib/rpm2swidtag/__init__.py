@@ -85,8 +85,8 @@ class SignedTag(Tag):
 		tag.write_output(in_data)
 		LAX_KEY_SEARCH=[ '--lax-key-search' ]
 		result = subprocess.run(['xmlsec1', '--version'],
-			capture_output=True, text=True, check=False)
-		if re.search(r'^xmlsec1 1\.2\.', result.stdout):
+			stdout=subprocess.PIPE, check=False)
+		if re.search(rb'^xmlsec1 1\.2\.', result.stdout):
 			LAX_KEY_SEARCH=[]
 		result = subprocess.run(['xmlsec1', '--sign',
 			'--enabled-reference-uris', 'empty',
