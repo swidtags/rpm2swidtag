@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoftwareIdentity xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd" xmlns:sha256="http://www.w3.org/2001/04/xmlenc#sha256" xmlns:n8060="http://csrc.nist.gov/ns/swid/2015-extensions/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19770/-2/2015/schema.xsd http://standards.iso.org/iso/19770/-2/2015-current/schema.xsd     http://csrc.nist.gov/ns/swid/2015-extensions/1.0 https://csrc.nist.gov/schema/swid/2015-extensions/swid-2015-extensions-1.0.xsd" tagId="test.example.pkg1-1.3.0-1.fc28.x86_64-component-of-test.a.Example-OS-Distro-3.x86_64" name="Example OS Distribution" supplemental="true">
+  <Link rel="supplemental" href="swid:test.a.Example-OS-Distro-3.x86_64"/>
+  <Link rel="component" href="swid:test.example.pkg1-1.3.0-1.fc28.x86_64"/>
+  <Entity name="" regid="example.test" role="tagCreator"/>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <Reference>
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <Transform Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <DigestValue>mNe/6J6IjbDTvLH6zA3zjBPCN9iSUpBVBg3LgeMlibg=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>jQal1+fOmGpBQ9zq6IgFr4fqnKvXQr9YUNe7WYXfuP+HB/qLfWI+zqYW+XW2j/9N
+jU2NGTfivIHE2vRL9lzgt9lVmsIRBeF2A4lzg7JHb60VeHg+yzaUDHuhqR2DdFbq
+VKeLr9ocIClFPCxgroEJR6OXHGFQfK7wNdlDqPAEMhQHH4xjMg5YO2jGLGv24b06
+HB5onrkALFnSemv2PI/Rf9i3legL1pacYJHYYbwRImWEy3MZPYeZR+Uos5j3GthI
+5n88MsqP+tWOZ9F91CmJyFSzccb8lthnfQAMSkLLiqpGwZ+1S7b9bb23XOK9d6+z
++ckww55xv9DYm9A1xMYZk/GwMvedvVSDzhZl3ZF3aaVfgb/h0JfF9DB28fagj/bD
+pLN56ZEcXXqW6thgbKPb7QCRxOxQS5Qo+Y8pkrCTabQDTDkxjUwhHcKtOretjfK/
+hlYMjOxDBgX4UVQ3WVm9zid6ZAPK1BhY7mG+nlUk8GFrb7ITaxpWIJup9pBJMf9b
+c+hFcKEo7eMDxKBdngikeFeYZTm/2aXXUYz1UheKLAPLtaKaNzaCG8W6ki+jDpyc
+GbAl7CEk8Duh/33QkJy5eVrjJJey9DWXHVmA8pvC3TsK5dSQQk7SGQt24M/6nsa5
+9Pf/TamugEP3Q9AJxf/uiJVMXWwU1sl6PKXxj4FnC+o=</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate>MIIFTjCCAzagAwIBAgIUfuiMD7vr88Ss62D8ivnPsBvWkwUwDQYJKoZIhvcNAQEL
+BQAwFTETMBEGA1UEAwwKVGVzdGluZyBDQTAeFw0yMTA5MjMxNjE0MzFaFw0zMTA5
+MjExNjE0MzFaMDMxMTAvBgNVBAMMKFRlc3RpbmcgY2VydGlmaWNhdGUgZm9yIFNX
+SUQgdGFnIHNpZ25pbmcwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCS
+ZZ82YMVxR11s/tIw/7I1F1ulfNN4UAksEYkB735LKnkBMD5L2zrpjBhcwnPfKOt2
+wrOmmlG8mfA3wURtYy3WLhrKi+Sx0s7DjkU9sHFxqGJrGgX6+tjMT29lvujkRxqk
+og8RNH+wjlp3LnF9elL7pnb5qrHGocPiR1bp7KLFU6tpm9LIb6jSj50DKcdVig5q
+V4hVpTUhy59WQqlJ1CmtgHHdFpvIsLygnbMvWdMxekalYJ9FPyuRdPcKZQMgdAkk
+Rgs9J9ax58AkIuZQl/w2I9iVpXmL5t5lCT2dLY8Om6SUZLaHfI1+OAPPg4HRDSox
+1v/I9Uz+cqGTctRyrcmZ4P0xizcRSdlWz2Uyyrc6YMTZQNMvPSIsltl0RngHpXT/
+v9kJMqzGU/05eZUmHsvEKk5dBjznas6cFHLNn5oG2Zajxg8auYZZ6fQ5c/ijMwFC
+JWQH+K8y5RIdix0QY3IDwT68hyCvccrTQEBFfUoX/9jMmDHCH8bq6OSiuRXP39H5
+uhN1MadqqfgH6UKgbIFQsJHbRK8ZfIIetb5FvzDqGLLYgzqKwa8W9HDv7fM72laK
+0V5jKsLnzElgGrgBf0Mc3RtHerzk2vbe+HZaSxCAr9/AQgV7OmQgXN9D6iCu1iKE
+k29vvlWuo7l8WbcYCuP3B3RIw29qikltD6N7cYTKBQIDAQABo3gwdjAdBgNVHQ4E
+FgQUL73h0QSwo15FY2SsbMNQF//zK4cwHwYDVR0jBBgwFoAUzTlYw+r1qh80/fMT
+XednURsn5V8wDAYDVR0TAQH/BAIwADAOBgNVHQ8BAf8EBAMCB4AwFgYDVR0lAQH/
+BAwwCgYIKwYBBQUHAwMwDQYJKoZIhvcNAQELBQADggIBABic2nPV6EXzh1nmL6X/
+s3UplsTIMmTinkRqH0jbPWNeZRgDVSAi8U7FqndZDlPpqoGBf6soJpVARuCu9xNk
+dRsswNVUN370fKAhQjO48ePU1Ep9v8NKqydQvjGr/nmJh2tClc5M8ssnUmCf/BwZ
+AyB3Nna9OvkzCqrDmiijrhdxFi+m+r8nj0rx3FzS7GTpk9n8LCNwXUR58fTCIh6p
+cl91bGV5KIhF8HMr7EM/FdG/8p8WBm3WFVaV+skId9bk0Y045MZb6NzA/deezNqd
+r7CPvJUivD6zShxUgXgvoozIEUbz0w06CW21Cx/AM5Ln6zkmu+qzzc1T/zOlh8JR
+Fe0px40jAwGu62zynYzRfTjhnbDVRfYB13ZtKMfMARB+4QTVS6wON4NkXLYF0z/6
+xfr/TElTObqkckC/U0YaILQqiM8X/UxK/cf+juVkLoVI6iXmmXsw4meU9gUXkW0h
+3ezxO8p7ojOcw9at5wUBeBNoxDj13g6u2NaLK3xwBjyvbYQOarMrjMMlYDlBdOgL
+ZlhMPEcQdOgngiIQMzv+/7emFLs0zMPIE1nZxTR96hBlRS+sgckm/AWTHt+TKDov
+6ude6DIpPBRjuXFelQKVhKSqOmoslJS9PC9eiiUy2hVcIzps6WPn4ynsgEOGoxi9
+uoqCJVvFfmmqqdjjoWpgwBWp
+</X509Certificate>
+        <X509Certificate>MIIFCzCCAvOgAwIBAgIUUciJjVn3m/FIXErnBIa1bTjRvTowDQYJKoZIhvcNAQEL
+BQAwFTETMBEGA1UEAwwKVGVzdGluZyBDQTAeFw0yMTA5MjMxNjE0MjhaFw0zMTA5
+MjExNjE0MjhaMBUxEzARBgNVBAMMClRlc3RpbmcgQ0EwggIiMA0GCSqGSIb3DQEB
+AQUAA4ICDwAwggIKAoICAQCtJqN89PhqtOuxHGAD4++0RObfjo+ca4cOq1VB8YBn
+8i59wAHVviTXwqDd+fOPSnv9/Npd58DH+e084F0BZl+tzHmom4RUkz/B/HpJNK7o
+HcCwpzn0e63kxcWpOGbwZEecWFSxVKOXtKe/pvrPpk6qNHUs7cr0t6LPttFRGE00
+jW3ftBQXO7dq99gq+lCWmsHfWBWhOCZZ7p7Xdg965ML8wE4o0OGJK3TIenvGGgsq
+7GB+mngfHbS1czG7B0Hp9h7C0x4X5KJQKcE5FmdvSKHxKf+FflXiMnC8/nPD2Txl
+QnNBjxOMiQYVrwG0LTqaHxVmrjMEF0dTUKYqBzzL3ypOB4LwfDsmQHarKLJaNeVw
+A0iY+eusvgZEcAWMTA1vzgFGu8F+Wq9V/TqNZr1eOvQhE0C0zaJu13zf39Ydhdfh
+q7Z4QrmdEgOD34E3RE1l+PQDHUZs9K86bYqmJ0K2H3Sc3dotj7PJqpU4WKXKi03r
+4F18yOrE7MXmu0BuEHzGUdyMxiSaJ5ot/stJ5LxA4NavsQH3O0IkF4XonR+T9zb+
+8tVxiPjPQippP8hiwPcvDuFlnLlxywjAPJjixA7bxvXUpO5tBGjKvzVEAJVX5ydS
+lNKEE3+LTF4UkOKzw5BXMpj+UoO54fWRtMxuZ5CNYwZo/A8J5+zx15SMM3u5FwFf
+VQIDAQABo1MwUTAdBgNVHQ4EFgQUzTlYw+r1qh80/fMTXednURsn5V8wHwYDVR0j
+BBgwFoAUzTlYw+r1qh80/fMTXednURsn5V8wDwYDVR0TAQH/BAUwAwEB/zANBgkq
+hkiG9w0BAQsFAAOCAgEAHYxbtcZJX/UbX1CPRSKReU6D98+1VWG+oiBVvGQhSfVq
+rGXyMkxHNNGkUzWvv7Bkb2Gmu8hU5mgp7mrozRNqTI/jM5MzaUpv+18WQTjWxadX
+ZVThyim5XI1e92KZ38bjMPSV8uUajTgQ6GKjgebRzKEAogTa8kkQmXGiVoj5ksvV
+R5nSzN0ZPk2O2gV/5Qa+j3uKhZAuws6zTmC+ogfmoWt3bks2BMblZyqehjjs9yDu
+KOKlEyGXog7diLQVDsvFgLtKX/AxZfrM0hkiyH373akGx5+N1cVPbOvt+8GzfIZe
+lz1tHR56Y3B3UpUGZC9YocgizyjTEGmpJVCHw9yedS/q1Js/dcoCNhQxwAKSB0GU
+Xs0LzBB6HumlUPVCqt3pznyeOn7N9f3I57V1YKLjAOcvrWMnpU+9tlLMzmLNshLG
+elUWCzG6kq1r8ybTSozZSDbpVeeBi7SePbEqJHPfIafjZI1o5Sp3u/LazTqUNwH1
+niniVBzQJ6/eNTkrgy1fpJX0lO6bRSm47EMjaZpHn4cXdVydCrGkmbI1Nbsq1wal
+CDYSrCbUnsUZQM0OQ67ONMCgTEnbsN5wRLmBWumjdeZpeEqDrq1UNaQnfhUUf3Qs
+OIVmSVlMLFXuImV0D1pWztGzy/xMgzrURBrU/UMN4KbwA7nht6BjloBUfwrNjcI=
+</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</SoftwareIdentity>
