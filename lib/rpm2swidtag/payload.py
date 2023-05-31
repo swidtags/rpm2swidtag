@@ -1,5 +1,5 @@
 
-from rpm import fi, RPMFILE_CONFIG, RPMFILE_DOC, RPMFILE_MISSINGOK, RPMFILE_GHOST, \
+from rpm import files, RPMFILE_CONFIG, RPMFILE_DOC, RPMFILE_MISSINGOK, RPMFILE_GHOST, \
 	RPMFILE_LICENSE, RPMFILE_README, RPMVERIFY_FILEDIGEST, RPMVERIFY_FILESIZE
 from lxml import etree
 import re
@@ -22,10 +22,10 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 
 		output = []
 		last_dir = None
-		for f in fi(self.rpm_header):
+		for f in files(self.rpm_header):
 			append_to = None
 
-			name = f[0]
+			name = f.name
 			location = None
 			m = re.search(r'^(.*/)(.+)$', name)
 			if m is not None:
@@ -40,28 +40,28 @@ class SWIDPayloadExtension(etree.XSLTExtension):
 						break
 					last_dir = last_dir.getparent()
 
-			if S_ISDIR(f[2]):
+			if S_ISDIR(f.mode):
 				e = etree.Element("Directory", nsmap=NSMAP)
 				last_dir = e
 			else:
-				e = etree.Element("File", size=str(f[1]), nsmap=NSMAP)
+				e = etree.Element("File", size=str(f.size), nsmap=NSMAP)
 
-			e.set("fullname", f[0])
+			e.set("fullname", f.name)
 			e.set("name", name)
 			if location:
 				location = re.sub(r'^(.+)/$', r'\g<1>', location)
 				e.set("location", location)
-			if f[12]:
-				if len(f[12]) == 64 and f[12] != "0" * 64:
-					e.set("{%s}hash" % NSMAP['sha256'], f[12])
-				if len(f[12]) == 32 and f[12] != "0" * 32:
-					e.set("{%s}hash" % NSMAP['md5'], f[12])
-			if not S_ISDIR(f[2]):
-				if (f[4] & (RPMFILE_CONFIG | RPMFILE_GHOST)) \
-					or (f[9] & RPMVERIFY_FILEDIGEST) == 0 \
-					or (f[9] & RPMVERIFY_FILESIZE) == 0:
+			if f.digest:
+				if len(f.digest) == 64 and f.digest != "0" * 64:
+					e.set("{%s}hash" % NSMAP['sha256'], f.digest)
+				if len(f.digest) == 32 and f.digest != "0" * 32:
+					e.set("{%s}hash" % NSMAP['md5'], f.digest)
+			if not S_ISDIR(f.mode):
+				if (f.fflags & (RPMFILE_CONFIG | RPMFILE_GHOST)) \
+					or (f.vflags & RPMVERIFY_FILEDIGEST) == 0 \
+					or (f.vflags & RPMVERIFY_FILESIZE) == 0:
 					e.set("{%s}mutable" % NSMAP['n8060'], "true")
-				if not (f[4] & (RPMFILE_DOC | RPMFILE_MISSINGOK | RPMFILE_GHOST | RPMFILE_LICENSE | RPMFILE_README)):
+				if not (f.fflags & (RPMFILE_DOC | RPMFILE_MISSINGOK | RPMFILE_GHOST | RPMFILE_LICENSE | RPMFILE_README)):
 					e.set("key", "true")
 
 			if append_to is None:

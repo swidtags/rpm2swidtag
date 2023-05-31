@@ -176,10 +176,10 @@ locally into `/var/lib/swidtag/rpm2swidtag-generated`.
 
 ## Author
 
-Written by Jan Pazdziora, 2018--2021.
+Written by Jan Pazdziora, 2018--2023.
 
 ## License
 
-Copyright 2018--2021, Red Hat, Inc.
+Copyright 2018--2023, Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0.
