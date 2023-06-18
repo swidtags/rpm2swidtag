@@ -1,4 +1,4 @@
-name: Build and test rpm2swidtag
+name: test
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Run tests in container
+    name: x86_64 container
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
