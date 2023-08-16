@@ -59,7 +59,15 @@ class Primary:
 		self.repo = repo
 		self.href = primary
 		self.path = path.join(self.repo.path, self.href)
-		self.xml = etree.parse(self.path)
+		self.zst = False
+		if path.splitext(self.path)[1] == '.zst':
+			self.zst = True
+			import zstandard
+			with zstandard.open(self.path, 'rb') as fh:
+				self.xml = etree.parse(fh)
+				print(self.xml)
+		else:
+			self.xml = etree.parse(self.path)
 		self.list = None
 		self.index = -1
 
@@ -91,7 +99,7 @@ class Package:
 		location = self.location_fn(self.element)[0]
 		href = location.get("href")
 		base = location.base
-		if base == self.primary.path:
+		if base is None or base == self.primary.path:
 			return href
 		if base.startswith("file:///"):
 			base = base[7:]
