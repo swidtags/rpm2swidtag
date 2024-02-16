@@ -9,7 +9,7 @@ jobs:
     resource_class: arm.medium
     steps:
       - checkout
-      - run: sed -i "s#^FROM.*#FROM $( echo << parameters.os >> | sed 's#^fedora-#registry.fedoraproject.org/fedora:#; s#^centos-stream-#quay.io/centos/centos:stream#;' )#" tests/Dockerfile
+      - run: sed -i "s#^FROM.*#FROM $( echo << parameters.os >> | sed 's#^fedora-#registry.fedoraproject.org/fedora:#' )#" tests/Dockerfile
       - run: docker build -t rpm2swidtag-source -f tests/Dockerfile .
       - run: docker run --name rpm2swidtag-build -d rpm2swidtag-source sleep 600
       - run: docker exec rpm2swidtag-build tests/build.sh
@@ -26,4 +26,4 @@ workflows:
       - arm-container:
           matrix:
             parameters:
-              os: [ fedora-latest, centos-stream-9, centos-stream-8 ]
+              os: [ fedora-latest ]

@@ -1,0 +1,39 @@
+
+[project]
+name = "rpm2swidtag"
+version = "0.8.20"
+authors = [{name = "Jan Pazdziora", email = "jpazdziora@redhat.com"}]
+license = {text = "ASL 2.0"}
+description = "Tools for producing SWID tags from rpm package headers and inspecting the SWID tags"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Environment :: Plugins",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: System :: Systems Administration",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "lib"}
+# Workaround configuration error: `tool.setuptools.py-modules[0]` must be python-module-name
+# by keeping this in setup.cfg file:
+# py-modules = ["dnf-plugins.swidtags"]
+packages = ["rpm2swidtag", "swidq"]
+script-files = [
+    "bin/rpm2swidtag",
+    "bin/dnf-plugin-swidtags-update-from-0.7",
+    "bin/swidq",
+]
+
