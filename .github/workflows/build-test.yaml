@@ -16,7 +16,7 @@ jobs:
       matrix:
         os: [ fedora-rawhide, fedora-40, fedora-39, fedora-38, centos-stream-8, centos-stream-9 ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set the right OS in the Dockerfile
         run: sed -i "s#^FROM.*#FROM $( echo ${{ matrix.os }} | sed 's#^fedora-#registry.fedoraproject.org/fedora:#; s#^centos-stream-#quay.io/centos/centos:stream#;' )#" tests/Dockerfile
       - name: Build image
