@@ -1,7 +1,7 @@
 
 [project]
 name = "rpm2swidtag"
-version = "0.8.20"
+version = "0.8.21"
 authors = [{name = "Jan Pazdziora", email = "jpazdziora@redhat.com"}]
 license = {text = "ASL 2.0"}
 description = "Tools for producing SWID tags from rpm package headers and inspecting the SWID tags"
