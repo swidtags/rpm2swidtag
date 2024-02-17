@@ -10,11 +10,16 @@ jobs:
     steps:
       - checkout
       - run: sed -i "s#^FROM.*#FROM $( echo << parameters.os >> | sed 's#^fedora-#registry.fedoraproject.org/fedora:#; s#^centos-stream-#quay.io/centos/centos:stream#;' )#" tests/Dockerfile
-      - run: docker build -t rpm2swidtag -f tests/Dockerfile .
-      - run: docker run --name rpm2swidtag -d rpm2swidtag sleep 600
-      - run: docker exec rpm2swidtag mkdir the-tests
-      - run: docker exec rpm2swidtag cp -rp Makefile test.sh tests README.md the-tests/
-      - run: docker exec rpm2swidtag make -C the-tests test TEST_INSTALLED=true
+      - run: docker build -t rpm2swidtag-source -f tests/Dockerfile .
+      - run: docker run --name rpm2swidtag-build -d rpm2swidtag-source sleep 600
+      - run: docker exec rpm2swidtag-build tests/build.sh
+      - run: docker run --name rpm2swidtag-test -d rpm2swidtag-source sleep 600
+      - run: docker exec rpm2swidtag-build ls dist | grep noarch.rpm | while read f ; do docker cp rpm2swidtag-build:/src/dist/$f . ; done
+      - run: for f in *.noarch.rpm ; do docker cp $f rpm2swidtag-test:/src/ ; done
+      - run: docker rm -f rpm2swidtag-build
+      - run: docker exec rpm2swidtag-test bash -c 'dnf install -y *.noarch.rpm'
+      - run: docker exec rpm2swidtag-test dnf install -y diffutils createrepo_c
+      - run: docker exec -e TEST_INSTALLED=true rpm2swidtag-test ./test.sh
 workflows:
   workflow:
     jobs:

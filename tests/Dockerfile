@@ -1,4 +1,4 @@
 FROM registry.fedoraproject.org/fedora
 COPY . /src/
 WORKDIR /src
-RUN tests/build.sh
+RUN if test -f /etc/centos-release ; then dnf install -y epel-release ; fi

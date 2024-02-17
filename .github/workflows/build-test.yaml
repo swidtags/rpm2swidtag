@@ -19,25 +19,37 @@ jobs:
       - uses: actions/checkout@v4
       - name: Set the right OS in the Dockerfile
         run: sed -i "s#^FROM.*#FROM $( echo ${{ matrix.os }} | sed 's#^fedora-#registry.fedoraproject.org/fedora:#; s#^centos-stream-#quay.io/centos/centos:stream#;' )#" tests/Dockerfile
-      - name: Build image
-        run: podman build -t rpm2swidtag -f tests/Dockerfile .
-      - name: Run container
-        run: podman run --name rpm2swidtag -d rpm2swidtag sleep 600
-      - run: podman exec rpm2swidtag mkdir the-tests
-      - run: podman exec rpm2swidtag cp -rp Makefile test.sh tests README.md the-tests/
+      - name: Create image with the source
+        run: podman build -t rpm2swidtag-source -f tests/Dockerfile .
+      - name: Run a container to build the rpm
+        run: podman run --name rpm2swidtag-build -d rpm2swidtag-source sleep 600
+      - name: Build the rpm
+        run: podman exec rpm2swidtag-build tests/build.sh
+
+      - name: Run a container to test the installed rpm
+        run: podman run --name rpm2swidtag-test -d rpm2swidtag-source sleep 600
+
+      - name: Copy the rpm from the build container to the test container
+        run: podman exec rpm2swidtag-build ls dist | grep noarch.rpm | while read f ; do podman cp rpm2swidtag-build:/src/dist/$f rpm2swidtag-test:/src/ ; done
+      - run: podman rm -f rpm2swidtag-build
+
+      - name: Install the rpm
+        run: podman exec rpm2swidtag-test bash -c 'dnf install -y *.noarch.rpm'
+      - name: Install test dependencies
+        run: podman exec rpm2swidtag-test dnf install -y diffutils createrepo_c
       - name: Run TEST_INSTALLED=true tests
-        run: podman exec rpm2swidtag make -C the-tests test TEST_INSTALLED=true
+        run: podman exec -e TEST_INSTALLED=true rpm2swidtag-test ./test.sh
       - name: See what rpm2swidtag generated for bash
-        run: podman exec rpm2swidtag /usr/bin/rpm2swidtag bash
+        run: podman exec rpm2swidtag-test /usr/bin/rpm2swidtag bash
       - name: Get us full set of tags
-        run: podman exec rpm2swidtag dnf swidtags regen
+        run: podman exec rpm2swidtag-test dnf swidtags regen
       - name: Check all packages have component-of tags
-        run: diff <( podman exec rpm2swidtag rpm -qa | grep -v gpg-pubkey | wc -l ) <( podman exec rpm2swidtag ls /var/lib/swidtag/rpm2swidtag-generated | grep -v component-of | wc -l )
+        run: diff <( podman exec rpm2swidtag-test rpm -qa | grep -v gpg-pubkey | wc -l ) <( podman exec rpm2swidtag-test ls /var/lib/swidtag/rpm2swidtag-generated | grep -v component-of | wc -l )
       - name: There has to be a tag for bash
-        run: podman exec rpm2swidtag swidq -n bash | grep .
+        run: podman exec rpm2swidtag-test swidq -n bash | grep .
       - name: There should not be a tag for zsh
-        run: if podman exec rpm2swidtag swidq -n zsh | grep . ; then exit 1 ; fi
+        run: if podman exec rpm2swidtag-test swidq -n zsh | grep . ; then exit 1 ; fi
       - name: But after we install zsh ...
-        run: podman exec rpm2swidtag dnf install -y zsh
+        run: podman exec rpm2swidtag-test dnf install -y zsh
       - name: ... the tag should have been generated
-        run: podman exec rpm2swidtag swidq -n zsh | grep .
+        run: podman exec rpm2swidtag-test swidq -n zsh | grep .
