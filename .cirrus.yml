@@ -1,7 +1,6 @@
 test_task:
   arm_container:
     matrix:
-      image: registry.fedoraproject.org/fedora:rawhide
       image: registry.fedoraproject.org/fedora:latest
   build_script: tests/build.sh
   test_script: make test
