@@ -308,8 +308,8 @@ class swidtags(Plugin):
 
 	def get_nevra_checksum(self, nevra, verbose=True):
 		if not self.ts:
-			ts = rpm.transaction.initReadOnlyTransaction(root=self.base.conf.installroot)
-		rpms = ( ts.dbMatch(2, str(nevra)) )
+			self.ts = rpm.transaction.initReadOnlyTransaction(root=self.base.conf.installroot)
+		rpms = ( self.ts.dbMatch(2, str(nevra)) )
 		if len(rpms) > 1:
 			if verbose:
 				logger.warning("Multiple rpms %s found installed for package %s.", str(rpms), str(nevra))
