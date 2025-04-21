@@ -9,12 +9,13 @@ on:
 
 jobs:
   build:
-    name: x86_64 container
-    runs-on: ubuntu-20.04
+    name: ${{ matrix.os }} ${{ matrix.arch }}
+    runs-on: ubuntu-24.04${{ (matrix.arch == 'arm64' && '-arm') || (matrix.arch == 'x86_64' && '') }}
     strategy:
       fail-fast: false
       matrix:
         os: [ fedora-40, fedora-39 ]
+        arch: [ x86_64, arm64 ]
     steps:
       - uses: actions/checkout@v4
       - name: Set the right OS in the Dockerfile
