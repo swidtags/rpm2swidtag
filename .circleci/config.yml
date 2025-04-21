@@ -26,4 +26,4 @@ workflows:
       - arm-container:
           matrix:
             parameters:
-              os: [ fedora-latest ]
+              os: [ fedora-40 ]
